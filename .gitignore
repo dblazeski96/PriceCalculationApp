@@ -1,0 +1,15 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Api/packages
+/Api/PriceCalculation.Data/bin/Debug
+/Api/PriceCalculation.Data/obj/Debug
+/Api/PriceCalculation.Data.Model/bin/Debug
+/Api/PriceCalculation.Data.Model/obj/Debug
+/Api/PriceCalculation.Service/bin/Debug
+/Api/PriceCalculation.Service/obj/Debug
+/Api/PriceCalculation.WebApi/bin
+/Api/PriceCalculation.WebApi/obj/Debug
+/Api/PriceCalculation.WebApi.Tests/bin/Debug
+/Api/PriceCalculation.WebApi.Tests/obj/Debug
