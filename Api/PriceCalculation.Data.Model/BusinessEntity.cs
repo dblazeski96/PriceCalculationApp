@@ -14,11 +14,14 @@ namespace PriceCalculation.Data.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        [Required]
         [MaxLength(20)]
         public string Name { get; set; }
 
+        [Required]
         public BusinessType Type { get; set; }
 
+        [Required]
         public Currency Currency { get; set; }
 
         public List<Catalogue> Catalogues { get; set; }

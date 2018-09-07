@@ -21,6 +21,7 @@ namespace PriceCalculation.Data.Models
         [MaxLength(100)]
         public string Description { get; set; }
 
+        [Required]
         public int GroupId { get; set; }
         public Group Group { get; set; }
     }

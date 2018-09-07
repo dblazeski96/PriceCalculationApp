@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PriceCalculation.Data.Repository
 {
-    public interface IRepository<T>
+    public interface IRepository<T> : IBaseRepository
     {
         void Create(T item);
         Task Change(T item);

@@ -14,9 +14,11 @@ namespace PriceCalculation.Data.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        [Required]
         [MaxLength(20)]
         public string Name { get; set; }
 
+        [Required]
         public int BusinessEntityId { get; set; }
         public BusinessEntity BusinessEntity { get; set; }
 

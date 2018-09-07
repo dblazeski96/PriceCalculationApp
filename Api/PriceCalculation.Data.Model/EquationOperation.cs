@@ -14,6 +14,7 @@ namespace PriceCalculation.Data.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        [Required]
         public Operation Operation { get; set; }
     }
 }

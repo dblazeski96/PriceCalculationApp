@@ -18,6 +18,7 @@ namespace PriceCalculation.Data.Models
         [MaxLength(20)]
         public string Name { get; set; }
 
+        [Required]
         public int StrategyId { get; set; }
         public Strategy Strategy { get; set; }
 

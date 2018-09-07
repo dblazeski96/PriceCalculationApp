@@ -9,15 +9,15 @@ namespace PriceCalculation.Service
 {
     public class BaseService : IDisposable
     {
-        protected BusinessItemRepository BusinessItemRepository;
-        public BaseService()
+        protected readonly IBusinessItemRepository _businessItemRepository;
+        public BaseService(IBusinessItemRepository businessItemRepository)
         {
-            BusinessItemRepository = new BusinessItemRepository();
+            _businessItemRepository = businessItemRepository;
         }
         
         public void Dispose()
         {
-            BusinessItemRepository.Dispose();
+            _businessItemRepository.Dispose();
         }
     }
 }

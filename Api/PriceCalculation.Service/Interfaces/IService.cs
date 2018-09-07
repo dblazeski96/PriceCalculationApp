@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PriceCalculation.Service
 {
-    public interface IService<TViewModel, T>
+    public interface IService<TViewModel, T> : IDisposable
     {
         Task<ServiceResult<TViewModel>> Create(T item);
         Task<ServiceResult<TViewModel>> Change(T item);

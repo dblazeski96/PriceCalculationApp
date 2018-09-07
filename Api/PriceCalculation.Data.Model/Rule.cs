@@ -14,15 +14,19 @@ namespace PriceCalculation.Data.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        [Required]
         [MaxLength(20)]
         public string Name { get; set; }
 
+        [Required]
         [MaxLength(10)]
         public string Equation1 { get; set; }
 
+        [Required]
         [MaxLength(10)]
         public string Equation2 { get; set; }
 
+        [Required]
         public EquationOperation Operation { get; set; }
 
         public List<StrategyRule> Strategies { get; set; }

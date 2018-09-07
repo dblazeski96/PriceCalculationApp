@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{54BAD5DE-2B12-40FA-A764-5C1BC8610B1B}</ProjectGuid>
+    <ProjectGuid>{3D4B79BD-CF68-413D-A4A9-79AA803456A8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PriceCalculation.Service</RootNamespace>
-    <AssemblyName>PriceCalculation.Service</AssemblyName>
+    <RootNamespace>PriceCalculation.Mapper</RootNamespace>
+    <AssemblyName>PriceCalculation.Mapper</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,25 +40,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseService\BaseService.cs" />
-    <Compile Include="Interfaces\IService.cs" />
-    <Compile Include="BaseService\ServiceResult.cs" />
-    <Compile Include="BusinessItemService.cs" />
-    <Compile Include="Interfaces\IBusinessItemService.cs" />
+    <Compile Include="BusinessItemMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PriceCalculation.Data.Model\PriceCalculation.Data.Models.csproj">
       <Project>{72fd0a5a-0128-45ef-9ccc-02e7de551bb1}</Project>
       <Name>PriceCalculation.Data.Models</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PriceCalculation.Data\PriceCalculation.Data.csproj">
-      <Project>{dc2e57a0-b723-408f-8a9e-9486a12c8d43}</Project>
-      <Name>PriceCalculation.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PriceCalculation.Mapper\PriceCalculation.Mapper.csproj">
-      <Project>{3d4b79bd-cf68-413d-a4a9-79aa803456a8}</Project>
-      <Name>PriceCalculation.Mapper</Name>
     </ProjectReference>
     <ProjectReference Include="..\PriceCalculation.ViewModels\PriceCalculation.ViewModels.csproj">
       <Project>{4ce39bbd-f006-4628-b42c-f3c8bc4ac6a5}</Project>

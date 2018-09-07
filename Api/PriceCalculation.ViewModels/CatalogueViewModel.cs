@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PriceCalculation.Service.Models
+namespace PriceCalculation.ViewModels
 {
     public class CatalogueViewModel
     {

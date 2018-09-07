@@ -70,12 +70,16 @@
       <Name>PriceCalculation.Data.Models</Name>
     </ProjectReference>
     <ProjectReference Include="..\PriceCalculation.Data\PriceCalculation.Data.csproj">
-      <Project>{dc2e57a0-b723-408f-8a9e-9486a12c8d43}</Project>
+      <Project>{DC2E57A0-B723-408F-8A9E-9486A12C8D43}</Project>
       <Name>PriceCalculation.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\PriceCalculation.Service\PriceCalculation.Service.csproj">
       <Project>{54bad5de-2b12-40fa-a764-5c1bc8610b1b}</Project>
       <Name>PriceCalculation.Service</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PriceCalculation.ViewModels\PriceCalculation.ViewModels.csproj">
+      <Project>{4ce39bbd-f006-4628-b42c-f3c8bc4ac6a5}</Project>
+      <Name>PriceCalculation.ViewModels</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -14,9 +14,11 @@ namespace PriceCalculation.Data.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        [Required]
         public int StrategyId { get; set; }
         public Strategy Strategy { get; set; }
 
+        [Required]
         public int EquationOperationId { get; set; }
         public EquationOperation EquationOperation { get; set; }
     }

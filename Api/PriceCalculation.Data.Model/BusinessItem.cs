@@ -14,9 +14,11 @@ namespace PriceCalculation.Data.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public int ItemId { get; set; }
+        [Required]
+        public int? ItemId { get; set; }
         public Item Item { get; set; }
 
+        [Required]
         public int Quantity { get; set; }
 
         public DateTime DateOfProduction { get; set; }

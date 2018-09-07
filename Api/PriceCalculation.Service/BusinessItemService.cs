@@ -5,24 +5,23 @@ using System.Text;
 using System.Threading.Tasks;
 using PriceCalculation.Data.Repository;
 using PriceCalculation.Data.Models;
-using PriceCalculation.Service.Models;
+using PriceCalculation.ViewModels;
+using PriceCalculation.Mapper;
 
 namespace PriceCalculation.Service
 {
     public class BusinessItemService : BaseService, IBusinessItemService
     {
-        public Task<ServiceResult<BusinessItemViewModel>> Create(BusinessItem item)
+        public BusinessItemService(IBusinessItemRepository businessItemRepository) : base(businessItemRepository)
         {
-            throw new NotImplementedException();
         }
 
-        public async Task<ServiceResult<BusinessItemViewModel>> Change(BusinessItem item)
+        public async Task<ServiceResult<BusinessItemViewModel>> Create(BusinessItem item)
         {
             try
             {
-                await BusinessItemRepository.Change(item);
-
-                await BusinessItemRepository.Save();
+                _businessItemRepository.Create(item);
+                await _businessItemRepository.Commit();
 
                 return new ServiceResult<BusinessItemViewModel>
                 {
@@ -39,29 +38,56 @@ namespace PriceCalculation.Service
             }
         }
 
-        public Task<ServiceResult<BusinessItemViewModel>> Remove(int id)
+        public async Task<ServiceResult<BusinessItemViewModel>> Change(BusinessItem item)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _businessItemRepository.Change(item);
+                await _businessItemRepository.Commit();
+
+                return new ServiceResult<BusinessItemViewModel>
+                {
+                    Success = true
+                };
+            }
+            catch(Exception ex)
+            {
+                return new ServiceResult<BusinessItemViewModel>
+                {
+                    Success = false,
+                    ex = ex
+                };
+            }
+        }
+
+        public async Task<ServiceResult<BusinessItemViewModel>> Remove(int id)
+        {
+            try
+            {
+                await _businessItemRepository.Remove(id);
+                await _businessItemRepository.Commit();
+
+                return new ServiceResult<BusinessItemViewModel>
+                {
+                    Success = true
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResult<BusinessItemViewModel>
+                {
+                    Success = false,
+                    ex = ex
+                };
+            }
         }
 
         public async Task<ServiceResult<BusinessItemViewModel>> Get(int id)
         {
             try
             {
-                var businessItem = await BusinessItemRepository.Get(id);
-                var businessItemViewModel = new BusinessItemViewModel
-                {
-                    Id = businessItem.Id,
-                    Name = businessItem.Item.Name,
-                    Description = businessItem.Item.Description,
-                    Group = businessItem.Item.Group.Name,
-                    Quantity = businessItem.Quantity,
-                    PriceCost = businessItem.Prices.Where(p => p.Type == PriceType.Cost).FirstOrDefault().Amount,
-                    PriceTarget = businessItem.Prices.Where(p => p.Type == PriceType.Target).FirstOrDefault().Amount,
-                    PricePremium = businessItem.Prices.Where(p => p.Type == PriceType.Premium).FirstOrDefault().Amount,
-                    DateOfProduction = businessItem.DateOfProduction,
-                    DateOfLastSoldItem = businessItem.DateOfLastSold
-                };
+                var businessItem = await _businessItemRepository.Get(id);
+                var businessItemViewModel = businessItem.Map();
 
                 return new ServiceResult<BusinessItemViewModel>
                 {
@@ -77,12 +103,36 @@ namespace PriceCalculation.Service
                     ex = ex
                 };
             }
-            
         }
 
-        public Task<ServiceResult<BusinessItemViewModel>> GetAll()
+        public async Task<ServiceResult<BusinessItemViewModel>> GetAll()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var businessItems = await _businessItemRepository.GetAll();
+                var businessItemsViewModel = new List<BusinessItemViewModel>();
+
+                foreach(var item in businessItems)
+                {
+                    businessItemsViewModel.Add(
+                        item.Map()
+                    );
+                }
+
+                return new ServiceResult<BusinessItemViewModel>
+                {
+                    Success = true,
+                    Items = businessItemsViewModel
+                };
+            }
+            catch(Exception ex)
+            {
+                return new ServiceResult<BusinessItemViewModel>
+                {
+                    Success = false,
+                    ex = ex
+                };
+            }
         }
     }
 }

@@ -7,22 +7,22 @@ using System.Threading.Tasks;
 
 namespace PriceCalculation.Data.Repository
 {
-    public class BaseRepository : IDisposable
+    public class BaseRepository : IBaseRepository
     {
-        protected PriceCalculationContext DbContext;
+        protected readonly PriceCalculationContext _dbContext;
 
         public BaseRepository()
         {
-            DbContext = new PriceCalculationContext();
+            _dbContext = new PriceCalculationContext();
         }
 
-        public async Task Save()
+        public async Task Commit()
         {
-            await DbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
         }
         public void Dispose()
         {
-            DbContext.Dispose();
+            _dbContext.Dispose();
         }
     }
 }
