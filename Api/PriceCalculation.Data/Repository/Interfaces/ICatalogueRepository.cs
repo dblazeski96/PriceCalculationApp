@@ -5,10 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PriceCalculation.Data.Repository.Interfaces
+namespace PriceCalculation.Data.Repository
 {
-    public interface BusinessEntityRepository : IRepository<BusinessEntity>
+    public interface ICatalogueRepository : IRepository<Catalogue>
     {
-
     }
 }
