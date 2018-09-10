@@ -1,34 +1,37 @@
-﻿using System;
+﻿using PriceCalculation.Data.UnitOfWork;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PriceCalculation.Data.Repository;
 using PriceCalculation.Data.Models;
 using PriceCalculation.ViewModels;
 using PriceCalculation.Mapper;
 
 namespace PriceCalculation.Service
 {
-    public class BusinessItemService : BaseService, IBusinessItemService
+    public class SearchService : ISearchService
     {
-        public BusinessItemService(IBusinessItemRepository businessItemRepository) : base(businessItemRepository)
+        private readonly ISearchUoW _searchUoW;
+
+        public SearchService(ISearchUoW searchUoW)
         {
+            _searchUoW = searchUoW;
         }
 
         public async Task<ServiceResult<BusinessItemViewModel>> Create(BusinessItem item)
         {
             try
             {
-                _businessItemRepository.Create(item);
-                await _businessItemRepository.Commit();
+                _searchUoW._businessItemRepository.Create(item);
+                await _searchUoW.Commit();
 
                 return new ServiceResult<BusinessItemViewModel>
                 {
                     Success = true
                 };
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new ServiceResult<BusinessItemViewModel>
                 {
@@ -42,15 +45,15 @@ namespace PriceCalculation.Service
         {
             try
             {
-                await _businessItemRepository.Change(item);
-                await _businessItemRepository.Commit();
+                await _searchUoW._businessItemRepository.Change(item);
+                await _searchUoW.Commit();
 
                 return new ServiceResult<BusinessItemViewModel>
                 {
                     Success = true
                 };
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new ServiceResult<BusinessItemViewModel>
                 {
@@ -64,8 +67,8 @@ namespace PriceCalculation.Service
         {
             try
             {
-                await _businessItemRepository.Remove(id);
-                await _businessItemRepository.Commit();
+                await _searchUoW._businessItemRepository.Remove(id);
+                await _searchUoW.Commit();
 
                 return new ServiceResult<BusinessItemViewModel>
                 {
@@ -86,16 +89,16 @@ namespace PriceCalculation.Service
         {
             try
             {
-                var businessItem = await _businessItemRepository.Get(id);
-                var businessItemViewModel = businessItem.Map();
+                var item = await _searchUoW._businessItemRepository.Get(id);
+                var itemViewModel = item.Map();
 
                 return new ServiceResult<BusinessItemViewModel>
                 {
                     Success = true,
-                    Item = businessItemViewModel
+                    Item = itemViewModel
                 };
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new ServiceResult<BusinessItemViewModel>
                 {
@@ -109,23 +112,21 @@ namespace PriceCalculation.Service
         {
             try
             {
-                var businessItems = await _businessItemRepository.GetAll();
-                var businessItemsViewModel = new List<BusinessItemViewModel>();
+                var items = await _searchUoW._businessItemRepository.GetAll();
+                var itemsViewModels = new List<BusinessItemViewModel>();
 
-                foreach(var item in businessItems)
+                foreach(var item in items)
                 {
-                    businessItemsViewModel.Add(
-                        item.Map()
-                    );
+                    itemsViewModels.Add(item.Map());
                 }
 
                 return new ServiceResult<BusinessItemViewModel>
                 {
                     Success = true,
-                    Items = businessItemsViewModel
+                    Items = itemsViewModels
                 };
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new ServiceResult<BusinessItemViewModel>
                 {
@@ -133,6 +134,11 @@ namespace PriceCalculation.Service
                     ex = ex
                 };
             }
+        }
+
+        public void Dispose()
+        {
+            _searchUoW.Dispose();
         }
     }
 }

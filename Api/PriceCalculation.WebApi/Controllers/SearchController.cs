@@ -15,26 +15,37 @@ namespace PriceCalculation.WebApi.Controllers
     [RoutePrefix("api/search")]
     public class SearchController : ApiController
     {
-        private IBusinessItemService _businessItemService;
-        public SearchController(IBusinessItemService businessItemService)
+        private ISearchService _searchService;
+        public SearchController(ISearchService searchService)
         {
-            _businessItemService = businessItemService;
+            _searchService = searchService;
         }
-
+        
         [HttpGet]
         [Route("getallbusinessitems")]
         public async Task<HttpResponseMessage> GetAllBusinessItems()
         {
-            var response = Request.CreateResponse(HttpStatusCode.OK);
+            var businessItemsResult = await _searchService.GetAll();
 
-            var businessItemsResponse = await _businessItemService.GetAll();
-            var businessItems = businessItemsResponse.Items;
+            if (businessItemsResult.Success)
+            {
+                var response = Request.CreateResponse(HttpStatusCode.OK);
 
-            var responseContent = JsonConvert.SerializeObject(businessItems);
+                var businessItems = businessItemsResult.Items;
+                var responseContent = JsonConvert.SerializeObject(businessItems);
 
-            response.Content = new StringContent(responseContent);
+                response.Content = new StringContent(responseContent);
 
-            return response;
+                return response;
+            }
+            else
+            {
+                var exception = businessItemsResult.ex;
+
+                var response = Request.CreateErrorResponse(HttpStatusCode.BadRequest, exception.Message, exception);
+
+                return response;
+            }
         }
     }
 }

@@ -10,6 +10,8 @@ namespace PriceCalculation.Data.Repository
 {
     public class BusinessItemRepository : BaseRepository, IBusinessItemRepository
     {
+        public BusinessItemRepository(PriceCalculationContext dbContext) : base(dbContext) { }
+
         public void Create(BusinessItem item)
         {
             if (item.ItemId == null)
