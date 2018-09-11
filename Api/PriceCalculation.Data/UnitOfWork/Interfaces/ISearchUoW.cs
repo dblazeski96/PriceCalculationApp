@@ -1,4 +1,5 @@
-﻿using PriceCalculation.Data.Repository;
+﻿using PriceCalculation.Data.Factory;
+using PriceCalculation.Data.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace PriceCalculation.Data.UnitOfWork
 {
-    public interface ISearchUoW : IDisposable
+    public interface ISearchUoW : IUnitOfWork
     {
-        Task Commit();
         IBusinessItemRepository _businessItemRepository { get; }
     }
 }

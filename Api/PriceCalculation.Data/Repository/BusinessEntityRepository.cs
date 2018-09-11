@@ -8,20 +8,20 @@ using System.Data.Entity;
 
 namespace PriceCalculation.Data.Repository
 {
-    public class BusinessEntityRepository : BaseRepository, IBusinessEntityRepository
+    public class BusinessEntityRepository : PriceCalculationRepository, IBusinessEntityRepository
     {
-        public BusinessEntityRepository(PriceCalculationContext dbContext) : base(dbContext)
+        public BusinessEntityRepository(PriceCalculationContext priceCalculationContext) : base(priceCalculationContext)
         {
         }
 
         public void Create(BusinessEntity item)
         {
-            _dbContext.BusinessEntities.Add(item);
+            _priceCalculationContext.BusinessEntities.Add(item);
         }
 
         public async Task Change(BusinessEntity item)
         {
-            var businessEntityToChange = await _dbContext.BusinessEntities.SingleAsync(b => b.Id == item.Id);
+            var businessEntityToChange = await _priceCalculationContext.BusinessEntities.SingleAsync(b => b.Id == item.Id);
             businessEntityToChange.Name = item.Name;
             businessEntityToChange.Type = item.Type;
             businessEntityToChange.Currency = item.Currency;
@@ -29,18 +29,18 @@ namespace PriceCalculation.Data.Repository
 
         public async Task Remove(int id)
         {
-            var businessEntityToRemove = await _dbContext.BusinessEntities.SingleAsync(b => b.Id == id);
-            _dbContext.BusinessEntities.Remove(businessEntityToRemove);
+            var businessEntityToRemove = await _priceCalculationContext.BusinessEntities.SingleAsync(b => b.Id == id);
+            _priceCalculationContext.BusinessEntities.Remove(businessEntityToRemove);
         }
 
         public async Task<BusinessEntity> Get(int id)
         {
-            return await _dbContext.BusinessEntities.SingleAsync(b => b.Id == id);
+            return await _priceCalculationContext.BusinessEntities.SingleAsync(b => b.Id == id);
         }
 
         public async Task<IList<BusinessEntity>> GetAll()
         {
-            return await _dbContext.BusinessEntities.Include(b => b.Catalogues).ToListAsync();
+            return await _priceCalculationContext.BusinessEntities.Include(b => b.Catalogues).ToListAsync();
         }
     }
 }

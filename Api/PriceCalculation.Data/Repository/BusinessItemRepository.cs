@@ -8,29 +8,29 @@ using System.Data.Entity;
 
 namespace PriceCalculation.Data.Repository
 {
-    public class BusinessItemRepository : BaseRepository, IBusinessItemRepository
+    public class BusinessItemRepository : PriceCalculationRepository, IBusinessItemRepository
     {
-        public BusinessItemRepository(PriceCalculationContext dbContext) : base(dbContext) { }
+        public BusinessItemRepository(PriceCalculationContext priceCalculationContext) : base(priceCalculationContext) { }
 
         public void Create(BusinessItem item)
         {
             if (item.ItemId == null)
             {
-                _dbContext.Items.Add(item.Item);
-                item.ItemId = _dbContext.Items.Local.Last().Id;
+                _priceCalculationContext.Items.Add(item.Item);
+                item.ItemId = _priceCalculationContext.Items.Local.Last().Id;
             }
 
-            _dbContext.BusinessItems.Add(item);
+            _priceCalculationContext.BusinessItems.Add(item);
         }
 
         public async Task Change(BusinessItem item)
         {
-            var itemToChange = await _dbContext.Items.SingleAsync(i => i.Id == item.ItemId);
+            var itemToChange = await _priceCalculationContext.Items.SingleAsync(i => i.Id == item.ItemId);
             itemToChange.Name = item.Item.Name;
             itemToChange.Description = item.Item.Description;
             itemToChange.GroupId = item.Item.GroupId;
 
-            var businessItemToChange = await _dbContext.BusinessItems
+            var businessItemToChange = await _priceCalculationContext.BusinessItems
                                                 .Include(i => i.Prices)
                                                 .SingleAsync(i => i.Id == item.Id);
 
@@ -44,14 +44,14 @@ namespace PriceCalculation.Data.Repository
 
         public async Task Remove(int id)
         {
-            var businessItemToRemove = await _dbContext.BusinessItems.SingleAsync(i => i.Id == id);
+            var businessItemToRemove = await _priceCalculationContext.BusinessItems.SingleAsync(i => i.Id == id);
 
-            _dbContext.BusinessItems.Remove(businessItemToRemove);
+            _priceCalculationContext.BusinessItems.Remove(businessItemToRemove);
         }
 
         public async Task<BusinessItem> Get(int id)
         {
-            return await _dbContext.BusinessItems
+            return await _priceCalculationContext.BusinessItems
                                     .Include(i => i.Item)
                                     .Include(i => i.Item.Group)
                                     .Include(i => i.Prices)
@@ -61,7 +61,7 @@ namespace PriceCalculation.Data.Repository
 
         public async Task<IList<BusinessItem>> GetAll()
         {
-            return await _dbContext.BusinessItems
+            return await _priceCalculationContext.BusinessItems
                                     .Include(i => i.Item)
                                     .Include(i => i.Item.Group)
                                     .Include(i => i.Prices)

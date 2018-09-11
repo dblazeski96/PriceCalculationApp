@@ -8,20 +8,20 @@ using System.Data.Entity;
 
 namespace PriceCalculation.Data.Repository
 {
-    public class GroupRepository : BaseRepository, IGroupRepository
+    public class GroupRepository : PriceCalculationRepository, IGroupRepository
     {
-        public GroupRepository(PriceCalculationContext dbContext) : base(dbContext)
+        public GroupRepository(PriceCalculationContext priceCalculationContext) : base(priceCalculationContext)
         {
         }
 
         public void Create(Group item)
         {
-            _dbContext.Groups.Add(item);
+            _priceCalculationContext.Groups.Add(item);
         }
 
         public async Task Change(Group item)
         {
-            var groupToChange = await _dbContext.Groups
+            var groupToChange = await _priceCalculationContext.Groups
                                                 .SingleAsync(g => g.Id == item.Id);
             groupToChange.Name = item.Name;
             groupToChange.StrategyId = item.StrategyId;
@@ -29,20 +29,20 @@ namespace PriceCalculation.Data.Repository
 
         public async Task Remove(int id)
         {
-            var groupToRemove = await _dbContext.Groups
+            var groupToRemove = await _priceCalculationContext.Groups
                                                 .SingleAsync(g => g.Id == id);
-            _dbContext.Groups.Remove(groupToRemove);
+            _priceCalculationContext.Groups.Remove(groupToRemove);
         }
 
         public async Task<Group> Get(int id)
         {
-            return await _dbContext.Groups
+            return await _priceCalculationContext.Groups
                                     .SingleAsync(g => g.Id == id);
         }
 
         public async Task<IList<Group>> GetAll()
         {
-            return await _dbContext.Groups
+            return await _priceCalculationContext.Groups
                                     .Include(g => g.Items)
                                     .ToListAsync();
         }
