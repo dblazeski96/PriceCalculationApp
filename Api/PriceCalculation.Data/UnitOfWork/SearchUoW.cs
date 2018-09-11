@@ -17,16 +17,14 @@ namespace PriceCalculation.Data.UnitOfWork
         {
             _priceCalculationContextFactory = priceCalculationContextFactory;
             _businessItemFactory = businessItemFactory;
-            //_priceCalculationContext = (PriceCalculationContext)_priceCalculationContextFactory.Create();
-            _priceCalculationContext = new PriceCalculationContext();
+            _priceCalculationContext = (PriceCalculationContext)_priceCalculationContextFactory.Create();
         }
 
         public IBusinessItemRepository _businessItemRepository
         {
             get
             {
-                //return (IBusinessItemRepository)_businessItemFactory.Create(_priceCalculationContext);
-                return new BusinessItemRepository(_priceCalculationContext);
+                return (IBusinessItemRepository)_businessItemFactory.Create(_priceCalculationContext);
             }
         }
 
