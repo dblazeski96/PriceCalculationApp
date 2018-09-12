@@ -8,7 +8,7 @@ using System.Data.Entity;
 
 namespace PriceCalculation.Data.Repository
 {
-    public class BusinessItemRepository : PriceCalculationRepository, IBusinessItemRepository
+    public class BusinessItemRepository : BaseRepository, IBusinessItemRepository
     {
         public BusinessItemRepository(PriceCalculationContext priceCalculationContext) : base(priceCalculationContext) { }
 
@@ -23,16 +23,16 @@ namespace PriceCalculation.Data.Repository
             _priceCalculationContext.BusinessItems.Add(item);
         }
 
-        public async Task Change(BusinessItem item)
+        public void Change(BusinessItem item)
         {
-            var itemToChange = await _priceCalculationContext.Items.SingleAsync(i => i.Id == item.ItemId);
+            var itemToChange = _priceCalculationContext.Items.Single(i => i.Id == item.ItemId);
             itemToChange.Name = item.Item.Name;
             itemToChange.Description = item.Item.Description;
             itemToChange.GroupId = item.Item.GroupId;
 
-            var businessItemToChange = await _priceCalculationContext.BusinessItems
+            var businessItemToChange = _priceCalculationContext.BusinessItems
                                                 .Include(i => i.Prices)
-                                                .SingleAsync(i => i.Id == item.Id);
+                                                .Single(i => i.Id == item.Id);
 
             businessItemToChange.Quantity = item.Quantity;
             businessItemToChange.DateOfProduction = item.DateOfProduction;
@@ -42,31 +42,31 @@ namespace PriceCalculation.Data.Repository
             businessItemToChange.Prices.Single(p => p.Type == PriceType.Premium).Amount = item.Prices.Single(p => p.Type == PriceType.Premium).Amount;
         }
 
-        public async Task Remove(int id)
+        public void Remove(int id)
         {
-            var businessItemToRemove = await _priceCalculationContext.BusinessItems.SingleAsync(i => i.Id == id);
+            var businessItemToRemove = _priceCalculationContext.BusinessItems.Single(i => i.Id == id);
 
             _priceCalculationContext.BusinessItems.Remove(businessItemToRemove);
         }
 
-        public async Task<BusinessItem> Get(int id)
+        public BusinessItem Get(int id)
         {
-            return await _priceCalculationContext.BusinessItems
+            return _priceCalculationContext.BusinessItems
                                     .Include(i => i.Item)
                                     .Include(i => i.Item.Group)
                                     .Include(i => i.Prices)
                                     .Include(i => i.Catalogues)
-                                    .SingleAsync(i => i.Id == id);
+                                    .Single(i => i.Id == id);
         }
 
-        public async Task<IList<BusinessItem>> GetAll()
+        public IList<BusinessItem> GetAll()
         {
-            return await _priceCalculationContext.BusinessItems
+            return _priceCalculationContext.BusinessItems
                                     .Include(i => i.Item)
                                     .Include(i => i.Item.Group)
                                     .Include(i => i.Prices)
                                     .Include(i => i.Catalogues)
-                                    .ToListAsync();
+                                    .ToList();
         }
     }
 }

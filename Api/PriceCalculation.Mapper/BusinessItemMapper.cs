@@ -10,7 +10,7 @@ namespace PriceCalculation.Mapper
 {
     public static class BusinessItemMapper
     {
-        public static BusinessItemViewModel Map(this BusinessItem dataModel)
+        public static BusinessItemViewModel MapToViewModel(this BusinessItem dataModel)
         {
             return new BusinessItemViewModel
             {

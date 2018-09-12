@@ -49,18 +49,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Factory\BaseFactory\ContextFactory.cs" />
-    <Compile Include="Factory\BaseFactory\IContextFactory.cs" />
-    <Compile Include="Factory\BaseFactory\IRepositoryFactory.cs" />
-    <Compile Include="Factory\BaseFactory\RepositoryFactory.cs" />
-    <Compile Include="Factory\BusinessItemFactory.cs" />
-    <Compile Include="Factory\Interfaces\IBusinessItemFactory.cs" />
-    <Compile Include="Factory\Interfaces\IPriceCalculationContextFactory.cs" />
-    <Compile Include="Factory\PriceCalculationContextFactory.cs" />
+    <Compile Include="Factory\ContextFactory.cs" />
+    <Compile Include="Factory\RepositoryFactory.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="PriceCalculationContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repository\BaseRepository\PriceCalculationRepository.cs" />
+    <Compile Include="Repository\BaseRepository\BaseRepository.cs" />
     <Compile Include="Repository\BusinessEntityRepository.cs" />
     <Compile Include="Repository\CatalogueRepository.cs" />
     <Compile Include="Repository\GroupRepository.cs" />

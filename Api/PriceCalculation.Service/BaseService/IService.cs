@@ -8,10 +8,10 @@ namespace PriceCalculation.Service
 {
     public interface IService<TViewModel, T>
     {
-        Task<ServiceResult<TViewModel>> Create(T item);
-        Task<ServiceResult<TViewModel>> Change(T item);
-        Task<ServiceResult<TViewModel>> Remove(int id);
-        Task<ServiceResult<TViewModel>> Get(int id);
-        Task<ServiceResult<TViewModel>> GetAll();
+        ServiceResult<TViewModel> Create(T item);
+        ServiceResult<TViewModel> Change(T item);
+        ServiceResult<TViewModel> Remove(int id);
+        ServiceResult<TViewModel> Get(int id);
+        ServiceResult<TViewModel> GetAll();
     }
 }

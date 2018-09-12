@@ -8,8 +8,11 @@ using System.Threading.Tasks;
 
 namespace PriceCalculation.Data.Factory
 {
-    public abstract class RepositoryFactory : IRepositoryFactory
+    public static class RepositoryFactory<T> where T : class
     {
-        public abstract PriceCalculationRepository Create(DbContext dbContext);
+        public static T Create(DbContext dbContext)
+        {
+            return (T)Activator.CreateInstance(typeof(T), dbContext);
+        }
     }
 }

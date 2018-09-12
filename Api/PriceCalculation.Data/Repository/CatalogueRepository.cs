@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PriceCalculation.Data.Repository
 {
-    public class CatalogueRepository : PriceCalculationRepository, IRepository<Catalogue>
+    public class CatalogueRepository : BaseRepository, IRepository<Catalogue>
     {
         public CatalogueRepository(PriceCalculationContext priceCalculationContext) : base(priceCalculationContext)
         {
@@ -19,27 +19,27 @@ namespace PriceCalculation.Data.Repository
             _priceCalculationContext.Catalogues.Add(item);
         }
 
-        public async Task Change(Catalogue item)
+        public void Change(Catalogue item)
         {
-            var catalogueToChange = await _priceCalculationContext.Catalogues.SingleAsync(c => c.Id == item.Id);
+            var catalogueToChange = _priceCalculationContext.Catalogues.Single(c => c.Id == item.Id);
             catalogueToChange.Name = item.Name;
             catalogueToChange.BusinessEntityId = item.Id;
         }
 
-        public async Task Remove(int id)
+        public void Remove(int id)
         {
-            var catalogueToRemove = await _priceCalculationContext.Catalogues.SingleAsync(c => c.Id == id);
+            var catalogueToRemove = _priceCalculationContext.Catalogues.Single(c => c.Id == id);
             _priceCalculationContext.Catalogues.Remove(catalogueToRemove);
         }
 
-        public async Task<Catalogue> Get(int id)
+        public Catalogue Get(int id)
         {
-            return await _priceCalculationContext.Catalogues.SingleAsync(c => c.Id == id);
+            return _priceCalculationContext.Catalogues.Single(c => c.Id == id);
         }
 
-        public async Task<IList<Catalogue>> GetAll()
+        public IList<Catalogue> GetAll()
         {
-            return await _priceCalculationContext.Catalogues.Include(c => c.CatalogueItems).ToListAsync();
+            return _priceCalculationContext.Catalogues.Include(c => c.CatalogueItems).ToList();
         }
     }
 }

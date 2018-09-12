@@ -10,27 +10,23 @@ namespace PriceCalculation.Data.UnitOfWork
 {
     public class SearchUoW : ISearchUoW
     {
-        private IPriceCalculationContextFactory _priceCalculationContextFactory;
-        private IBusinessItemFactory _businessItemFactory;
         private PriceCalculationContext _priceCalculationContext;
-        public SearchUoW(IPriceCalculationContextFactory priceCalculationContextFactory, IBusinessItemFactory businessItemFactory)
+        public SearchUoW()
         {
-            _priceCalculationContextFactory = priceCalculationContextFactory;
-            _businessItemFactory = businessItemFactory;
-            _priceCalculationContext = (PriceCalculationContext)_priceCalculationContextFactory.Create();
+            _priceCalculationContext = ContextFactory<PriceCalculationContext>.Create();
         }
 
         public IBusinessItemRepository _businessItemRepository
         {
             get
             {
-                return (IBusinessItemRepository)_businessItemFactory.Create(_priceCalculationContext);
+                return RepositoryFactory<BusinessItemRepository>.Create(_priceCalculationContext);
             }
         }
 
-        public async Task Commit()
+        public void Commit()
         {
-           await _priceCalculationContext.SaveChangesAsync();
+           _priceCalculationContext.SaveChanges();
         }
 
         public void Dispose()

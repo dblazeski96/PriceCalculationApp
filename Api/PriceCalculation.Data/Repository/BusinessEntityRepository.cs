@@ -8,7 +8,7 @@ using System.Data.Entity;
 
 namespace PriceCalculation.Data.Repository
 {
-    public class BusinessEntityRepository : PriceCalculationRepository, IBusinessEntityRepository
+    public class BusinessEntityRepository : BaseRepository, IBusinessEntityRepository
     {
         public BusinessEntityRepository(PriceCalculationContext priceCalculationContext) : base(priceCalculationContext)
         {
@@ -19,28 +19,28 @@ namespace PriceCalculation.Data.Repository
             _priceCalculationContext.BusinessEntities.Add(item);
         }
 
-        public async Task Change(BusinessEntity item)
+        public void Change(BusinessEntity item)
         {
-            var businessEntityToChange = await _priceCalculationContext.BusinessEntities.SingleAsync(b => b.Id == item.Id);
+            var businessEntityToChange = _priceCalculationContext.BusinessEntities.Single(b => b.Id == item.Id);
             businessEntityToChange.Name = item.Name;
             businessEntityToChange.Type = item.Type;
             businessEntityToChange.Currency = item.Currency;
         }
 
-        public async Task Remove(int id)
+        public void Remove(int id)
         {
-            var businessEntityToRemove = await _priceCalculationContext.BusinessEntities.SingleAsync(b => b.Id == id);
+            var businessEntityToRemove = _priceCalculationContext.BusinessEntities.Single(b => b.Id == id);
             _priceCalculationContext.BusinessEntities.Remove(businessEntityToRemove);
         }
 
-        public async Task<BusinessEntity> Get(int id)
+        public BusinessEntity Get(int id)
         {
-            return await _priceCalculationContext.BusinessEntities.SingleAsync(b => b.Id == id);
+            return _priceCalculationContext.BusinessEntities.Single(b => b.Id == id);
         }
 
-        public async Task<IList<BusinessEntity>> GetAll()
+        public IList<BusinessEntity> GetAll()
         {
-            return await _priceCalculationContext.BusinessEntities.Include(b => b.Catalogues).ToListAsync();
+            return _priceCalculationContext.BusinessEntities.Include(b => b.Catalogues).ToList();
         }
     }
 }

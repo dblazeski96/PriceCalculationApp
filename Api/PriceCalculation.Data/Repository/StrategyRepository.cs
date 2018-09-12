@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PriceCalculation.Data.Repository
 {
-    public class StrategyRepository : PriceCalculationRepository, IRepository<Strategy>
+    public class StrategyRepository : BaseRepository, IRepository<Strategy>
     {
         public StrategyRepository(PriceCalculationContext priceCalculationContext) : base(priceCalculationContext)
         {
@@ -19,26 +19,26 @@ namespace PriceCalculation.Data.Repository
             _priceCalculationContext.Strategies.Add(item);
         }
 
-        public async Task Change(Strategy item)
+        public void Change(Strategy item)
         {
-            var strategyToChange = await _priceCalculationContext.Strategies.SingleAsync(s => s.Id == item.Id);
+            var strategyToChange = _priceCalculationContext.Strategies.Single(s => s.Id == item.Id);
             strategyToChange.Name = item.Name;
         }
 
-        public async Task Remove(int id)
+        public void Remove(int id)
         {
-            var strategyToRemove = await _priceCalculationContext.Strategies.SingleAsync(s => s.Id == id);
+            var strategyToRemove = _priceCalculationContext.Strategies.Single(s => s.Id == id);
             _priceCalculationContext.Strategies.Remove(strategyToRemove);
         }
 
-        public async Task<Strategy> Get(int id)
+        public Strategy Get(int id)
         {
-            return await _priceCalculationContext.Strategies.Include(s => s.Operations).Include(s => s.Rules).SingleAsync(s => s.Id == id); ;
+            return _priceCalculationContext.Strategies.Include(s => s.Operations).Include(s => s.Rules).Single(s => s.Id == id); ;
         }
 
-        public async Task<IList<Strategy>> GetAll()
+        public IList<Strategy> GetAll()
         {
-            return await _priceCalculationContext.Strategies.Include(s => s.Operations).Include(s => s.Rules).ToListAsync();
+            return _priceCalculationContext.Strategies.Include(s => s.Operations).Include(s => s.Rules).ToList();
         }
     }
 }

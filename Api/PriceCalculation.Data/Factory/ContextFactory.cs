@@ -7,8 +7,11 @@ using System.Threading.Tasks;
 
 namespace PriceCalculation.Data.Factory
 {
-    public interface IContextFactory
+    public static class ContextFactory<T> where T : DbContext
     {
-        DbContext Create();
+        public static T Create()
+        {
+            return (T)Activator.CreateInstance(typeof(T));
+        }
     }
 }

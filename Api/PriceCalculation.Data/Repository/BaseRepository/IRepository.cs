@@ -9,9 +9,9 @@ namespace PriceCalculation.Data.Repository
     public interface IRepository<T>
     {
         void Create(T item);
-        Task Change(T item);
-        Task Remove(int id);
-        Task<T> Get(int id);
-        Task<IList<T>> GetAll();
+        void Change(T item);
+        void Remove(int id);
+        T Get(int id);
+        IList<T> GetAll();
     }
 }

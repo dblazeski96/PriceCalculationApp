@@ -23,9 +23,9 @@ namespace PriceCalculation.WebApi.Controllers
         
         [HttpGet]
         [Route("getallbusinessitems")]
-        public async Task<HttpResponseMessage> GetAllBusinessItems()
+        public HttpResponseMessage GetAllBusinessItems()
         {
-            var businessItemsResult = await _searchService.GetAll();
+            var businessItemsResult = _searchService.GetAll();
 
             if (businessItemsResult.Success)
             {

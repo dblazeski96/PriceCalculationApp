@@ -10,7 +10,7 @@ namespace PriceCalculation.Service
     {
         public bool Success { get; set; }
         public Exception ex { get; set; }
-        public IList<T> Items { get; set; }
         public T Item { get; set; }
+        public IList<T> Items { get; set; }
     }
 }

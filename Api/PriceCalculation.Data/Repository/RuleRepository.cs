@@ -8,7 +8,7 @@ using System.Data.Entity;
 
 namespace PriceCalculation.Data.Repository
 {
-    public class RuleRepository : PriceCalculationRepository, IRuleRepository
+    public class RuleRepository : BaseRepository, IRuleRepository
     {
         public RuleRepository(PriceCalculationContext priceCalculationContext) : base(priceCalculationContext)
         {
@@ -19,29 +19,29 @@ namespace PriceCalculation.Data.Repository
             _priceCalculationContext.Rules.Add(item);
         }
 
-        public async Task Change(Rule item)
+        public void Change(Rule item)
         {
-            var ruleToChange = await _priceCalculationContext.Rules.SingleAsync(r => r.Id == item.Id);
+            var ruleToChange = _priceCalculationContext.Rules.Single(r => r.Id == item.Id);
             ruleToChange.Name = item.Name;
             ruleToChange.Equation1 = item.Equation1;
             ruleToChange.Equation2 = item.Equation2;
             ruleToChange.Operation = item.Operation;
         }
 
-        public async Task Remove(int id)
+        public void Remove(int id)
         {
-            var ruleToRemove = await _priceCalculationContext.Rules.SingleAsync(r => r.Id == id);
+            var ruleToRemove = _priceCalculationContext.Rules.Single(r => r.Id == id);
             _priceCalculationContext.Rules.Remove(ruleToRemove);
         }
 
-        public async Task<Rule> Get(int id)
+        public Rule Get(int id)
         {
-            return await _priceCalculationContext.Rules.SingleAsync(r => r.Id == id);
+            return _priceCalculationContext.Rules.Single(r => r.Id == id);
         }
 
-        public async Task<IList<Rule>> GetAll()
+        public IList<Rule> GetAll()
         {
-            return await _priceCalculationContext.Rules.Include(r => r.Strategies).ToListAsync();
+            return _priceCalculationContext.Rules.Include(r => r.Strategies).ToList();
         }
     }
 }

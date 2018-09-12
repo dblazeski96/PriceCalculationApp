@@ -8,7 +8,7 @@ using System.Data.Entity;
 
 namespace PriceCalculation.Data.Repository
 {
-    public class GroupRepository : PriceCalculationRepository, IGroupRepository
+    public class GroupRepository : BaseRepository, IGroupRepository
     {
         public GroupRepository(PriceCalculationContext priceCalculationContext) : base(priceCalculationContext)
         {
@@ -19,32 +19,32 @@ namespace PriceCalculation.Data.Repository
             _priceCalculationContext.Groups.Add(item);
         }
 
-        public async Task Change(Group item)
+        public void Change(Group item)
         {
-            var groupToChange = await _priceCalculationContext.Groups
-                                                .SingleAsync(g => g.Id == item.Id);
+            var groupToChange = _priceCalculationContext.Groups
+                                                .Single(g => g.Id == item.Id);
             groupToChange.Name = item.Name;
             groupToChange.StrategyId = item.StrategyId;
         }
 
-        public async Task Remove(int id)
+        public void Remove(int id)
         {
-            var groupToRemove = await _priceCalculationContext.Groups
-                                                .SingleAsync(g => g.Id == id);
+            var groupToRemove = _priceCalculationContext.Groups
+                                                .Single(g => g.Id == id);
             _priceCalculationContext.Groups.Remove(groupToRemove);
         }
 
-        public async Task<Group> Get(int id)
+        public Group Get(int id)
         {
-            return await _priceCalculationContext.Groups
-                                    .SingleAsync(g => g.Id == id);
+            return _priceCalculationContext.Groups
+                                    .Single(g => g.Id == id);
         }
 
-        public async Task<IList<Group>> GetAll()
+        public IList<Group> GetAll()
         {
-            return await _priceCalculationContext.Groups
+            return _priceCalculationContext.Groups
                                     .Include(g => g.Items)
-                                    .ToListAsync();
+                                    .ToList();
         }
 
 

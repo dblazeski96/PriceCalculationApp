@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace PriceCalculation.Data.Repository
 {
-    public class PriceCalculationRepository
+    public class BaseRepository
     {
         protected readonly PriceCalculationContext _priceCalculationContext;
-        public PriceCalculationRepository(PriceCalculationContext priceCalculationContext)
+        public BaseRepository(PriceCalculationContext priceCalculationContext)
         {
             _priceCalculationContext = priceCalculationContext;
         }

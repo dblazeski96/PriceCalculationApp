@@ -43,12 +43,6 @@ namespace PriceCalculation.WebApi
             // Make sure to add a Unity.Configuration to the using statements.
             // container.LoadConfiguration();
 
-            // Factories
-            //  Contexts
-            container.RegisterType<IPriceCalculationContextFactory, PriceCalculationContextFactory>();
-            //  Repositories
-            container.RegisterType<IBusinessItemFactory, BusinessItemFactory>();
-
 
             // Unit of Work
             container.RegisterType<ISearchUoW, SearchUoW>();

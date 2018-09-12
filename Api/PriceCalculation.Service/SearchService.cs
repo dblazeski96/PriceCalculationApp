@@ -19,12 +19,12 @@ namespace PriceCalculation.Service
             _searchUoW = searchUoW;
         }
 
-        public async Task<ServiceResult<BusinessItemViewModel>> Create(BusinessItem item)
+        public ServiceResult<BusinessItemViewModel> Create(BusinessItem item)
         {
             try
             {
                 _searchUoW._businessItemRepository.Create(item);
-                await _searchUoW.Commit();
+                _searchUoW.Commit();
 
                 return new ServiceResult<BusinessItemViewModel>
                 {
@@ -41,12 +41,12 @@ namespace PriceCalculation.Service
             }
         }
 
-        public async Task<ServiceResult<BusinessItemViewModel>> Change(BusinessItem item)
+        public ServiceResult<BusinessItemViewModel> Change(BusinessItem item)
         {
             try
             {
-                await _searchUoW._businessItemRepository.Change(item);
-                await _searchUoW.Commit();
+                _searchUoW._businessItemRepository.Change(item);
+                _searchUoW.Commit();
 
                 return new ServiceResult<BusinessItemViewModel>
                 {
@@ -63,12 +63,12 @@ namespace PriceCalculation.Service
             }
         }
 
-        public async Task<ServiceResult<BusinessItemViewModel>> Remove(int id)
+        public ServiceResult<BusinessItemViewModel> Remove(int id)
         {
             try
             {
-                await _searchUoW._businessItemRepository.Remove(id);
-                await _searchUoW.Commit();
+                _searchUoW._businessItemRepository.Remove(id);
+                _searchUoW.Commit();
 
                 return new ServiceResult<BusinessItemViewModel>
                 {
@@ -85,12 +85,12 @@ namespace PriceCalculation.Service
             }
         }
 
-        public async Task<ServiceResult<BusinessItemViewModel>> Get(int id)
+        public ServiceResult<BusinessItemViewModel> Get(int id)
         {
             try
             {
-                var item = await _searchUoW._businessItemRepository.Get(id);
-                var itemViewModel = item.Map();
+                var item = _searchUoW._businessItemRepository.Get(id);
+                var itemViewModel = item.MapToViewModel();
 
                 return new ServiceResult<BusinessItemViewModel>
                 {
@@ -108,16 +108,16 @@ namespace PriceCalculation.Service
             }
         }
 
-        public async Task<ServiceResult<BusinessItemViewModel>> GetAll()
+        public ServiceResult<BusinessItemViewModel> GetAll()
         {
             try
             {
-                var items = await _searchUoW._businessItemRepository.GetAll();
+                var items = _searchUoW._businessItemRepository.GetAll();
                 var itemsViewModels = new List<BusinessItemViewModel>();
 
                 foreach(var item in items)
                 {
-                    itemsViewModels.Add(item.Map());
+                    itemsViewModels.Add(item.MapToViewModel());
                 }
 
                 return new ServiceResult<BusinessItemViewModel>

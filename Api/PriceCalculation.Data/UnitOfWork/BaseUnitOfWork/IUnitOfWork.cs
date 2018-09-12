@@ -8,6 +8,6 @@ namespace PriceCalculation.Data.UnitOfWork
 {
     public interface IUnitOfWork : IDisposable
     {
-        Task Commit();
+        void Commit();
     }
 }
