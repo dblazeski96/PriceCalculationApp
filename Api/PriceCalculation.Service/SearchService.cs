@@ -1,12 +1,14 @@
 ﻿using PriceCalculation.Data.UnitOfWork;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PriceCalculation.Data.Models;
 using PriceCalculation.ViewModels;
 using PriceCalculation.Mapper;
+using System.Collections;
 
 namespace PriceCalculation.Service
 {
@@ -17,6 +19,37 @@ namespace PriceCalculation.Service
         public SearchService(ISearchUoW searchUoW)
         {
             _searchUoW = searchUoW;
+        }
+
+        public ServiceResult<BusinessItemViewModel> ChangePropertyOfMultipleItems(string property, string value, List<int> items)
+        {
+            try
+            {
+                var allItems = _searchUoW._businessItemRepository.GetAll();
+
+                var allItemsElementType = allItems.GetType().GetGenericArguments()[0];
+                var allItemsType = typeof(List<>).MakeGenericType(allItemsElementType);
+
+                var filteredItems = (IList)Activator.CreateInstance(allItemsType);
+
+                foreach(var item in items)
+                {
+                    filteredItems.Add(allItems.Single(i => i.Id == item).MapToViewModel());
+                }
+
+                return new ServiceResult<BusinessItemViewModel>
+                {
+                    Success = true
+                };
+            }
+            catch(Exception ex)
+            {
+                return new ServiceResult<BusinessItemViewModel>
+                {
+                    Success = false,
+                    ex = ex
+                };
+            }
         }
 
         public ServiceResult<BusinessItemViewModel> Create(BusinessItem item)

@@ -1,8 +1,7 @@
-using PriceCalculation.Data.Factory;
+using PriceCalculation.Data;
 using PriceCalculation.Data.UnitOfWork;
 using PriceCalculation.Service;
 using System;
-
 using Unity;
 
 namespace PriceCalculation.WebApi
@@ -43,10 +42,8 @@ namespace PriceCalculation.WebApi
             // Make sure to add a Unity.Configuration to the using statements.
             // container.LoadConfiguration();
 
-
             // Unit of Work
-            container.RegisterType<ISearchUoW, SearchUoW>();
-
+            //container.RegisterType<ISearchUoW, SearchUoW>();
 
             // Services
             container.RegisterType<ISearchService, SearchService>();

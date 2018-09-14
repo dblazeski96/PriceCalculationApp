@@ -10,6 +10,6 @@ namespace PriceCalculation.Service
 {
     public interface ISearchService : IService<BusinessItemViewModel, BusinessItem>, IDisposable
     {
-
+        ServiceResult<BusinessItemViewModel> ChangePropertyOfMultipleItems(string property, string value, List<int> items);
     }
 }

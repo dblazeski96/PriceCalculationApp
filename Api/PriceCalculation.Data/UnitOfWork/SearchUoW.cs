@@ -5,33 +5,35 @@ using System.Text;
 using System.Threading.Tasks;
 using PriceCalculation.Data.Repository;
 using PriceCalculation.Data.Factory;
+using System.Data.Entity;
 
 namespace PriceCalculation.Data.UnitOfWork
 {
-    public class SearchUoW : ISearchUoW
+    public class SearchUoW : BaseUoW
     {
-        private PriceCalculationContext _priceCalculationContext;
-        public SearchUoW()
+        public SearchUoW(DbContext[] dbContexts) : base(dbContexts)
         {
-            _priceCalculationContext = ContextFactory<PriceCalculationContext>.Create();
+        }
+        public SearchUoW(DbContext dbContext) : base(dbContext)
+        {
         }
 
         public IBusinessItemRepository _businessItemRepository
         {
             get
             {
-                return RepositoryFactory<BusinessItemRepository>.Create(_priceCalculationContext);
+                return RepositoryFactory<BusinessItemRepository>.Create(_dbContexts[typeof(PriceCalculationContext)]);
             }
         }
 
-        public void Commit()
-        {
-           _priceCalculationContext.SaveChanges();
-        }
+        //public void Commit()
+        //{
+        //   _priceCalculationContext.SaveChanges();
+        //}
 
-        public void Dispose()
-        {
-            _priceCalculationContext.Dispose();
-        }
+        //public void Dispose()
+        //{
+        //    _priceCalculationContext.Dispose();
+        //}
     }
 }

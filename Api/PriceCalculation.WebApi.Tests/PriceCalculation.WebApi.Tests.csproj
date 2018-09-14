@@ -62,6 +62,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceTests\UnitTest1.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PriceCalculation.Data.Model\PriceCalculation.Data.Models.csproj">
@@ -71,6 +72,10 @@
     <ProjectReference Include="..\PriceCalculation.Data\PriceCalculation.Data.csproj">
       <Project>{DC2E57A0-B723-408F-8A9E-9486A12C8D43}</Project>
       <Name>PriceCalculation.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PriceCalculation.Mapper\PriceCalculation.Mapper.csproj">
+      <Project>{3D4B79BD-CF68-413D-A4A9-79AA803456A8}</Project>
+      <Name>PriceCalculation.Mapper</Name>
     </ProjectReference>
     <ProjectReference Include="..\PriceCalculation.Service\PriceCalculation.Service.csproj">
       <Project>{54bad5de-2b12-40fa-a764-5c1bc8610b1b}</Project>
@@ -85,9 +90,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ServiceTests\" />
-  </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
