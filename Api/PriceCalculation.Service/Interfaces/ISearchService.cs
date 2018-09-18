@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace PriceCalculation.Service
 {
-    public interface ISearchService : IService<BusinessItemViewModel, BusinessItem>, IDisposable
+    public interface ISearchService : IService, IDisposable
     {
-        ServiceResult<BusinessItemViewModel> ChangePropertyOfMultipleItems(string property, string value, List<int> items);
+        ServiceResult<TViewModel> ChangePropertyOfMultipleItems<TViewModel, T>(string property, string value, List<int> items) where TViewModel : class where T : class;
     }
 }

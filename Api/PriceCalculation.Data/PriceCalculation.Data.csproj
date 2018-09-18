@@ -68,7 +68,6 @@
     <Compile Include="Repository\Interfaces\IStrategyRepository.cs" />
     <Compile Include="Repository\RuleRepository.cs" />
     <Compile Include="Repository\StrategyRepository.cs" />
-    <Compile Include="UnitOfWork\BaseUoW\BaseUoW.cs" />
     <Compile Include="UnitOfWork\BaseUoW\IUnitOfWork.cs" />
     <Compile Include="UnitOfWork\Interfaces\ISearchUoW.cs" />
     <Compile Include="UnitOfWork\SearchUoW.cs" />

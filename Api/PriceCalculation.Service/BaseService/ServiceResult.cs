@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PriceCalculation.Service
 {
-    public class ServiceResult<T>
+    public class ServiceResult<T> where T : class
     {
         public bool Success { get; set; }
         public Exception ex { get; set; }

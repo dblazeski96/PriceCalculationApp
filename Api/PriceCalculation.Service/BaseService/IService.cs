@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace PriceCalculation.Service
 {
-    public interface IService<TViewModel, T>
+    public interface IService
     {
-        ServiceResult<TViewModel> Create(T item);
-        ServiceResult<TViewModel> Change(T item);
-        ServiceResult<TViewModel> Remove(int id);
-        ServiceResult<TViewModel> Get(int id);
-        ServiceResult<TViewModel> GetAll();
+        ServiceResult<TViewModel> Create<TViewModel, T>(T item) where TViewModel : class where T : class;
+        ServiceResult<TViewModel> Change<TViewModel, T>(T item) where TViewModel : class where T : class;
+        ServiceResult<TViewModel> Remove<TViewModel, T>(int id) where TViewModel : class where T : class;
+        ServiceResult<TViewModel> Get<TViewModel, T>(int id) where TViewModel : class where T : class;
+        ServiceResult<TViewModel> GetAll<TViewModel, T>() where TViewModel : class where T : class;
     }
 }

@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseService\BaseService.cs" />
     <Compile Include="Interfaces\ISearchService.cs" />
     <Compile Include="BaseService\IService.cs" />
     <Compile Include="BaseService\ServiceResult.cs" />

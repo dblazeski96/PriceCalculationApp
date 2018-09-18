@@ -9,10 +9,11 @@ using PriceCalculation.Data.Models;
 using PriceCalculation.ViewModels;
 using PriceCalculation.Mapper;
 using System.Collections;
+using PriceCalculation.Service;
 
 namespace PriceCalculation.Service
 {
-    public class SearchService : ISearchService
+    public class SearchService : BaseService, ISearchService
     {
         private readonly ISearchUoW _searchUoW;
 
@@ -21,7 +22,7 @@ namespace PriceCalculation.Service
             _searchUoW = searchUoW;
         }
 
-        public ServiceResult<BusinessItemViewModel> ChangePropertyOfMultipleItems(string property, string value, List<int> items)
+        public ServiceResult<TViewModel> ChangePropertyOfMultipleItems<TViewModel, T>(string property, string value, List<int> items) where TViewModel: class where T : class
         {
             try
             {
@@ -32,136 +33,19 @@ namespace PriceCalculation.Service
 
                 var filteredItems = (IList)Activator.CreateInstance(allItemsType);
 
-                foreach(var item in items)
+                foreach (var item in items)
                 {
                     filteredItems.Add(allItems.Single(i => i.Id == item).MapToViewModel());
                 }
 
-                return new ServiceResult<BusinessItemViewModel>
-                {
-                    Success = true
-                };
-            }
-            catch(Exception ex)
-            {
-                return new ServiceResult<BusinessItemViewModel>
-                {
-                    Success = false,
-                    ex = ex
-                };
-            }
-        }
-
-        public ServiceResult<BusinessItemViewModel> Create(BusinessItem item)
-        {
-            try
-            {
-                _searchUoW._businessItemRepository.Create(item);
-                _searchUoW.Commit();
-
-                return new ServiceResult<BusinessItemViewModel>
+                return new ServiceResult<TViewModel>
                 {
                     Success = true
                 };
             }
             catch (Exception ex)
             {
-                return new ServiceResult<BusinessItemViewModel>
-                {
-                    Success = false,
-                    ex = ex
-                };
-            }
-        }
-
-        public ServiceResult<BusinessItemViewModel> Change(BusinessItem item)
-        {
-            try
-            {
-                _searchUoW._businessItemRepository.Change(item);
-                _searchUoW.Commit();
-
-                return new ServiceResult<BusinessItemViewModel>
-                {
-                    Success = true
-                };
-            }
-            catch (Exception ex)
-            {
-                return new ServiceResult<BusinessItemViewModel>
-                {
-                    Success = false,
-                    ex = ex
-                };
-            }
-        }
-
-        public ServiceResult<BusinessItemViewModel> Remove(int id)
-        {
-            try
-            {
-                _searchUoW._businessItemRepository.Remove(id);
-                _searchUoW.Commit();
-
-                return new ServiceResult<BusinessItemViewModel>
-                {
-                    Success = true
-                };
-            }
-            catch (Exception ex)
-            {
-                return new ServiceResult<BusinessItemViewModel>
-                {
-                    Success = false,
-                    ex = ex
-                };
-            }
-        }
-
-        public ServiceResult<BusinessItemViewModel> Get(int id)
-        {
-            try
-            {
-                var item = _searchUoW._businessItemRepository.Get(id);
-                var itemViewModel = item.MapToViewModel();
-
-                return new ServiceResult<BusinessItemViewModel>
-                {
-                    Success = true,
-                    Item = itemViewModel
-                };
-            }
-            catch (Exception ex)
-            {
-                return new ServiceResult<BusinessItemViewModel>
-                {
-                    Success = false,
-                    ex = ex
-                };
-            }
-        }
-
-        public ServiceResult<BusinessItemViewModel> GetAll()
-        {
-            try
-            {
-                var items = _searchUoW._businessItemRepository.GetAll();
-                var itemsViewModels = new List<BusinessItemViewModel>();
-
-                foreach(var item in items)
-                {
-                    itemsViewModels.Add(item.MapToViewModel());
-                }
-
-                return new ServiceResult<BusinessItemViewModel>
-                {
-                    Success = true,
-                    Items = itemsViewModels
-                };
-            }
-            catch (Exception ex)
-            {
-                return new ServiceResult<BusinessItemViewModel>
+                return new ServiceResult<TViewModel>
                 {
                     Success = false,
                     ex = ex

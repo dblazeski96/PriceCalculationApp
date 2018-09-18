@@ -9,31 +9,26 @@ using System.Data.Entity;
 
 namespace PriceCalculation.Data.UnitOfWork
 {
-    public class SearchUoW : BaseUoW
+    public class SearchUoW : ISearchUoW
     {
-        public SearchUoW(DbContext[] dbContexts) : base(dbContexts)
-        {
-        }
-        public SearchUoW(DbContext dbContext) : base(dbContext)
-        {
-        }
+        private readonly DbContext _priceCalculationContext = ContextFactory<PriceCalculationContext>.Create();
 
         public IBusinessItemRepository _businessItemRepository
         {
             get
             {
-                return RepositoryFactory<BusinessItemRepository>.Create(_dbContexts[typeof(PriceCalculationContext)]);
+                return RepositoryFactory<BusinessItemRepository>.Create(_priceCalculationContext);
             }
         }
 
-        //public void Commit()
-        //{
-        //   _priceCalculationContext.SaveChanges();
-        //}
+        public void Commit()
+        {
+            _priceCalculationContext.SaveChanges();
+        }
 
-        //public void Dispose()
-        //{
-        //    _priceCalculationContext.Dispose();
-        //}
+        public void Dispose()
+        {
+            _priceCalculationContext.Dispose();
+        }
     }
 }

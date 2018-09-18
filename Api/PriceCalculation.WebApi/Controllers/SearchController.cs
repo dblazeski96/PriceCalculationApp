@@ -20,40 +20,76 @@ namespace PriceCalculation.WebApi.Controllers
         {
             _searchService = searchService;
         }
-        
-        [HttpGet]
-        [Route("getallbusinessitems")]
-        public HttpResponseMessage GetAllBusinessItems()
+
+        [HttpPost]
+        [Route("ChangePropertyOfMultipleBusinessItems")]
+        public HttpResponseMessage ChangePropertyOfMultipleBusinessItems([FromUri]string property, [FromUri]string value, [FromBody]List<int> items)
         {
-            var businessItemsResult = _searchService.GetAll();
-            if (businessItemsResult.Success == false)
+            var serviceResult = _searchService.ChangePropertyOfMultipleItems<BusinessItemViewModel, BusinessItem>(property, value, items);
+            if (!(serviceResult.Success))
             {
-                throw businessItemsResult.ex;
+                throw serviceResult.ex;
             }
 
             var response = Request.CreateResponse(HttpStatusCode.OK);
 
-            var businessItems = businessItemsResult.Items;
-            var responseContent = new StringContent(JsonConvert.SerializeObject(businessItems));
-
-            response.Content = responseContent;
+            response.Content = new StringContent(items[1].ToString());
 
             return response;
         }
 
-        [HttpGet]
-        [Route("getbusinessitem/{id:int}")]
-        public HttpResponseMessage GetBusinessItem([FromUri] int id)
+        [HttpPost]
+        [Route("CreateBusinessItem")]
+        public HttpResponseMessage CreateBusinessItem([FromBody]BusinessItem businessItem)
         {
-            var getBusinessItemResult = _searchService.Get(id);
-            if (getBusinessItemResult.Success == false)
+            var serviceResult = _searchService.Create<BusinessItemViewModel, BusinessItem>(businessItem);
+            if (!(serviceResult.Success))
             {
-                throw getBusinessItemResult.ex;
+                throw serviceResult.ex;
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
+        [HttpPost]
+        [Route("ChangeBusinessItem")]
+        public HttpResponseMessage ChangeBusinessItem([FromBody]BusinessItem businessItem)
+        {
+            var serviceResult = _searchService.Change<BusinessItemViewModel, BusinessItem>(businessItem);
+            if (!(serviceResult.Success))
+            {
+                throw serviceResult.ex;
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
+        [HttpPost]
+        [Route("RemoveBusinessItem/{id:int}")]
+        public HttpResponseMessage RemoveBusinessItem([FromUri]int id)
+        {
+            var serviceResult = _searchService.Remove<BusinessItemViewModel, BusinessItem>(id);
+            if (!(serviceResult.Success))
+            {
+                throw serviceResult.ex;
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
+        [HttpGet]
+        [Route("GetBusinessItem/{id:int}")]
+        public HttpResponseMessage GetBusinessItem([FromUri]int id)
+        {
+            var serviceResult = _searchService.Get<BusinessItemViewModel, BusinessItem>(id);
+            if (!(serviceResult.Success))
+            {
+                throw serviceResult.ex;
             }
 
             var response = Request.CreateResponse(HttpStatusCode.OK);
 
-            var businessItem = getBusinessItemResult.Item;
+            var businessItem = serviceResult.Item;
             var responseContent = new StringContent(JsonConvert.SerializeObject(businessItem));
 
             response.Content = responseContent;
@@ -61,34 +97,22 @@ namespace PriceCalculation.WebApi.Controllers
             return response;
         }
 
-        [HttpPost]
-        [Route("changebusinessitem")]
-        public HttpResponseMessage ChangeBusinessItem([FromBody]BusinessItem businessItem)
+        [HttpGet]
+        [Route("GetAllBusinessItems")]
+        public HttpResponseMessage GetAllBusinessItems()
         {
-            var changeBusinessItemResult = _searchService.Change(businessItem);
-            if (changeBusinessItemResult.Success == false)
+            var serviceResult = _searchService.GetAll<BusinessItemViewModel, BusinessItem>();
+            if (!(serviceResult.Success))
             {
-                throw changeBusinessItemResult.ex;
+                throw serviceResult.ex;
             }
 
             var response = Request.CreateResponse(HttpStatusCode.OK);
 
-            return response;
-        }
+            var businessItems = serviceResult.Items;
+            var responseContent = new StringContent(JsonConvert.SerializeObject(businessItems));
 
-        [HttpPost]
-        [Route("changemultiplebusinessitems")]
-        public HttpResponseMessage ChangePropertyOfMultipleItems([FromUri]string property, [FromUri]string value, [FromBody]List<int> items)
-        {
-            var CPoMIResult = _searchService.ChangePropertyOfMultipleItems(property, value, items);
-            if(CPoMIResult.Success == false)
-            {
-                throw CPoMIResult.ex;
-            }
-
-            var response = Request.CreateResponse(HttpStatusCode.OK);
-
-            response.Content = new StringContent(items[1].ToString());
+            response.Content = responseContent;
 
             return response;
         }

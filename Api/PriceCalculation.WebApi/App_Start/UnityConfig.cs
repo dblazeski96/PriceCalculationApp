@@ -43,7 +43,7 @@ namespace PriceCalculation.WebApi
             // container.LoadConfiguration();
 
             // Unit of Work
-            //container.RegisterType<ISearchUoW, SearchUoW>();
+            container.RegisterType<ISearchUoW, SearchUoW>();
 
             // Services
             container.RegisterType<ISearchService, SearchService>();

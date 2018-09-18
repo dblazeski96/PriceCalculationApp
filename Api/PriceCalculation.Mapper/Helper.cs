@@ -2,25 +2,26 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace PriceCalculation.Mapper
 {
-    public static class DbSetMapper
+    public static class Helper
     {
-        public static void CopyProperties(this object dbSet, object obj)
+        public static void CopyProperties(this object src, object obj)
         {
-            var dbSetProps = dbSet.GetType().GetProperties();
+            var srcProps = src.GetType().GetProperties();
             var objProps = obj.GetType().GetProperties();
 
-            foreach(var dbSetProp in dbSetProps)
+            foreach(var srcProp in srcProps)
             {
                 foreach(var objProp in objProps)
                 {
-                    if(dbSetProp.Name == objProp.Name && dbSetProp.PropertyType == objProp.PropertyType)
+                    if(srcProp.Name == objProp.Name && srcProp.PropertyType == objProp.PropertyType)
                     {
-                        dbSetProp.SetValue(dbSet, objProp.GetValue(obj));
+                        srcProp.SetValue(src, objProp.GetValue(obj));
                     }
                 }
             }
