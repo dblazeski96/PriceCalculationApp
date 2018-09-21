@@ -10,9 +10,16 @@ namespace PriceCalculation.Data.Factory
 {
     public static class RepositoryFactory<T> where T : class
     {
-        public static T Create(DbContext dbContext)
+        public static dynamic Create(DbContext dbContext)
         {
-            return (T)Activator.CreateInstance(typeof(T), dbContext);
+            switch (typeof(T).Name)
+            {
+                case "IBusinessItemRepository":
+                    return Activator.CreateInstance(typeof(BusinessItemRepository), new object[] { dbContext });
+
+                default:
+                    throw new Exception("Repository isn't registered");
+            }
         }
     }
 }

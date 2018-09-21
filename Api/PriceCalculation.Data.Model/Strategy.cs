@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PriceCalculation.Data.Models
 {
-    public class Strategy
+    public class Strategy : BaseModel
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

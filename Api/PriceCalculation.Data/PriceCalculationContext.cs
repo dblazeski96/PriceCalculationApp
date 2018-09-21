@@ -12,6 +12,7 @@ namespace PriceCalculation.Data
     {
         public PriceCalculationContext() : base("name=PriceCalculationConnection")
         {
+            Configuration.LazyLoadingEnabled = false;
         }
         public virtual DbSet<Item> Items { get; set; }
         public virtual DbSet<Group> Groups { get; set; }

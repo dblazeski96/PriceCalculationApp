@@ -9,9 +9,9 @@ using PriceCalculation.Mapper;
 
 namespace PriceCalculation.Data.Repository
 {
-    public class BusinessItemRepository : BaseRepository<PriceCalculationContext, BusinessItem>, IBusinessItemRepository
+    public class BusinessItemRepository : BaseRepository<BusinessItem>, IBusinessItemRepository
     {
-        public BusinessItemRepository(PriceCalculationContext dbContext) : base(dbContext)
+        public BusinessItemRepository(DbContext dbContext) : base(dbContext)
         {
         }
 

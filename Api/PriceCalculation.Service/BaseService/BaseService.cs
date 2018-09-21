@@ -12,29 +12,83 @@ namespace PriceCalculation.Service
 {
     public class BaseService : IService
     {
-        private ServiceResult<TViewModel> ExecuteRepositoryMethod<TViewModel, T>(string methodName, object[] parameters)
-            where TViewModel : class
+        protected ServiceResult<TViewModel> ExecuteRepositoryMethod<TViewModel, T>(string methodName, object[] parameters)
             where T : class
+            where TViewModel : class
         {
             try
             {
-                var serviceFields = new List<FieldInfo>(GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance));
-                var serviceUoWs = serviceFields.Where(field => typeof(IUnitOfWork).IsAssignableFrom(field.GetValue(this).GetType())).Select(field => field.GetValue(this)).ToList();
+                IEnumerable<FieldInfo> serviceUoWs = new List<FieldInfo>(
+                    GetType()
+                    .GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+                    .Where(
+                        field => typeof(IUnitOfWork).IsAssignableFrom(field.FieldType)
+                    );
+
+                //IEnumerable<FieldInfo> serviceUoWs = serviceFields.Where(
+                //        field => typeof(IUnitOfWork).IsAssignableFrom(field.FieldType)
+                //    );
 
                 foreach (var uoW in serviceUoWs)
                 {
-                    var uoWProps = new List<PropertyInfo>(uoW.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance));
-                    var repository = uoWProps.Single(prop => typeof(IRepository<T>).IsAssignableFrom(prop.GetValue(uoW).GetType())).GetValue(uoW);
-                    if (repository != null)
+                    IEnumerable<PropertyInfo> uoWProps = new List<PropertyInfo>(
+                        uoW.FieldType
+                            .GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance));
+
+                    IRepository<T> repository = (IRepository<T>)uoWProps.Single(
+                            prop => typeof(IRepository<T>).IsAssignableFrom(prop.PropertyType)
+                        ).GetValue(uoW.GetValue(this));
+
+                    switch (methodName)
                     {
-                        repository.GetType().GetMethod(methodName).Invoke(repository, parameters);
-                        break;
+                        case "Create":
+                        case "Change":
+                        case "Remove":
+                            repository.GetType().GetMethod(methodName).Invoke(repository, parameters);
+
+                            return new ServiceResult<TViewModel>
+                            {
+                                Success = true
+                            };
+
+                        case "Get":
+                            var item = (TViewModel)repository.GetType().GetMethod(methodName).Invoke(repository, parameters).Map<TViewModel>();
+
+                            return new ServiceResult<TViewModel>
+                            {
+                                Success = true,
+                                Item = item
+                            };
+
+                        case "GetAll":
+                            IList<T> items = (IList<T>)repository.GetType().GetMethod(methodName).Invoke(repository, parameters);
+                            IList<TViewModel> itemsViewModel = new List<TViewModel>();
+
+                            foreach (var i in items)
+                            {
+                                itemsViewModel.Add(i.Map<TViewModel>());
+                            }
+
+                            return new ServiceResult<TViewModel>
+                            {
+                                Success = true,
+                                Items = itemsViewModel
+                            };
+
+                        default:
+                            return new ServiceResult<TViewModel>
+                            {
+                                Success = false,
+                                ex = new Exception("Method doesn't exist!")
+                            };
                     }
+
                 }
 
                 return new ServiceResult<TViewModel>
                 {
-                    Success = true
+                    Success = false,
+                    ex = new Exception("No Unit Of Work found!")
                 };
             }
             catch (Exception ex)
@@ -48,36 +102,36 @@ namespace PriceCalculation.Service
         }
 
         public ServiceResult<TViewModel> Create<TViewModel, T>(T item)
-            where TViewModel : class
             where T : class
+            where TViewModel : class
         {
             return ExecuteRepositoryMethod<TViewModel, T>("Create", new object[] { item });
         }
 
         public ServiceResult<TViewModel> Change<TViewModel, T>(T item)
-            where TViewModel : class
             where T : class
+            where TViewModel : class
         {
             return ExecuteRepositoryMethod<TViewModel, T>("Change", new object[] { item });
         }
 
         public ServiceResult<TViewModel> Remove<TViewModel, T>(int id)
-            where TViewModel : class
             where T : class
+            where TViewModel : class
         {
             return ExecuteRepositoryMethod<TViewModel, T>("Remove", new object[] { id });
         }
 
         public ServiceResult<TViewModel> Get<TViewModel, T>(int id)
-            where TViewModel : class
             where T : class
+            where TViewModel : class
         {
             return ExecuteRepositoryMethod<TViewModel, T>("Get", new object[] { id });
         }
 
         public ServiceResult<TViewModel> GetAll<TViewModel, T>()
-            where TViewModel : class
             where T : class
+            where TViewModel : class
         {
             return ExecuteRepositoryMethod<TViewModel, T>("GetAll", new object[] { });
         }

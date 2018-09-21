@@ -15,28 +15,31 @@ namespace PriceCalculation.Service
 {
     public class SearchService : BaseService, ISearchService
     {
-        private readonly ISearchUoW _searchUoW;
+        private readonly IPriceCalculationUoW _priceCalculationUoW;
 
-        public SearchService(ISearchUoW searchUoW)
+        public SearchService(IPriceCalculationUoW priceCalculationUoW)
         {
-            _searchUoW = searchUoW;
+            _priceCalculationUoW = priceCalculationUoW;
         }
 
-        public ServiceResult<TViewModel> ChangePropertyOfMultipleItems<TViewModel, T>(string property, string value, List<int> items) where TViewModel: class where T : class
+        public ServiceResult<TViewModel> ChangePropertyOfMultipleItems<TViewModel, T>(string property, string value, List<int> items) 
+            where T : class
+            where TViewModel : class
         {
+
             try
             {
-                var allItems = _searchUoW._businessItemRepository.GetAll();
+                //var allItemsResult = Get<T>(1);
 
-                var allItemsElementType = allItems.GetType().GetGenericArguments()[0];
-                var allItemsType = typeof(List<>).MakeGenericType(allItemsElementType);
+                //var allItemsElementType = allItems.GetType().GetGenericArguments()[0];
+                //var allItemsType = typeof(List<>).MakeGenericType(allItemsElementType);
 
-                var filteredItems = (IList)Activator.CreateInstance(allItemsType);
+                //var filteredItems = (IList)Activator.CreateInstance(allItemsType);
 
-                foreach (var item in items)
-                {
-                    filteredItems.Add(allItems.Single(i => i.Id == item).MapToViewModel());
-                }
+                //foreach (var item in items)
+                //{
+                //    filteredItems.Add(allItems.Single(i => i.Id == item).MapToViewModel());
+                //}
 
                 return new ServiceResult<TViewModel>
                 {
@@ -55,7 +58,7 @@ namespace PriceCalculation.Service
 
         public void Dispose()
         {
-            _searchUoW.Dispose();
+            _priceCalculationUoW.Dispose();
         }
     }
 }

@@ -1,6 +1,7 @@
-﻿using System;
+﻿using PriceCalculation.Data.Models;
+using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -10,14 +11,14 @@ namespace PriceCalculation.Mapper
 {
     public static class Helper
     {
-        public static void CopyProperties(this object src, object obj)
+        public static void CopyPropertiesFrom(this object src, object obj)
         {
-            var srcProps = src.GetType().GetProperties();
-            var objProps = obj.GetType().GetProperties();
+            PropertyInfo[] srcProps = src.GetType().GetProperties();
+            PropertyInfo[] objProps = obj.GetType().GetProperties();
 
-            foreach(var srcProp in srcProps)
+            foreach(PropertyInfo srcProp in srcProps)
             {
-                foreach(var objProp in objProps)
+                foreach(PropertyInfo objProp in objProps)
                 {
                     if(srcProp.Name == objProp.Name && srcProp.PropertyType == objProp.PropertyType)
                     {
@@ -25,6 +26,11 @@ namespace PriceCalculation.Mapper
                     }
                 }
             }
+        }
+
+        public static IEnumerable<PropertyInfo> GetIncludableProps(this IEnumerable<PropertyInfo> props)
+        {
+            return props.Where(prop => typeof(BaseModel).IsAssignableFrom(prop.PropertyType) || typeof(IList).IsAssignableFrom(prop.PropertyType));
         }
     }
 }
