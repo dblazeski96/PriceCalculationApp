@@ -82,7 +82,7 @@ namespace PriceCalculation.WebApi.Controllers
         public HttpResponseMessage GetBusinessItem([FromUri]int id)
         {
             var serviceResult = _searchService.Get<BusinessItemViewModel, BusinessItem>(id);
-            if (serviceResult.Success == false)
+            if (!(serviceResult.Success))
             {
                 throw serviceResult.ex;
             }

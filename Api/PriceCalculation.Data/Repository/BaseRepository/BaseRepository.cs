@@ -31,7 +31,7 @@ namespace PriceCalculation.Data.Repository
         {
             IDbSet<T> dbSet = _dbContext.Set<T>();
 
-            var itemToChange = dbSet.Find(item);
+            var itemToChange = Get((int)item.GetType().GetProperty("Id").GetValue(item));
 
             itemToChange.CopyPropertiesFrom(item);
         }

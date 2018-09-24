@@ -14,7 +14,5 @@ namespace PriceCalculation.Data.Repository
         public BusinessItemRepository(DbContext dbContext) : base(dbContext)
         {
         }
-
-
     }
 }

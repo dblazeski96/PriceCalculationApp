@@ -29,17 +29,15 @@ namespace PriceCalculation.Service
 
             try
             {
-                //var allItemsResult = Get<T>(1);
+                foreach (var itemId in items)
+                {
+                    var repository = DetermineRepository<T>(this);
 
-                //var allItemsElementType = allItems.GetType().GetGenericArguments()[0];
-                //var allItemsType = typeof(List<>).MakeGenericType(allItemsElementType);
+                    var item = repository.GetType().GetMethod("Get").Invoke(repository, new object[] { itemId });
+                    item.GetType().GetProperty(property).SetValue(item, int.Parse(value));
 
-                //var filteredItems = (IList)Activator.CreateInstance(allItemsType);
-
-                //foreach (var item in items)
-                //{
-                //    filteredItems.Add(allItems.Single(i => i.Id == item).MapToViewModel());
-                //}
+                    repository.GetType().GetMethod("Change").Invoke(repository, new object[] { item });
+                }
 
                 return new ServiceResult<TViewModel>
                 {

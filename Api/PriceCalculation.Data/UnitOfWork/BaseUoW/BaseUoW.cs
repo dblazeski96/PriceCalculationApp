@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PriceCalculation.Data.UnitOfWork
 {
-    public class BaseUoW<Context> : IUnitOfWork where Context : DbContext
+    public abstract class BaseUoW<Context> : IUnitOfWork where Context : DbContext
     {
         protected DbContext _dbContext;
 
@@ -17,12 +17,12 @@ namespace PriceCalculation.Data.UnitOfWork
             _dbContext = ContextFactory<Context>.Create();
         }
 
-        public void Commit()
+        public virtual void Commit()
         {
             _dbContext.SaveChanges();
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             _dbContext.Dispose();
         }
