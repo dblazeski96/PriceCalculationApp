@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace PriceCalculation.Data.Factory
 {
-    public static class RepositoryFactory<T> where T : class
+    public static class RepositoryFactory
     {
-        public static dynamic Create(DbContext dbContext)
+        public static dynamic Create<T>(DbContext dbContext) where T : class
         {
             switch (typeof(T).Name)
             {

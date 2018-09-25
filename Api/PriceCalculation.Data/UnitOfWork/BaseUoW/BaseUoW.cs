@@ -14,7 +14,7 @@ namespace PriceCalculation.Data.UnitOfWork
 
         public BaseUoW()
         {
-            _dbContext = ContextFactory<Context>.Create();
+            _dbContext = ContextFactory.Create<Context>();
         }
 
         public virtual void Commit()

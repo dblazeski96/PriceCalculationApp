@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Data.Entity;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -41,7 +42,7 @@ namespace PriceCalculation.Service
             throw new Exception("Repository not found!");
         }
 
-        protected virtual ServiceResult<TViewModel> ExecuteRepositoryMethod<TViewModel, T>(string methodName, object[] parameters)
+        private ServiceResult<TViewModel> ExecuteRepositoryMethod<TViewModel, T>(string methodName, object[] parameters)
             where T : class
             where TViewModel : class
         {
@@ -62,7 +63,7 @@ namespace PriceCalculation.Service
                         };
 
                     case "Get":
-                        var item = (TViewModel)repository.GetType().GetMethod(methodName).Invoke(repository, parameters).Map<TViewModel>();
+                        TViewModel item = repository.GetType().GetMethod(methodName).Invoke(repository, parameters).Map<TViewModel>();
 
                         return new ServiceResult<TViewModel>
                         {
@@ -72,7 +73,7 @@ namespace PriceCalculation.Service
 
                     case "GetAll":
                         IList<T> items = (IList<T>)repository.GetType().GetMethod(methodName).Invoke(repository, parameters);
-                        List<TViewModel> itemsViewModel = new List<TViewModel>();
+                        ICollection<TViewModel> itemsViewModel = new List<TViewModel>();
 
                         foreach (var i in items)
                         {
@@ -82,7 +83,7 @@ namespace PriceCalculation.Service
                         return new ServiceResult<TViewModel>
                         {
                             Success = true,
-                            Items = itemsViewModel
+                            Items = itemsViewModel.ToList()
                         };
 
                     default:

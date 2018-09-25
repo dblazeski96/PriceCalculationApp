@@ -10,6 +10,8 @@ using PriceCalculation.ViewModels;
 using PriceCalculation.Mapper;
 using System.Collections;
 using PriceCalculation.Service;
+using System.Reflection;
+using PriceCalculation.Data.Repository;
 
 namespace PriceCalculation.Service
 {
@@ -29,12 +31,14 @@ namespace PriceCalculation.Service
 
             try
             {
+                IRepository<T> repository = DetermineRepository<T>(this);
+
                 foreach (var itemId in items)
                 {
-                    var repository = DetermineRepository<T>(this);
+                    var item = (T)repository.GetType().GetMethod("Get").Invoke(repository, new object[] { itemId });
 
-                    var item = repository.GetType().GetMethod("Get").Invoke(repository, new object[] { itemId });
-                    item.GetType().GetProperty(property).SetValue(item, int.Parse(value));
+                    PropertyInfo itemProperty = item.GetType().GetProperty(property);
+                    itemProperty.SetValue(item, Convert.ChangeType(value, itemProperty.PropertyType));
 
                     repository.GetType().GetMethod("Change").Invoke(repository, new object[] { item });
                 }

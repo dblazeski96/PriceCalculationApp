@@ -31,7 +31,7 @@ namespace PriceCalculation.Data.Repository
         {
             IDbSet<T> dbSet = _dbContext.Set<T>();
 
-            var itemToChange = Get((int)item.GetType().GetProperty("Id").GetValue(item));
+            var itemToChange = dbSet.Find((int)item.GetType().GetProperty("Id").GetValue(item));
 
             itemToChange.CopyPropertiesFrom(item);
         }
@@ -55,7 +55,7 @@ namespace PriceCalculation.Data.Repository
                     (int)item
                         .GetType()
                         .GetProperty("Id")
-                        .GetValue(item) 
+                        .GetValue(item)
                     == id)
                 {
                     return item;
@@ -67,13 +67,13 @@ namespace PriceCalculation.Data.Repository
 
         public virtual IList<T> GetAll()
         {
-            IEnumerable<PropertyInfo> TProps = new List<PropertyInfo>(
+            IEnumerable<PropertyInfo> TIncludableProps = new List<PropertyInfo>(
                     typeof(T).GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
                 ).GetIncludableProps();
 
             IQueryable<T> dbSet = _dbContext.Set<T>();
 
-            foreach (var prop in TProps)
+            foreach (var prop in TIncludableProps)
             {
                 dbSet = dbSet.Include(prop.Name);
             }

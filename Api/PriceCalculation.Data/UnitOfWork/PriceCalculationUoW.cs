@@ -15,7 +15,7 @@ namespace PriceCalculation.Data.UnitOfWork
 
         public PriceCalculationUoW()
         {
-            _businessItemRepository = RepositoryFactory<IBusinessItemRepository>.Create(_dbContext);
+            _businessItemRepository = RepositoryFactory.Create<IBusinessItemRepository>(_dbContext);
         }
     }
 }
