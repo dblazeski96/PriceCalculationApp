@@ -32,5 +32,24 @@ namespace PriceCalculation.Mapper
         {
             return props.Where(prop => typeof(BaseModel).IsAssignableFrom(prop.PropertyType) || typeof(IList).IsAssignableFrom(prop.PropertyType));
         }
+
+        public static Type GetDataModelType<TOutput>()
+        {
+            var viewType = typeof(TOutput);
+
+            string dataTypeName = viewType.Name.Replace("OModel", "");
+
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (var assembly in assemblies)
+            {
+                var models = assembly.GetTypes().Where(m => m.Name == dataTypeName);
+                if (models.Any())
+                {
+                    return models.FirstOrDefault();
+                }
+            }
+
+            throw new Exception("Data model not found!");
+        }
     }
 }

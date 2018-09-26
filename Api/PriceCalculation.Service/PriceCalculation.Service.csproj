@@ -69,9 +69,9 @@
       <Project>{3d4b79bd-cf68-413d-a4a9-79aa803456a8}</Project>
       <Name>PriceCalculation.Mapper</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PriceCalculation.ViewModels\PriceCalculation.ViewModels.csproj">
+    <ProjectReference Include="..\PriceCalculation.ViewModels\PriceCalculation.View.Models.csproj">
       <Project>{4ce39bbd-f006-4628-b42c-f3c8bc4ac6a5}</Project>
-      <Name>PriceCalculation.ViewModels</Name>
+      <Name>PriceCalculation.View.Models</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

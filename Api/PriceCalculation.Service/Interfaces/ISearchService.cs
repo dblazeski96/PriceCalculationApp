@@ -10,8 +10,7 @@ namespace PriceCalculation.Service
 {
     public interface ISearchService : IService, IDisposable
     {
-        ServiceResult<TViewModel> ChangePropertyOfMultipleItems<TViewModel, T>(string property, string value, List<int> items) 
-            where T : class
-            where TViewModel : class;
+        ServiceResult<TOutput> ChangePropertyOfMultipleItems<TOutput>(string property, string value, List<int> items) 
+            where TOutput : class;
     }
 }

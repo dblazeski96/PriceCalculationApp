@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PriceCalculation.ViewModels
 {
-    public class BusinessItemViewModel
+    public class BusinessItemOModel
     {
         public int Id { get; set; }
         public string Name { get; set; }

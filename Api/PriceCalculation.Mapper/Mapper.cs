@@ -15,7 +15,7 @@ namespace PriceCalculation.Mapper
         {
             switch (typeof(T).Name)
             {
-                case "BusinessItemViewModel":
+                case "BusinessItemOModel":
                     var objMain = new BusinessItem();
                     objMain.CopyPropertiesFrom(src);
 

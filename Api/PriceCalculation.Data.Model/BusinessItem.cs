@@ -10,12 +10,6 @@ namespace PriceCalculation.Data.Models
 {
     public class BusinessItem : BaseModel
     {
-        public BusinessItem()
-        {
-            ItemId = 0;
-            Quantity = 0;
-        }
-
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }

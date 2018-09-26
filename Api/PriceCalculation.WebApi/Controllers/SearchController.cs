@@ -25,7 +25,7 @@ namespace PriceCalculation.WebApi.Controllers
         [Route("ChangePropertyOfMultipleBusinessItems")]
         public HttpResponseMessage ChangePropertyOfMultipleBusinessItems([FromUri]string property, [FromUri]string value, [FromBody]List<int> items)
         {
-            var serviceResult = _searchService.ChangePropertyOfMultipleItems<BusinessItemViewModel, BusinessItem>(property, value, items);
+            var serviceResult = _searchService.ChangePropertyOfMultipleItems<BusinessItemOModel>(property, value, items);
             if (!(serviceResult.Success))
             {
                 throw serviceResult.ex;
@@ -40,9 +40,9 @@ namespace PriceCalculation.WebApi.Controllers
 
         [HttpPost]
         [Route("CreateBusinessItem")]
-        public HttpResponseMessage CreateBusinessItem([FromBody]BusinessItem businessItem)
+        public HttpResponseMessage CreateBusinessItem([FromBody]BusinessItemIModel businessItem)
         {
-            var serviceResult = _searchService.Create<BusinessItemViewModel, BusinessItem>(businessItem);
+            var serviceResult = _searchService.Create<BusinessItemIModel, BusinessItemOModel>(businessItem);
             if (!(serviceResult.Success))
             {
                 throw serviceResult.ex;
@@ -53,9 +53,9 @@ namespace PriceCalculation.WebApi.Controllers
 
         [HttpPost]
         [Route("ChangeBusinessItem")]
-        public HttpResponseMessage ChangeBusinessItem([FromBody]BusinessItem businessItem)
+        public HttpResponseMessage ChangeBusinessItem([FromBody]BusinessItemIModel businessItem)
         {
-            var serviceResult = _searchService.Change<BusinessItemViewModel, BusinessItem>(businessItem);
+            var serviceResult = _searchService.Change<BusinessItemIModel, BusinessItemOModel>(businessItem);
             if (!(serviceResult.Success))
             {
                 throw serviceResult.ex;
@@ -68,7 +68,7 @@ namespace PriceCalculation.WebApi.Controllers
         [Route("RemoveBusinessItem/{id:int}")]
         public HttpResponseMessage RemoveBusinessItem([FromUri]int id)
         {
-            var serviceResult = _searchService.Remove<BusinessItemViewModel, BusinessItem>(id);
+            var serviceResult = _searchService.Remove<BusinessItemOModel>(id);
             if (!(serviceResult.Success))
             {
                 throw serviceResult.ex;
@@ -81,7 +81,7 @@ namespace PriceCalculation.WebApi.Controllers
         [Route("GetBusinessItem/{id:int}")]
         public HttpResponseMessage GetBusinessItem([FromUri]int id)
         {
-            var serviceResult = _searchService.Get<BusinessItemViewModel, BusinessItem>(id);
+            var serviceResult = _searchService.Get<BusinessItemOModel>(id);
             if (!(serviceResult.Success))
             {
                 throw serviceResult.ex;
@@ -101,7 +101,7 @@ namespace PriceCalculation.WebApi.Controllers
         [Route("GetAllBusinessItems")]
         public HttpResponseMessage GetAllBusinessItems()
         {
-            var serviceResult = _searchService.GetAll<BusinessItemViewModel, BusinessItem>();
+            var serviceResult = _searchService.GetAll<BusinessItemOModel>();
             if (!(serviceResult.Success))
             {
                 throw new WebException(serviceResult.ex.Message, serviceResult.ex);

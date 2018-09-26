@@ -58,9 +58,9 @@
       <Project>{72fd0a5a-0128-45ef-9ccc-02e7de551bb1}</Project>
       <Name>PriceCalculation.Data.Models</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PriceCalculation.ViewModels\PriceCalculation.ViewModels.csproj">
+    <ProjectReference Include="..\PriceCalculation.ViewModels\PriceCalculation.View.Models.csproj">
       <Project>{4ce39bbd-f006-4628-b42c-f3c8bc4ac6a5}</Project>
-      <Name>PriceCalculation.ViewModels</Name>
+      <Name>PriceCalculation.View.Models</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -8,14 +8,18 @@ using System.Reflection;
 using System.Data.Entity;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections;
 
 namespace PriceCalculation.Service
 {
     public abstract class BaseService : IService
     {
-        protected virtual IRepository<T> DetermineRepository<T>(IService service)
-            where T : class
+        protected virtual object DetermineRepository<TOutput>(IService service)
+            where TOutput : class
         {
+            Type dataModelType = Helper.GetDataModelType<TOutput>();
+            Type repositoryType = typeof(IRepository<>).MakeGenericType(dataModelType);
+
             IEnumerable<FieldInfo> serviceUoWs = new List<FieldInfo>(
                 service.GetType()
                 .GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
@@ -29,8 +33,8 @@ namespace PriceCalculation.Service
                 uoW.FieldType
                     .GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance));
 
-                IRepository<T> repository = (IRepository<T>)uoWProps.Single(
-                    prop => typeof(IRepository<T>).IsAssignableFrom(prop.PropertyType))
+                var repository = uoWProps.Single(
+                    prop => repositoryType.IsAssignableFrom(prop.PropertyType))
                     .GetValue(uoW.GetValue(this));
 
                 if (repository != null)
@@ -42,13 +46,12 @@ namespace PriceCalculation.Service
             throw new Exception("Repository not found!");
         }
 
-        private ServiceResult<TViewModel> ExecuteRepositoryMethod<TViewModel, T>(string methodName, object[] parameters)
-            where T : class
-            where TViewModel : class
+        private ServiceResult<TOutput> ExecuteRepositoryMethod<TOutput>(string methodName, object[] parameters)
+            where TOutput : class
         {
             try
             {
-                IRepository<T> repository = DetermineRepository<T>(this);
+                var repository = DetermineRepository<TOutput>(this);
 
                 switch (methodName)
                 {
@@ -57,37 +60,37 @@ namespace PriceCalculation.Service
                     case "Remove":
                         repository.GetType().GetMethod(methodName).Invoke(repository, parameters);
 
-                        return new ServiceResult<TViewModel>
+                        return new ServiceResult<TOutput>
                         {
                             Success = true
                         };
 
                     case "Get":
-                        TViewModel item = repository.GetType().GetMethod(methodName).Invoke(repository, parameters).Map<TViewModel>();
+                        var item = repository.GetType().GetMethod(methodName).Invoke(repository, parameters).Map<TOutput>();
 
-                        return new ServiceResult<TViewModel>
+                        return new ServiceResult<TOutput>
                         {
                             Success = true,
                             Item = item
                         };
 
                     case "GetAll":
-                        IList<T> items = (IList<T>)repository.GetType().GetMethod(methodName).Invoke(repository, parameters);
-                        ICollection<TViewModel> itemsViewModel = new List<TViewModel>();
+                        var items = (IList)repository.GetType().GetMethod(methodName).Invoke(repository, parameters);
+                        ICollection<TOutput> itemsViewModel = new List<TOutput>();
 
                         foreach (var i in items)
                         {
-                            itemsViewModel.Add(i.Map<TViewModel>());
+                            itemsViewModel.Add(i.Map<TOutput>());
                         }
 
-                        return new ServiceResult<TViewModel>
+                        return new ServiceResult<TOutput>
                         {
                             Success = true,
                             Items = itemsViewModel.ToList()
                         };
 
                     default:
-                        return new ServiceResult<TViewModel>
+                        return new ServiceResult<TOutput>
                         {
                             Success = false,
                             ex = new Exception("Method doesn't exist!")
@@ -96,7 +99,7 @@ namespace PriceCalculation.Service
             }
             catch (Exception ex)
             {
-                return new ServiceResult<TViewModel>
+                return new ServiceResult<TOutput>
                 {
                     Success = false,
                     ex = ex
@@ -104,39 +107,36 @@ namespace PriceCalculation.Service
             }
         }
 
-        public virtual ServiceResult<TViewModel> Create<TViewModel, T>(T item)
-            where T : class
-            where TViewModel : class
+        public virtual ServiceResult<TOutput> Create<TInput, TOutput>(TInput item)
+            where TInput : class
+            where TOutput : class
         {
-            return ExecuteRepositoryMethod<TViewModel, T>("Create", new object[] { item });
+            return ExecuteRepositoryMethod<TOutput>("Create", new object[] { item });
         }
 
-        public virtual ServiceResult<TViewModel> Change<TViewModel, T>(T item)
-            where T : class
-            where TViewModel : class
+        public virtual ServiceResult<TOutput> Change<TInput, TOutput>(TInput item)
+            where TInput : class
+            where TOutput : class
         {
-            return ExecuteRepositoryMethod<TViewModel, T>("Change", new object[] { item });
+            return ExecuteRepositoryMethod<TOutput>("Change", new object[] { item });
         }
 
-        public virtual ServiceResult<TViewModel> Remove<TViewModel, T>(int id)
-            where T : class
-            where TViewModel : class
+        public virtual ServiceResult<TOutput> Remove<TOutput>(int id)
+            where TOutput : class
         {
-            return ExecuteRepositoryMethod<TViewModel, T>("Remove", new object[] { id });
+            return ExecuteRepositoryMethod<TOutput>("Remove", new object[] { id });
         }
 
-        public virtual ServiceResult<TViewModel> Get<TViewModel, T>(int id)
-            where T : class
-            where TViewModel : class
+        public virtual ServiceResult<TOutput> Get<TOutput>(int id)
+            where TOutput : class
         {
-            return ExecuteRepositoryMethod<TViewModel, T>("Get", new object[] { id });
+            return ExecuteRepositoryMethod<TOutput>("Get", new object[] { id });
         }
 
-        public virtual ServiceResult<TViewModel> GetAll<TViewModel, T>()
-            where T : class
-            where TViewModel : class
+        public virtual ServiceResult<TOutput> GetAll<TOutput>()
+            where TOutput : class
         {
-            return ExecuteRepositoryMethod<TViewModel, T>("GetAll", new object[] { });
+            return ExecuteRepositoryMethod<TOutput>("GetAll", new object[] { });
         }
     }
 }

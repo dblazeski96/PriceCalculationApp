@@ -40,9 +40,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BusinessItemViewModel.cs" />
+    <Compile Include="BusinessItemIModel.cs" />
+    <Compile Include="BusinessItemOModel.cs" />
     <Compile Include="CatalogueViewModel.cs" />
+    <Compile Include="ItemIModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PriceCalculation.Data.Model\PriceCalculation.Data.Models.csproj">
+      <Project>{72FD0A5A-0128-45EF-9CCC-02E7DE551BB1}</Project>
+      <Name>PriceCalculation.Data.Models</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

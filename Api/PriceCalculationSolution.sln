@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceCalculation.WebApi.Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceCalculation.Mapper", "PriceCalculation.Mapper\PriceCalculation.Mapper.csproj", "{3D4B79BD-CF68-413D-A4A9-79AA803456A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceCalculation.ViewModels", "PriceCalculation.ViewModels\PriceCalculation.ViewModels.csproj", "{4CE39BBD-F006-4628-B42C-F3C8BC4AC6A5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceCalculation.View.Models", "PriceCalculation.ViewModels\PriceCalculation.View.Models.csproj", "{4CE39BBD-F006-4628-B42C-F3C8BC4AC6A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -24,18 +24,16 @@ namespace PriceCalculation.Service
             _priceCalculationUoW = priceCalculationUoW;
         }
 
-        public ServiceResult<TViewModel> ChangePropertyOfMultipleItems<TViewModel, T>(string property, string value, List<int> items) 
-            where T : class
-            where TViewModel : class
+        public ServiceResult<TOutput> ChangePropertyOfMultipleItems<TOutput>(string property, string value, List<int> items)
+            where TOutput : class
         {
-
             try
             {
-                IRepository<T> repository = DetermineRepository<T>(this);
+                var repository = DetermineRepository<TOutput>(this);
 
                 foreach (var itemId in items)
                 {
-                    var item = (T)repository.GetType().GetMethod("Get").Invoke(repository, new object[] { itemId });
+                    var item = repository.GetType().GetMethod("Get").Invoke(repository, new object[] { itemId });
 
                     PropertyInfo itemProperty = item.GetType().GetProperty(property);
                     itemProperty.SetValue(item, Convert.ChangeType(value, itemProperty.PropertyType));
@@ -43,14 +41,14 @@ namespace PriceCalculation.Service
                     repository.GetType().GetMethod("Change").Invoke(repository, new object[] { item });
                 }
 
-                return new ServiceResult<TViewModel>
+                return new ServiceResult<TOutput>
                 {
                     Success = true
                 };
             }
             catch (Exception ex)
             {
-                return new ServiceResult<TViewModel>
+                return new ServiceResult<TOutput>
                 {
                     Success = false,
                     ex = ex

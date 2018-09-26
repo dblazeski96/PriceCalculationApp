@@ -44,8 +44,8 @@ namespace PriceCalculation.WebApi.Tests.ServiceTests
             var searchService = new SearchService(new PriceCalculationUoW<PriceCalculationContext>());
 
             //Act
-            var itemGet = searchService.Get<BusinessItemViewModel, BusinessItem>(1);
-            searchService.Create<BusinessItemViewModel, BusinessItem>(item1);
+            var itemGet = searchService.Get<BusinessItemOModel, BusinessItem>(1);
+            searchService.Create<BusinessItemOModel, BusinessItem>(item1);
 
             //Assert
         }

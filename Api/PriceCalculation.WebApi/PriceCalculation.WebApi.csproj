@@ -154,9 +154,9 @@
       <Project>{54bad5de-2b12-40fa-a764-5c1bc8610b1b}</Project>
       <Name>PriceCalculation.Service</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PriceCalculation.ViewModels\PriceCalculation.ViewModels.csproj">
+    <ProjectReference Include="..\PriceCalculation.ViewModels\PriceCalculation.View.Models.csproj">
       <Project>{4ce39bbd-f006-4628-b42c-f3c8bc4ac6a5}</Project>
-      <Name>PriceCalculation.ViewModels</Name>
+      <Name>PriceCalculation.View.Models</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
