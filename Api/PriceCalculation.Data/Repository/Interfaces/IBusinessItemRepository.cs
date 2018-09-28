@@ -9,5 +9,6 @@ namespace PriceCalculation.Data.Repository
 {
     public interface IBusinessItemRepository : IRepository<BusinessItem>
     {
+        void ChangePropertyOfMultipleItems(string property, string value, List<int> items);
     }
 }

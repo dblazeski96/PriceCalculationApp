@@ -69,7 +69,7 @@
     <Compile Include="Repository\RuleRepository.cs" />
     <Compile Include="Repository\StrategyRepository.cs" />
     <Compile Include="UnitOfWork\BaseUoW\BaseUoW.cs" />
-    <Compile Include="UnitOfWork\IPriceCalculationUoW.cs" />
+    <Compile Include="UnitOfWork\Interfaces\IPriceCalculationUoW.cs" />
     <Compile Include="UnitOfWork\BaseUoW\IUnitOfWork.cs" />
     <Compile Include="UnitOfWork\PriceCalculationUoW.cs" />
   </ItemGroup>

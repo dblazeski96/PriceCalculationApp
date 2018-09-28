@@ -9,6 +9,5 @@ namespace PriceCalculation.Data.Repository
 {
     public interface IGroupRepository : IRepository<Group>
     {
-
     }
 }

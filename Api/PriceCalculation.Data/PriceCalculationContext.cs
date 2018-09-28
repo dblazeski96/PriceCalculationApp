@@ -14,6 +14,7 @@ namespace PriceCalculation.Data
         {
             Configuration.LazyLoadingEnabled = false;
         }
+
         public virtual DbSet<Item> Items { get; set; }
         public virtual DbSet<Group> Groups { get; set; }
         public virtual DbSet<Strategy> Strategies { get; set; }

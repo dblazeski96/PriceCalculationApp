@@ -17,6 +17,9 @@ namespace PriceCalculation.Data.Factory
                 case "IBusinessItemRepository":
                     return Activator.CreateInstance(typeof(BusinessItemRepository), new object[] { dbContext });
 
+                case "IBusinessEntityRepository":
+                    return Activator.CreateInstance(typeof(BusinessEntityRepository), new object[] { dbContext });
+
                 default:
                     throw new Exception("Repository isn't registered");
             }

@@ -142,10 +142,6 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PriceCalculation.Data.Model\PriceCalculation.Data.Models.csproj">
-      <Project>{72fd0a5a-0128-45ef-9ccc-02e7de551bb1}</Project>
-      <Name>PriceCalculation.Data.Models</Name>
-    </ProjectReference>
     <ProjectReference Include="..\PriceCalculation.Data\PriceCalculation.Data.csproj">
       <Project>{dc2e57a0-b723-408f-8a9e-9486a12c8d43}</Project>
       <Name>PriceCalculation.Data</Name>

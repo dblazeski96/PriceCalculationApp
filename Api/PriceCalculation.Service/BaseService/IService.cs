@@ -12,6 +12,6 @@ namespace PriceCalculation.Service
         ServiceResult<TOutput> Change<TInput, TOutput>(TInput item) where TInput : class where TOutput : class;
         ServiceResult<TOutput> Remove<TOutput>(int id) where TOutput : class;
         ServiceResult<TOutput> Get<TOutput>(int id) where TOutput : class;
-        ServiceResult<TOutput> GetAll<TOutput>() where TOutput : class;
+        ServiceResult<TOutput> GetAll<TOutput>(string property, string searchCriteria) where TOutput : class;
     }
 }

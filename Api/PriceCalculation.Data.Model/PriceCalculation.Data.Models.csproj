@@ -44,7 +44,7 @@
     <Compile Include="BaseModel\BaseModel.cs" />
     <Compile Include="BusinessEntity.cs" />
     <Compile Include="BusinessItem.cs" />
-    <Compile Include="CatalogueItem.cs" />
+    <Compile Include="Relationships\CatalogueItem.cs" />
     <Compile Include="Catalogue.cs" />
     <Compile Include="Enums\BusinessType.cs" />
     <Compile Include="Enums\Currency.cs" />
@@ -57,8 +57,8 @@
     <Compile Include="Rule.cs" />
     <Compile Include="EquationOperation.cs" />
     <Compile Include="Strategy.cs" />
-    <Compile Include="StrategyOperation.cs" />
-    <Compile Include="StrategyRule.cs" />
+    <Compile Include="Relationships\StrategyOperation.cs" />
+    <Compile Include="Relationships\StrategyRule.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

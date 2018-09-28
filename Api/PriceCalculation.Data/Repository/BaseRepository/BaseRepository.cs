@@ -29,7 +29,19 @@ namespace PriceCalculation.Data.Repository
 
         public virtual void Change(T item)
         {
-            IDbSet<T> dbSet = _dbContext.Set<T>();
+            // Need to test and check other CRUD operations
+            IQueryable<T> dbSetQueryable = _dbContext.Set<T>();
+
+            IEnumerable<PropertyInfo> TIncludableProps = new List<PropertyInfo>(
+                typeof(T).GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+            ).GetIncludableProps();
+
+            foreach (var prop in TIncludableProps)
+            {
+                dbSetQueryable = dbSetQueryable.Include(prop.Name);
+            }
+
+            IDbSet<T> dbSet = (IDbSet<T>)dbSetQueryable;
 
             var itemToChange = dbSet.Find((int)item.GetType().GetProperty("Id").GetValue(item));
 
@@ -47,7 +59,7 @@ namespace PriceCalculation.Data.Repository
 
         public virtual T Get(int id)
         {
-            IList<T> items = GetAll();
+            IList<T> items = GetAll(null, null);
 
             foreach (var item in items)
             {
@@ -65,7 +77,7 @@ namespace PriceCalculation.Data.Repository
             throw new Exception("Item not found!");
         }
 
-        public virtual IList<T> GetAll()
+        public virtual IList<T> GetAll(string property, string searchCriteria)
         {
             IEnumerable<PropertyInfo> TIncludableProps = new List<PropertyInfo>(
                     typeof(T).GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
@@ -78,7 +90,16 @@ namespace PriceCalculation.Data.Repository
                 dbSet = dbSet.Include(prop.Name);
             }
 
-            return dbSet.ToList();
+            var items = dbSet.ToList();
+
+            if (searchCriteria == "" || searchCriteria == null)
+            {
+                return items;
+            }
+
+            var itemsFiltered = items.Where(i => i.GetType().GetProperty(property).GetValue(i).ToString().Contains(searchCriteria));
+
+            return itemsFiltered.ToList();
         }
     }
 }

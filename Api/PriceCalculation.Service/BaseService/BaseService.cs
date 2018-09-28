@@ -14,7 +14,7 @@ namespace PriceCalculation.Service
 {
     public abstract class BaseService : IService
     {
-        protected virtual object DetermineRepository<TOutput>(IService service)
+        protected object DetermineRepository<TOutput>(IService service)
             where TOutput : class
         {
             Type dataModelType = Helper.GetDataModelType<TOutput>();
@@ -133,10 +133,10 @@ namespace PriceCalculation.Service
             return ExecuteRepositoryMethod<TOutput>("Get", new object[] { id });
         }
 
-        public virtual ServiceResult<TOutput> GetAll<TOutput>()
+        public virtual ServiceResult<TOutput> GetAll<TOutput>(string property, string searchCriteria)
             where TOutput : class
         {
-            return ExecuteRepositoryMethod<TOutput>("GetAll", new object[] { });
+            return ExecuteRepositoryMethod<TOutput>("GetAll", new object[] { property, searchCriteria });
         }
     }
 }

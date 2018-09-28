@@ -6,7 +6,6 @@ using System.Net.Http;
 using System.Web.Http;
 using PriceCalculation.Service;
 using PriceCalculation.ViewModels;
-using PriceCalculation.Data.Models;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -98,10 +97,10 @@ namespace PriceCalculation.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("GetAllBusinessItems")]
-        public HttpResponseMessage GetAllBusinessItems()
+        [Route("GetAllBusinessItems/{searchCriteria}")]
+        public HttpResponseMessage GetAllBusinessItems([FromUri]string property, string searchCriteria)
         {
-            var serviceResult = _searchService.GetAll<BusinessItemOModel>();
+            var serviceResult = _searchService.GetAll<BusinessItemOModel>(property, searchCriteria);
             if (!(serviceResult.Success))
             {
                 throw new WebException(serviceResult.ex.Message, serviceResult.ex);
@@ -115,6 +114,17 @@ namespace PriceCalculation.WebApi.Controllers
             response.Content = responseContent;
 
             return response;
+        }
+
+        [HttpGet]
+        [Route("GetAllBusinessEntities")]
+        public HttpResponseMessage GetAllBusinessEntities()
+        {
+            var serviceResult = _searchService.GetAll<BusinessEntityOModel>(null, null);
+
+
+
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
     }
 }

@@ -14,5 +14,10 @@ namespace PriceCalculation.Data.Repository
         public BusinessItemRepository(DbContext dbContext) : base(dbContext)
         {
         }
+
+        public void ChangePropertyOfMultipleItems(string property, string value, List<int> items)
+        {
+
+        }
     }
 }
