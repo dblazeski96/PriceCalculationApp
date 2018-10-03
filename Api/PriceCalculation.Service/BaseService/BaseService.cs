@@ -9,49 +9,20 @@ using System.Data.Entity;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections;
+using System.Net;
 
 namespace PriceCalculation.Service
 {
     public abstract class BaseService : IService
     {
-        protected object DetermineRepository<TOutput>(IService service)
-            where TOutput : class
-        {
-            Type dataModelType = Helper.GetDataModelType<TOutput>();
-            Type repositoryType = typeof(IRepository<>).MakeGenericType(dataModelType);
-
-            IEnumerable<FieldInfo> serviceUoWs = new List<FieldInfo>(
-                service.GetType()
-                .GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
-                .Where(
-                    field => typeof(IUnitOfWork).IsAssignableFrom(field.FieldType)
-                );
-
-            foreach (var uoW in serviceUoWs)
-            {
-                IEnumerable<PropertyInfo> uoWProps = new List<PropertyInfo>(
-                uoW.FieldType
-                    .GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance));
-
-                var repository = uoWProps.Single(
-                    prop => repositoryType.IsAssignableFrom(prop.PropertyType))
-                    .GetValue(uoW.GetValue(this));
-
-                if (repository != null)
-                {
-                    return repository;
-                }
-            }
-
-            throw new Exception("Repository not found!");
-        }
-
         private ServiceResult<TOutput> ExecuteRepositoryMethod<TOutput>(string methodName, object[] parameters)
             where TOutput : class
         {
             try
             {
-                var repository = DetermineRepository<TOutput>(this);
+                var serviceUoWs = ServiceHelper.GetServiceUoWs(this);
+                var dataModelType = ServiceHelper.GetDataModelType<TOutput>();
+                var repository = ServiceHelper.DetermineRepository(dataModelType, serviceUoWs);
 
                 switch (methodName)
                 {
@@ -66,7 +37,7 @@ namespace PriceCalculation.Service
                         };
 
                     case "Get":
-                        var item = repository.GetType().GetMethod(methodName).Invoke(repository, parameters).Map<TOutput>();
+                        var item = repository.GetType().GetMethod(methodName).Invoke(repository, parameters).Map(typeof(TOutput));
 
                         return new ServiceResult<TOutput>
                         {
@@ -75,12 +46,12 @@ namespace PriceCalculation.Service
                         };
 
                     case "GetAll":
-                        var items = (IList)repository.GetType().GetMethod(methodName).Invoke(repository, parameters);
+                        var items = (IEnumerable)repository.GetType().GetMethod(methodName).Invoke(repository, parameters);
                         ICollection<TOutput> itemsViewModel = new List<TOutput>();
 
                         foreach (var i in items)
                         {
-                            itemsViewModel.Add(i.Map<TOutput>());
+                            itemsViewModel.Add(i.Map(typeof(TOutput)));
                         }
 
                         return new ServiceResult<TOutput>
@@ -93,7 +64,7 @@ namespace PriceCalculation.Service
                         return new ServiceResult<TOutput>
                         {
                             Success = false,
-                            ex = new Exception("Method doesn't exist!")
+                            ex = new WebException("Method doesn't exist!")
                         };
                 }
             }
@@ -111,20 +82,50 @@ namespace PriceCalculation.Service
             where TInput : class
             where TOutput : class
         {
-            return ExecuteRepositoryMethod<TOutput>("Create", new object[] { item });
+            var dataModelType = ServiceHelper.GetDataModelType<TOutput>();
+            var itemDataModel = item.Map(dataModelType);
+
+            var serviceResult = ExecuteRepositoryMethod<TOutput>("Create", new object[] { itemDataModel });
+
+            var serviceUoWs = ServiceHelper.GetServiceUoWs(this);
+            foreach (var uoW in serviceUoWs)
+            {
+                uoW.Commit();
+            }
+
+            return serviceResult;
         }
 
         public virtual ServiceResult<TOutput> Change<TInput, TOutput>(TInput item)
             where TInput : class
             where TOutput : class
         {
-            return ExecuteRepositoryMethod<TOutput>("Change", new object[] { item });
+            var dataModelType = ServiceHelper.GetDataModelType<TOutput>();
+            var itemDataModel = item.Map(dataModelType);
+
+            var serviceResult = ExecuteRepositoryMethod<TOutput>("Change", new object[] { itemDataModel });
+
+            var serviceUoWs = ServiceHelper.GetServiceUoWs(this);
+            foreach (var uoW in serviceUoWs)
+            {
+                uoW.Commit();
+            }
+
+            return serviceResult;
         }
 
         public virtual ServiceResult<TOutput> Remove<TOutput>(int id)
             where TOutput : class
         {
-            return ExecuteRepositoryMethod<TOutput>("Remove", new object[] { id });
+            var serviceResult = ExecuteRepositoryMethod<TOutput>("Remove", new object[] { id });
+
+            var serviceUoWs = ServiceHelper.GetServiceUoWs(this);
+            foreach (var uoW in serviceUoWs)
+            {
+                uoW.Commit();
+            }
+
+            return serviceResult;
         }
 
         public virtual ServiceResult<TOutput> Get<TOutput>(int id)

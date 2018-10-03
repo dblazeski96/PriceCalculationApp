@@ -14,8 +14,8 @@ namespace PriceCalculation.ViewModels
         public string Description { get; set; }
         public int GroupId { get; set; }
         public int Quantity { get; set; }
-        public DateTime DateOfProduction { get; set; }
-        public DateTime DateOfLastSold { get; set; }
+        public string DateOfProduction { get; set; }
+        public string DateOfLastSold { get; set; }
         public double PriceCost { get; set; }
     }
 }

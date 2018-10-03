@@ -24,18 +24,20 @@ namespace PriceCalculation.Service
             _priceCalculationUoW = priceCalculationUoW;
         }
 
-        public ServiceResult<TOutput> ChangePropertyOfMultipleItems<TOutput>(string property, string value, List<int> items)
+        public ServiceResult<TOutput> ChangePropertyOfMultipleItems<TOutput>(string property, string value, IList<int> items)
             where TOutput : class
         {
             try
             {
-                var repository = DetermineRepository<TOutput>(this);
+                var serviceUoWs = ServiceHelper.GetServiceUoWs(this);
+                var dataTypeModel = ServiceHelper.GetDataModelType<TOutput>();
+                var repository = ServiceHelper.DetermineRepository(dataTypeModel, serviceUoWs);
 
                 foreach (var itemId in items)
                 {
                     var item = repository.GetType().GetMethod("Get").Invoke(repository, new object[] { itemId });
 
-                    PropertyInfo itemProperty = item.GetType().GetProperty(property);
+                    var itemProperty = item.GetType().GetProperty(property);
                     itemProperty.SetValue(item, Convert.ChangeType(value, itemProperty.PropertyType));
 
                     repository.GetType().GetMethod("Change").Invoke(repository, new object[] { item });

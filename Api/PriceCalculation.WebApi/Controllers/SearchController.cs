@@ -88,8 +88,8 @@ namespace PriceCalculation.WebApi.Controllers
 
             var response = Request.CreateResponse(HttpStatusCode.OK);
 
-            var businessItem = serviceResult.Item;
-            var responseContent = new StringContent(JsonConvert.SerializeObject(businessItem));
+            var itemSerialized = JsonConvert.SerializeObject(serviceResult.Item);
+            var responseContent = new StringContent(itemSerialized);
 
             response.Content = responseContent;
 
@@ -97,8 +97,8 @@ namespace PriceCalculation.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("GetAllBusinessItems/{searchCriteria}")]
-        public HttpResponseMessage GetAllBusinessItems([FromUri]string property, string searchCriteria)
+        [Route("GetAllBusinessItems")]
+        public HttpResponseMessage GetAllBusinessItems([FromUri]string property, [FromUri]string searchCriteria)
         {
             var serviceResult = _searchService.GetAll<BusinessItemOModel>(property, searchCriteria);
             if (!(serviceResult.Success))

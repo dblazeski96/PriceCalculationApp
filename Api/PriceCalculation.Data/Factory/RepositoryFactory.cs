@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,14 +15,26 @@ namespace PriceCalculation.Data.Factory
         {
             switch (typeof(T).Name)
             {
-                case "IBusinessItemRepository":
-                    return Activator.CreateInstance(typeof(BusinessItemRepository), new object[] { dbContext });
-
                 case "IBusinessEntityRepository":
                     return Activator.CreateInstance(typeof(BusinessEntityRepository), new object[] { dbContext });
 
+                case "IBusinessItemRepository":
+                    return Activator.CreateInstance(typeof(BusinessItemRepository), new object[] { dbContext });
+
+                case "ICatalogueRepository":
+                    return Activator.CreateInstance(typeof(CatalogueRepository), new object[] { dbContext });
+
+                case "IGroupRepository":
+                    return Activator.CreateInstance(typeof(GroupRepository), new object[] { dbContext });
+
+                case "IRuleRepository":
+                    return Activator.CreateInstance(typeof(RuleRepository), new object[] { dbContext });
+
+                case "IStrategyRepository":
+                    return Activator.CreateInstance(typeof(StrategyRepository), new object[] { dbContext });
+
                 default:
-                    throw new Exception("Repository isn't registered");
+                    throw new WebException("Repository isn't registered");
             }
         }
     }

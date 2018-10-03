@@ -2,7 +2,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,45 +13,57 @@ namespace PriceCalculation.Mapper
 {
     public static class Helper
     {
-        public static void CopyPropertiesFrom(this object src, object obj)
+        public static void CopyPropertiesFrom(this object src, object obj, bool copyId = true)
         {
-            PropertyInfo[] srcProps = src.GetType().GetProperties();
-            PropertyInfo[] objProps = obj.GetType().GetProperties();
+            var srcProps = src.GetType().GetProperties();
+            var objProps = obj.GetType().GetProperties();
 
-            foreach(PropertyInfo srcProp in srcProps)
+            foreach (var srcProp in srcProps)
             {
-                foreach(PropertyInfo objProp in objProps)
+                foreach (var objProp in objProps)
                 {
-                    if(srcProp.Name == objProp.Name && srcProp.PropertyType == objProp.PropertyType)
+                    if (!copyId)
                     {
-                        srcProp.SetValue(src, objProp.GetValue(obj));
+                        if (srcProp.Name == "Id" && srcProp.PropertyType == typeof(int))
+                        {
+                            break;
+                        }
+                    }
+
+                    if (srcProp.Name == objProp.Name && srcProp.PropertyType == objProp.PropertyType)
+                    {
+                        if (objProp.GetValue(obj) != null)
+                        {
+                            srcProp.SetValue(src, objProp.GetValue(obj));
+                        }
+                        break;
                     }
                 }
             }
         }
 
-        public static IEnumerable<PropertyInfo> GetIncludableProps(this IEnumerable<PropertyInfo> props)
+        public static IEnumerable<PropertyInfo> GetIncludableProps(this Type obj, bool includeCollections = true, bool includeBaseModels = true)
         {
-            return props.Where(prop => typeof(BaseModel).IsAssignableFrom(prop.PropertyType) || typeof(IList).IsAssignableFrom(prop.PropertyType));
-        }
-
-        public static Type GetDataModelType<TOutput>()
-        {
-            var viewType = typeof(TOutput);
-
-            string dataTypeName = viewType.Name.Replace("OModel", "");
-
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            foreach (var assembly in assemblies)
+            if (!includeCollections && !includeBaseModels)
             {
-                var models = assembly.GetTypes().Where(m => m.Name == dataTypeName);
-                if (models.Any())
-                {
-                    return models.FirstOrDefault();
-                }
+                throw new WebException("You must include eather 'BaseModels' or 'Collections' or both");
             }
 
-            throw new Exception("Data model not found!");
+            var props = obj.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
+            if (includeCollections && !includeBaseModels)
+            {
+                return props.Where(p => typeof(IEnumerable).IsAssignableFrom(p.PropertyType));
+            }
+
+            if (!includeCollections && includeBaseModels)
+            {
+                return props.Where(p => typeof(BaseModel).IsAssignableFrom(p.PropertyType));
+            }
+
+            return props.Where(p =>
+                typeof(BaseModel).IsAssignableFrom(p.PropertyType) ||
+                typeof(IEnumerable).IsAssignableFrom(p.PropertyType));
         }
     }
 }

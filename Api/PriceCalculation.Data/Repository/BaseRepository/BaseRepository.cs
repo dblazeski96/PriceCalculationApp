@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Collections;
 using System.Linq.Expressions;
 using PriceCalculation.Mapper;
+using System.Net;
 
 namespace PriceCalculation.Data.Repository
 {
@@ -29,23 +30,55 @@ namespace PriceCalculation.Data.Repository
 
         public virtual void Change(T item)
         {
-            // Need to test and check other CRUD operations
-            IQueryable<T> dbSetQueryable = _dbContext.Set<T>();
+            UpdateBaseModels(item);
+        }
 
-            IEnumerable<PropertyInfo> TIncludableProps = new List<PropertyInfo>(
-                typeof(T).GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-            ).GetIncludableProps();
+        private void UpdateBaseModels(object item)
+        {
+            var dbEntityEntry = _dbContext.Entry(item);
+            dbEntityEntry.State = EntityState.Modified;
 
-            foreach (var prop in TIncludableProps)
+            var itemType = item.GetType();
+
+            var includableProps = itemType.GetIncludableProps(false);
+
+            foreach (var prop in includableProps)
             {
-                dbSetQueryable = dbSetQueryable.Include(prop.Name);
+                var recursiveItem = itemType.GetProperty(prop.PropertyType.Name).GetValue(item);
+                if (recursiveItem != null)
+                {
+                    UpdateBaseModels(itemType.GetProperty(prop.PropertyType.Name).GetValue(item));
+                }
+            }
+        }
+
+        private void UpdateCollections(IEnumerable items)
+        {
+            var itemType = items.GetType().GetGenericArguments().Single();
+            var includableProps = itemType.GetIncludableProps(true, false);
+
+            foreach (var item in items)
+            {
+                var dbEntityEntry = _dbContext.Entry(item);
+                dbEntityEntry.State = EntityState.Modified;
+
+                foreach (var prop in includableProps)
+                {
+                    var recursiveItem = itemType.GetProperty(prop.Name).GetValue(item);
+                    if (recursiveItem != null)
+                    {
+                        //UpdateCollections
+                    }
+                }
+
+
             }
 
-            IDbSet<T> dbSet = (IDbSet<T>)dbSetQueryable;
+            
 
-            var itemToChange = dbSet.Find((int)item.GetType().GetProperty("Id").GetValue(item));
+            
 
-            itemToChange.CopyPropertiesFrom(item);
+            
         }
 
         public virtual void Remove(int id)
@@ -59,31 +92,26 @@ namespace PriceCalculation.Data.Repository
 
         public virtual T Get(int id)
         {
-            IList<T> items = GetAll(null, null);
+            IEnumerable<T> items = GetAll(null, null);
 
             foreach (var item in items)
             {
-                if (
-                    (int)item
-                        .GetType()
-                        .GetProperty("Id")
-                        .GetValue(item)
-                    == id)
+                if ((int)
+                    item.GetType()
+                    .GetProperty("Id")
+                    .GetValue(item) == id)
                 {
                     return item;
                 }
             }
 
-            throw new Exception("Item not found!");
+            throw new WebException("Item not found!");
         }
 
-        public virtual IList<T> GetAll(string property, string searchCriteria)
+        public virtual IEnumerable<T> GetAll(string property, string searchCriteria)
         {
-            IEnumerable<PropertyInfo> TIncludableProps = new List<PropertyInfo>(
-                    typeof(T).GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                ).GetIncludableProps();
-
-            IQueryable<T> dbSet = _dbContext.Set<T>();
+            var dbSet = _dbContext.Set<T>().AsQueryable();
+            var TIncludableProps = typeof(T).GetIncludableProps();
 
             foreach (var prop in TIncludableProps)
             {
@@ -97,9 +125,17 @@ namespace PriceCalculation.Data.Repository
                 return items;
             }
 
-            var itemsFiltered = items.Where(i => i.GetType().GetProperty(property).GetValue(i).ToString().Contains(searchCriteria));
+            var itemsFiltered = items.Where(i => 
+                i.GetType()
+                .GetProperty(property)
+                .GetValue(i)
+                .ToString().ToLower()
+                .Contains(searchCriteria.ToLower())
+            );
 
-            return itemsFiltered.ToList();
+            return itemsFiltered;
         }
+
+        
     }
 }

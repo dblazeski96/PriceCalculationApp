@@ -29,6 +29,6 @@ namespace PriceCalculation.Data.Models
         [Required]
         public EquationOperation Operation { get; set; }
 
-        public List<StrategyRule> Strategies { get; set; }
+        public ICollection<StrategyRule> Strategies { get; set; }
     }
 }

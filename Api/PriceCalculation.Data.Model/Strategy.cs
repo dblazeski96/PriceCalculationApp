@@ -18,8 +18,8 @@ namespace PriceCalculation.Data.Models
         [MaxLength(20)]
         public string Name { get; set; }
 
-        public List<StrategyRule> Rules { get; set; }
+        public ICollection<StrategyRule> Rules { get; set; }
 
-        public List<StrategyOperation> Operations { get; set; }
+        public ICollection<StrategyOperation> Operations { get; set; }
     }
 }

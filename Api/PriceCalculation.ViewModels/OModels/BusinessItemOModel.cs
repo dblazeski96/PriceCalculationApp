@@ -16,7 +16,7 @@ namespace PriceCalculation.ViewModels
         public double PriceCost { get; set; }
         public double PriceTarget { get; set; }
         public double PricePremium { get; set; }
-        public DateTime DateOfProduction { get; set; }
-        public DateTime DateOfLastSoldItem { get; set; }
+        public string DateOfProduction { get; set; }
+        public string DateOfLastSoldItem { get; set; }
     }
 }

@@ -22,6 +22,6 @@ namespace PriceCalculation.Data.Models
         public int BusinessEntityId { get; set; }
         public BusinessEntity BusinessEntity { get; set; }
 
-        public List<CatalogueItem> CatalogueItems { get; set; }
+        public ICollection<CatalogueItem> CatalogueItems { get; set; }
     }
 }

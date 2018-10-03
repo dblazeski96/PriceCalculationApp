@@ -12,6 +12,6 @@ namespace PriceCalculation.Data.Repository
         void Change(T item);
         void Remove(int id);
         T Get(int id);
-        IList<T> GetAll(string property, string searchCriteria);
+        IEnumerable<T> GetAll(string property, string searchCriteria);
     }
 }

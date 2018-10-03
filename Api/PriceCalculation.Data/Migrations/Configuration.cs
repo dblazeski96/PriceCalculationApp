@@ -122,13 +122,13 @@ namespace PriceCalculation.Data.Migrations
             context.Items.AddOrUpdate(
                 new Item
                 {
-                    Name = "Dejan Item 1",
+                    Name = "Dejan Item",
                     Description = "simple test item",
                     GroupId = 1
                 },
                 new Item
                 {
-                    Name = "Marko Item 1",
+                    Name = "Marko Item",
                     Description = "simple test item",
                     GroupId = 2
                 }
@@ -157,24 +157,24 @@ namespace PriceCalculation.Data.Migrations
                     ItemId = 1,
                     //BusinessEntityId = 1,
                     Quantity = 12,
-                    DateOfProduction = new DateTime(2017, 2, 17),
-                    DateOfLastSold = new DateTime(2018, 8, 12)
+                    DateOfProduction = new DateTime(2017, 2, 17).Date,
+                    DateOfLastSold = new DateTime(2018, 8, 12).Date
                 },
                 new BusinessItem
                 {
                     ItemId = 2,
                     //BusinessEntityId = 1,
                     Quantity = 51,
-                    DateOfProduction = new DateTime(2017, 5, 14),
-                    DateOfLastSold = new DateTime(2018, 7, 1)
+                    DateOfProduction = new DateTime(2017, 5, 14).Date,
+                    DateOfLastSold = new DateTime(2018, 7, 1).Date
                 },
                 new BusinessItem
                 {
                     ItemId = 2,
                     //BusinessEntityId = 2,
                     Quantity = 32,
-                    DateOfProduction = new DateTime(2017, 9, 2),
-                    DateOfLastSold = new DateTime(2018, 9, 23)
+                    DateOfProduction = new DateTime(2017, 9, 2).Date,
+                    DateOfLastSold = new DateTime(2018, 9, 23).Date
                 }
             );
             context.SaveChanges();
