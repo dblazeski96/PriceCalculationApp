@@ -22,6 +22,6 @@ namespace PriceCalculation.Data.Models
         public int StrategyId { get; set; }
         public Strategy Strategy { get; set; }
 
-        public ICollection<Item> Items { get; set; }
+        public virtual ICollection<Item> Items { get; set; }
     }
 }

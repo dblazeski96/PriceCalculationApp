@@ -24,8 +24,8 @@ namespace PriceCalculation.Data.Models
         public DateTime DateOfProduction { get; set; }
         public DateTime DateOfLastSold { get; set; }
 
-        public ICollection<Price> Prices { get; set; }
+        public virtual ICollection<Price> Prices { get; set; }
 
-        public ICollection<CatalogueItem> Catalogues { get; set; }
+        public virtual ICollection<CatalogueItem> Catalogues { get; set; }
     }
 }

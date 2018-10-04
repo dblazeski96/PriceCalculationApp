@@ -8,6 +8,7 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace PriceCalculation.Mapper
 {
@@ -44,12 +45,14 @@ namespace PriceCalculation.Mapper
 
         public static IEnumerable<PropertyInfo> GetIncludableProps(this Type obj, bool includeCollections = true, bool includeBaseModels = true)
         {
-            if (!includeCollections && !includeBaseModels)
-            {
-                throw new WebException("You must include eather 'BaseModels' or 'Collections' or both");
-            }
-
             var props = obj.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
+            if (includeCollections && includeBaseModels)
+            {
+                return props.Where(p =>
+                    typeof(BaseModel).IsAssignableFrom(p.PropertyType) ||
+                    typeof(IEnumerable<BaseModel>).IsAssignableFrom(p.PropertyType));
+            }
 
             if (includeCollections && !includeBaseModels)
             {
@@ -61,9 +64,7 @@ namespace PriceCalculation.Mapper
                 return props.Where(p => typeof(BaseModel).IsAssignableFrom(p.PropertyType));
             }
 
-            return props.Where(p =>
-                typeof(BaseModel).IsAssignableFrom(p.PropertyType) ||
-                typeof(IEnumerable).IsAssignableFrom(p.PropertyType));
+            throw new WebException("You must include eather 'BaseModels' or 'Collections' or both");
         }
     }
 }

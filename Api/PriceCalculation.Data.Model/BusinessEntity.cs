@@ -24,6 +24,6 @@ namespace PriceCalculation.Data.Models
         [Required]
         public Currency Currency { get; set; }
 
-        public ICollection<Catalogue> Catalogues { get; set; }
+        public virtual ICollection<Catalogue> Catalogues { get; set; }
     }
 }

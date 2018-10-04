@@ -21,17 +21,19 @@ namespace PriceCalculation.Mapper
                         var srcObj = new BusinessItem();
                         srcObj.CopyPropertiesFrom(src);
 
-                        var mapObj = new BusinessItemOModel();
-
-                        mapObj.Id = srcObj.Id;
-                        //mapObj.Name = srcObj.Item.Name;
-                        //mapObj.Description = srcObj.Item.Description;
-                        mapObj.Quantity = srcObj.Quantity;
-                        mapObj.PriceCost = srcObj.Prices.Single(p => p.Type == PriceType.Cost).Amount;
-                        mapObj.PriceTarget = 100;
-                        mapObj.PricePremium = 200;
-                        mapObj.DateOfProduction = srcObj.DateOfProduction.Date.ToString("dd/MM/yyyy");
-                        mapObj.DateOfLastSoldItem = srcObj.DateOfLastSold.Date.ToString("dd/MM/yyyy");
+                        var mapObj = new BusinessItemOModel()
+                        {
+                            Id = srcObj.Id,
+                            Name = srcObj.Item.Name,
+                            Description = srcObj.Item.Description,
+                            Group = srcObj.Item.Group.Name,
+                            Quantity = srcObj.Quantity,
+                            PriceCost = srcObj.Prices.Single(p => p.Type == PriceType.Cost).Amount,
+                            PriceTarget = 100,
+                            PricePremium = 200,
+                            DateOfProduction = srcObj.DateOfProduction.Date.ToString("dd/MM/yyyy"),
+                            DateOfLastSoldItem = srcObj.DateOfLastSold.Date.ToString("dd/MM/yyyy")
+                        };
 
                         return mapObj;
                     }
@@ -41,20 +43,33 @@ namespace PriceCalculation.Mapper
                         var srcObj = new BusinessItemIModel();
                         srcObj.CopyPropertiesFrom(src);
 
-                        var mapObj = new BusinessItem();
-
-                        mapObj.Id = srcObj.Id;
-                        mapObj.ItemId = srcObj.ItemId;
-                        mapObj.Item = new Item();
-                        mapObj.Item.Id = srcObj.ItemId;
-                        mapObj.Item.Name = srcObj.Name;
-                        mapObj.Item.Description = srcObj.Description;
-                        mapObj.Item.GroupId = srcObj.GroupId;
-                        mapObj.Quantity = srcObj.Quantity;
-                        mapObj.Prices = new List<Price>();
-                        mapObj.Prices.Add(new Price() { BusinessItemId = srcObj.Id, Type = PriceType.Cost, Amount = srcObj.PriceCost });
-                        mapObj.DateOfProduction = DateTime.ParseExact(srcObj.DateOfProduction, "dd/MM/yyyy", new CultureInfo("en-US"));
-                        mapObj.DateOfLastSold = DateTime.ParseExact(srcObj.DateOfLastSold, "dd/MM/yyyy", new CultureInfo("en-US"));
+                        var mapObj = new BusinessItem
+                        {
+                            Id = srcObj.Id,
+                            ItemId = srcObj.ItemId,
+                            Item = new Item
+                            {
+                                Id = srcObj.ItemId,
+                                Name = srcObj.Name,
+                                Description = srcObj.Description,
+                                GroupId = srcObj.GroupId,
+                                Group = null
+                            },
+                            Quantity = srcObj.Quantity,
+                            Prices = new List<Price>
+                            {
+                                new Price
+                                {
+                                    Type = PriceType.Cost,
+                                    Amount = srcObj.PriceCost,
+                                    BusinessItemId = srcObj.Id,
+                                    BusinessItem = null
+                                }
+                            },
+                            DateOfProduction = DateTime.ParseExact(srcObj.DateOfProduction, "dd/MM/yyyy", new CultureInfo("en-US")),
+                            DateOfLastSold = DateTime.ParseExact(srcObj.DateOfLastSold, "dd/MM/yyyy", new CultureInfo("en-US")),
+                            Catalogues = null,
+                        };
 
                         return mapObj;
                     }

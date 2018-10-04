@@ -9,6 +9,7 @@ using System.Collections;
 using System.Linq.Expressions;
 using PriceCalculation.Mapper;
 using System.Net;
+using PriceCalculation.Data.Models;
 
 namespace PriceCalculation.Data.Repository
 {
@@ -31,6 +32,7 @@ namespace PriceCalculation.Data.Repository
         public virtual void Change(T item)
         {
             UpdateBaseModels(item);
+            UpdateCollections(item);
         }
 
         private void UpdateBaseModels(object item)
@@ -47,38 +49,34 @@ namespace PriceCalculation.Data.Repository
                 var recursiveItem = itemType.GetProperty(prop.PropertyType.Name).GetValue(item);
                 if (recursiveItem != null)
                 {
-                    UpdateBaseModels(itemType.GetProperty(prop.PropertyType.Name).GetValue(item));
+                    UpdateBaseModels(recursiveItem);
                 }
             }
         }
 
-        private void UpdateCollections(IEnumerable items)
+        private void UpdateCollections(object item)
         {
-            var itemType = items.GetType().GetGenericArguments().Single();
-            var includableProps = itemType.GetIncludableProps(true, false);
+            var itemType = item.GetType();
+            var includableCollections = itemType.GetIncludableProps(true, false);
 
-            foreach (var item in items)
+            foreach (var collectionProp in includableCollections)
             {
-                var dbEntityEntry = _dbContext.Entry(item);
-                dbEntityEntry.State = EntityState.Modified;
-
-                foreach (var prop in includableProps)
+                var collection = (ICollection)itemType.GetProperty(collectionProp.Name).GetValue(item);
+                
+                if (collection != null)
                 {
-                    var recursiveItem = itemType.GetProperty(prop.Name).GetValue(item);
-                    if (recursiveItem != null)
+                    foreach (var collectionItem in collection)
                     {
-                        //UpdateCollections
+                        var dbEntityEntry = _dbContext.Entry(collectionItem);
+                        dbEntityEntry.State = EntityState.Modified;
+
+                        if (collectionItem != null)
+                        {
+                            UpdateCollections(collectionItem);
+                        }
                     }
                 }
-
-
             }
-
-            
-
-            
-
-            
         }
 
         public virtual void Remove(int id)
@@ -111,11 +109,12 @@ namespace PriceCalculation.Data.Repository
         public virtual IEnumerable<T> GetAll(string property, string searchCriteria)
         {
             var dbSet = _dbContext.Set<T>().AsQueryable();
-            var TIncludableProps = typeof(T).GetIncludableProps();
 
-            foreach (var prop in TIncludableProps)
+            var includableProps = DetermineIncludableProps(typeof(T), null, new List<string>(), new List<string>());
+
+            foreach (var prop in includableProps)
             {
-                dbSet = dbSet.Include(prop.Name);
+                dbSet = dbSet.Include(prop);
             }
 
             var items = dbSet.ToList();
@@ -136,6 +135,31 @@ namespace PriceCalculation.Data.Repository
             return itemsFiltered;
         }
 
-        
+        private ICollection<string> DetermineIncludableProps(Type item, string parentItemPath, ICollection<string> includedPropPaths, ICollection<string> includedProps)
+        {
+            var includableProps = item.GetIncludableProps(false);
+
+            foreach (var prop in includableProps)
+            {
+                var propType = prop.PropertyType;
+                if (typeof(IEnumerable<BaseModel>).IsAssignableFrom(propType))
+                {
+                    propType = propType.GetGenericArguments().Single();
+                }
+
+                if (!includedProps.Contains(propType.Name))
+                {
+                    includedProps.Add(propType.Name);
+
+                    var itemPath = parentItemPath == null || parentItemPath == "" ? prop.Name : parentItemPath + "." + prop.Name;
+
+                    includedPropPaths.Add(itemPath);
+
+                    DetermineIncludableProps(prop.PropertyType, itemPath, includedPropPaths, includedProps);
+                }
+            }
+
+            return includedPropPaths;
+        }
     }
 }
