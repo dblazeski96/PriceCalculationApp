@@ -1,17 +1,16 @@
-﻿using PriceCalculation.Data.UnitOfWork;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PriceCalculation.Data.Models;
-using PriceCalculation.ViewModels;
 using PriceCalculation.Mapper;
 using System.Collections;
 using PriceCalculation.Service;
 using System.Reflection;
 using PriceCalculation.Data.Repository;
+using PriceCalculation.Models.Base;
+using PriceCalculation.Data.UnitOfWork;
 
 namespace PriceCalculation.Service
 {
@@ -24,24 +23,24 @@ namespace PriceCalculation.Service
             _priceCalculationUoW = priceCalculationUoW;
         }
 
-        public ServiceResult<TOutput> ChangePropertyOfMultipleItems<TOutput>(string property, string value, IList<int> items)
-            where TOutput : class
+        public ServiceResult<TOutput> ChangePropertyOfMultipleItems<TOutput>(string property, string value, IList<int> items) // Need to finish
+            where TOutput : class, BaseViewModel
         {
             try
             {
-                var serviceUoWs = ServiceHelper.GetServiceUoWs(this);
-                var dataTypeModel = ServiceHelper.GetDataModelType<TOutput>();
-                var repository = ServiceHelper.DetermineRepository(dataTypeModel, serviceUoWs);
+                //var repository = ServiceHelper.DetermineRepository<TOutput>(this);
 
-                foreach (var itemId in items)
-                {
-                    var item = repository.GetType().GetMethod("Get").Invoke(repository, new object[] { itemId });
+                //foreach (var itemId in items)
+                //{
+                //    var item = repository.Get(itemId);
 
-                    var itemProperty = item.GetType().GetProperty(property);
-                    itemProperty.SetValue(item, Convert.ChangeType(value, itemProperty.PropertyType));
+                //    var itemProperty = item.GetType().GetProperty(property);
+                //    itemProperty.SetValue(item, Convert.ChangeType(value, itemProperty.PropertyType));
 
-                    repository.GetType().GetMethod("Change").Invoke(repository, new object[] { item });
-                }
+                //    repository.Change(item);
+                //}
+
+                //ServiceHelper.SaveChanges(ServiceHelper.GetServiceUoWs(this));
 
                 return new ServiceResult<TOutput>
                 {

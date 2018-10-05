@@ -40,19 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IModels\BusinessEntityIModel.cs" />
-    <Compile Include="OModels\BusinessEntityOModel.cs" />
-    <Compile Include="IModels\BusinessItemIModel.cs" />
-    <Compile Include="OModels\BusinessItemOModel.cs" />
-    <Compile Include="IModels\CatalogueIModel.cs" />
-    <Compile Include="OModels\CatalogueOModel.cs" />
-    <Compile Include="IModels\GroupIModel.cs" />
-    <Compile Include="OModels\GroupOModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="IModels\RuleIModel.cs" />
-    <Compile Include="OModels\RuleOModel.cs" />
-    <Compile Include="IModels\StrategyIModel.cs" />
-    <Compile Include="OModels\StrategyOModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PriceCalculation.Data.Model\PriceCalculation.Data.Models.csproj">
@@ -60,6 +48,7 @@
       <Name>PriceCalculation.Data.Models</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -78,13 +78,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PriceCalculation.Data.Model\PriceCalculation.Data.Models.csproj">
-      <Project>{72fd0a5a-0128-45ef-9ccc-02e7de551bb1}</Project>
-      <Name>PriceCalculation.Data.Models</Name>
-    </ProjectReference>
     <ProjectReference Include="..\PriceCalculation.Mapper\PriceCalculation.Mapper.csproj">
       <Project>{3d4b79bd-cf68-413d-a4a9-79aa803456a8}</Project>
       <Name>PriceCalculation.Mapper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PriceCalculation.Models\PriceCalculation.Models.csproj">
+      <Project>{f73032ac-ae9a-4876-857e-9770e2040c21}</Project>
+      <Name>PriceCalculation.Models</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

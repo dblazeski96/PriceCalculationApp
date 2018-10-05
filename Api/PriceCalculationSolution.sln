@@ -9,13 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceCalculation.Data", "Pr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceCalculation.Service", "PriceCalculation.Service\PriceCalculation.Service.csproj", "{54BAD5DE-2B12-40FA-A764-5C1BC8610B1B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceCalculation.Data.Models", "PriceCalculation.Data.Model\PriceCalculation.Data.Models.csproj", "{72FD0A5A-0128-45EF-9CCC-02E7DE551BB1}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceCalculation.WebApi.Tests", "PriceCalculation.WebApi.Tests\PriceCalculation.WebApi.Tests.csproj", "{7F25376D-6164-4BEA-B792-9B5F32DE20F0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceCalculation.Mapper", "PriceCalculation.Mapper\PriceCalculation.Mapper.csproj", "{3D4B79BD-CF68-413D-A4A9-79AA803456A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceCalculation.View.Models", "PriceCalculation.ViewModels\PriceCalculation.View.Models.csproj", "{4CE39BBD-F006-4628-B42C-F3C8BC4AC6A5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceCalculation.Models", "PriceCalculation.Models\PriceCalculation.Models.csproj", "{F73032AC-AE9A-4876-857E-9770E2040C21}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +33,6 @@ Global
 		{54BAD5DE-2B12-40FA-A764-5C1BC8610B1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54BAD5DE-2B12-40FA-A764-5C1BC8610B1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54BAD5DE-2B12-40FA-A764-5C1BC8610B1B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{72FD0A5A-0128-45EF-9CCC-02E7DE551BB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{72FD0A5A-0128-45EF-9CCC-02E7DE551BB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{72FD0A5A-0128-45EF-9CCC-02E7DE551BB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{72FD0A5A-0128-45EF-9CCC-02E7DE551BB1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7F25376D-6164-4BEA-B792-9B5F32DE20F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7F25376D-6164-4BEA-B792-9B5F32DE20F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F25376D-6164-4BEA-B792-9B5F32DE20F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -47,10 +41,10 @@ Global
 		{3D4B79BD-CF68-413D-A4A9-79AA803456A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D4B79BD-CF68-413D-A4A9-79AA803456A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D4B79BD-CF68-413D-A4A9-79AA803456A8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4CE39BBD-F006-4628-B42C-F3C8BC4AC6A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4CE39BBD-F006-4628-B42C-F3C8BC4AC6A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4CE39BBD-F006-4628-B42C-F3C8BC4AC6A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4CE39BBD-F006-4628-B42C-F3C8BC4AC6A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F73032AC-AE9A-4876-857E-9770E2040C21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F73032AC-AE9A-4876-857E-9770E2040C21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F73032AC-AE9A-4876-857E-9770E2040C21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F73032AC-AE9A-4876-857E-9770E2040C21}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -58,10 +58,6 @@
     <Compile Include="SearchService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PriceCalculation.Data.Model\PriceCalculation.Data.Models.csproj">
-      <Project>{72fd0a5a-0128-45ef-9ccc-02e7de551bb1}</Project>
-      <Name>PriceCalculation.Data.Models</Name>
-    </ProjectReference>
     <ProjectReference Include="..\PriceCalculation.Data\PriceCalculation.Data.csproj">
       <Project>{dc2e57a0-b723-408f-8a9e-9486a12c8d43}</Project>
       <Name>PriceCalculation.Data</Name>
@@ -70,9 +66,9 @@
       <Project>{3d4b79bd-cf68-413d-a4a9-79aa803456a8}</Project>
       <Name>PriceCalculation.Mapper</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PriceCalculation.ViewModels\PriceCalculation.View.Models.csproj">
-      <Project>{4ce39bbd-f006-4628-b42c-f3c8bc4ac6a5}</Project>
-      <Name>PriceCalculation.View.Models</Name>
+    <ProjectReference Include="..\PriceCalculation.Models\PriceCalculation.Models.csproj">
+      <Project>{f73032ac-ae9a-4876-857e-9770e2040c21}</Project>
+      <Name>PriceCalculation.Models</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

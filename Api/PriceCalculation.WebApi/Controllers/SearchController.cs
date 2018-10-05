@@ -4,10 +4,10 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using PriceCalculation.Service;
-using PriceCalculation.ViewModels;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using PriceCalculation.Service;
+using PriceCalculation.Models.View;
 
 namespace PriceCalculation.WebApi.Controllers
 {
@@ -100,6 +100,7 @@ namespace PriceCalculation.WebApi.Controllers
         [Route("GetAllBusinessItems")]
         public HttpResponseMessage GetAllBusinessItems([FromUri]string property, [FromUri]string searchCriteria)
         {
+            // Need to test a different Model
             var serviceResult = _searchService.GetAll<BusinessItemOModel>(property, searchCriteria);
             if (!(serviceResult.Success))
             {

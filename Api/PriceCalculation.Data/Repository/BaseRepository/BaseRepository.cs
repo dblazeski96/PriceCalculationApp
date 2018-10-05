@@ -4,120 +4,109 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Reflection;
 using System.Collections;
-using System.Linq.Expressions;
 using PriceCalculation.Mapper;
 using System.Net;
-using PriceCalculation.Data.Models;
+using PriceCalculation.Models.Base;
 
 namespace PriceCalculation.Data.Repository
 {
-    public abstract class BaseRepository<T> : IRepository<T> where T : class
+    public abstract class BaseRepository<T> : IRepository<T>
+        where T : class, BaseDataModel
     {
         protected readonly DbContext _dbContext;
-
+    
         public BaseRepository(DbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public virtual void Create(T item)
+        // CRUD: Create 
+        public virtual void Create(T item) // Need to test
         {
-            IDbSet<T> dbSet = _dbContext.Set<T>();
-
+            var dbSet = _dbContext.Set<T>();
             dbSet.Add(item);
         }
 
-        public virtual void Change(T item)
+        // CRUD: Change
+        public virtual void Change(T item) // Need to finish
         {
-            UpdateBaseModels(item);
-            UpdateCollections(item);
+            var dbSet = _dbContext.Set<T>();
+            var dbSetIncluded = dbSet.IncludePropsToDbSet();
         }
 
-        private void UpdateBaseModels(object item)
-        {
-            var dbEntityEntry = _dbContext.Entry(item);
-            dbEntityEntry.State = EntityState.Modified;
+        //private void UpdateBaseModels(object item)
+        //{
+        //    var dbEntityEntry = _dbContext.Entry(item);
+        //    dbEntityEntry.State = EntityState.Modified;
 
-            var itemType = item.GetType();
+        //    var itemType = item.GetType();
 
-            var includableProps = itemType.GetIncludableProps(false);
+        //    var includableProps = itemType.GetIncludableProps(false);
 
-            foreach (var prop in includableProps)
-            {
-                var recursiveItem = itemType.GetProperty(prop.PropertyType.Name).GetValue(item);
-                if (recursiveItem != null)
-                {
-                    UpdateBaseModels(recursiveItem);
-                }
-            }
-        }
+        //    foreach (var prop in includableProps)
+        //    {
+        //        var recursiveItem = itemType.GetProperty(prop.PropertyType.Name).GetValue(item);
+        //        if (recursiveItem != null)
+        //        {
+        //            UpdateBaseModels(recursiveItem);
+        //        }
+        //    }
+        //}
 
-        private void UpdateCollections(object item)
-        {
-            var itemType = item.GetType();
-            var includableCollections = itemType.GetIncludableProps(true, false);
+        //private void UpdateCollections(object item)
+        //{
+        //    var itemType = item.GetType();
+        //    var includableCollections = itemType.GetIncludableProps(true, false);
 
-            foreach (var collectionProp in includableCollections)
-            {
-                var collection = (ICollection)itemType.GetProperty(collectionProp.Name).GetValue(item);
+        //    foreach (var collectionProp in includableCollections)
+        //    {
+        //        var collection = (ICollection)itemType.GetProperty(collectionProp.Name).GetValue(item);
                 
-                if (collection != null)
-                {
-                    foreach (var collectionItem in collection)
-                    {
-                        var dbEntityEntry = _dbContext.Entry(collectionItem);
-                        dbEntityEntry.State = EntityState.Modified;
+        //        if (collection != null)
+        //        {
+        //            foreach (var collectionItem in collection)
+        //            {
+        //                var dbEntityEntry = _dbContext.Entry(collectionItem);
+        //                dbEntityEntry.State = EntityState.Modified;
 
-                        if (collectionItem != null)
-                        {
-                            UpdateCollections(collectionItem);
-                        }
-                    }
-                }
-            }
+        //                if (collectionItem != null)
+        //                {
+        //                    UpdateCollections(collectionItem);
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
+
+
+        // CRUD: Remove
+        public virtual void Remove(int id) // Need to test
+        {
+            var dbSet = _dbContext.Set<T>();
+
+            var item = dbSet.Find(id);
+            dbSet.Remove(item);
         }
 
-        public virtual void Remove(int id)
+        // CRUD: Get
+        public virtual T Get(int id) // Good
         {
-            IDbSet<T> dbSet = _dbContext.Set<T>();
+            var dbSet = _dbContext.Set<T>();
+            var dbSetIncluded = dbSet.IncludePropsToDbSet();
 
-            var itemToRemove = dbSet.Find(id);
+            var item = dbSetIncluded.ToList().Single(i => (int)i.GetType().GetProperty("Id").GetValue(i) == id);
 
-            dbSet.Remove(itemToRemove);
+            return item;
         }
 
-        public virtual T Get(int id)
+        // CRUD: GetAll
+        public virtual IEnumerable<T> GetAll(string property, string searchCriteria) // Good
         {
-            IEnumerable<T> items = GetAll(null, null);
+            var dbSet = _dbContext.Set<T>();
+            var dbSetIncluded = dbSet.IncludePropsToDbSet();
 
-            foreach (var item in items)
-            {
-                if ((int)
-                    item.GetType()
-                    .GetProperty("Id")
-                    .GetValue(item) == id)
-                {
-                    return item;
-                }
-            }
-
-            throw new WebException("Item not found!");
-        }
-
-        public virtual IEnumerable<T> GetAll(string property, string searchCriteria)
-        {
-            var dbSet = _dbContext.Set<T>().AsQueryable();
-
-            var includableProps = DetermineIncludableProps(typeof(T), null, new List<string>(), new List<string>());
-
-            foreach (var prop in includableProps)
-            {
-                dbSet = dbSet.Include(prop);
-            }
-
-            var items = dbSet.ToList();
+            var items = dbSetIncluded.ToList();
 
             if (searchCriteria == "" || searchCriteria == null)
             {
@@ -133,33 +122,6 @@ namespace PriceCalculation.Data.Repository
             );
 
             return itemsFiltered;
-        }
-
-        private ICollection<string> DetermineIncludableProps(Type item, string parentItemPath, ICollection<string> includedPropPaths, ICollection<string> includedProps)
-        {
-            var includableProps = item.GetIncludableProps(false);
-
-            foreach (var prop in includableProps)
-            {
-                var propType = prop.PropertyType;
-                if (typeof(IEnumerable<BaseModel>).IsAssignableFrom(propType))
-                {
-                    propType = propType.GetGenericArguments().Single();
-                }
-
-                if (!includedProps.Contains(propType.Name))
-                {
-                    includedProps.Add(propType.Name);
-
-                    var itemPath = parentItemPath == null || parentItemPath == "" ? prop.Name : parentItemPath + "." + prop.Name;
-
-                    includedPropPaths.Add(itemPath);
-
-                    DetermineIncludableProps(prop.PropertyType, itemPath, includedPropPaths, includedProps);
-                }
-            }
-
-            return includedPropPaths;
         }
     }
 }

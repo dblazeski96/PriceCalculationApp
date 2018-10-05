@@ -65,10 +65,6 @@
     <Compile Include="ServiceTests\ServicesTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PriceCalculation.Data.Model\PriceCalculation.Data.Models.csproj">
-      <Project>{72fd0a5a-0128-45ef-9ccc-02e7de551bb1}</Project>
-      <Name>PriceCalculation.Data.Models</Name>
-    </ProjectReference>
     <ProjectReference Include="..\PriceCalculation.Data\PriceCalculation.Data.csproj">
       <Project>{DC2E57A0-B723-408F-8A9E-9486A12C8D43}</Project>
       <Name>PriceCalculation.Data</Name>
@@ -77,13 +73,13 @@
       <Project>{3D4B79BD-CF68-413D-A4A9-79AA803456A8}</Project>
       <Name>PriceCalculation.Mapper</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PriceCalculation.Models\PriceCalculation.Models.csproj">
+      <Project>{f73032ac-ae9a-4876-857e-9770e2040c21}</Project>
+      <Name>PriceCalculation.Models</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PriceCalculation.Service\PriceCalculation.Service.csproj">
       <Project>{54bad5de-2b12-40fa-a764-5c1bc8610b1b}</Project>
       <Name>PriceCalculation.Service</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PriceCalculation.ViewModels\PriceCalculation.View.Models.csproj">
-      <Project>{4ce39bbd-f006-4628-b42c-f3c8bc4ac6a5}</Project>
-      <Name>PriceCalculation.View.Models</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

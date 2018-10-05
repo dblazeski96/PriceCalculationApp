@@ -1,7 +1,4 @@
-﻿using PriceCalculation.Data.Models;
-using PriceCalculation.Data.Repository;
-using PriceCalculation.Data.UnitOfWork;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +6,18 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using PriceCalculation.Data.Repository;
+using PriceCalculation.Data.UnitOfWork;
+using PriceCalculation.Models.Base;
+using PriceCalculation.Models.Data;
 
 namespace PriceCalculation.Service
 {
     public static class ServiceHelper
     {
+        // Determines DataModel object from ViewModel object.
         public static Type GetDataModelType<TOutput>()
+            where TOutput : class, BaseViewModel
         {
             string dataModelName = typeof(TOutput).Name.Replace("OModel", "");
 
@@ -31,6 +34,16 @@ namespace PriceCalculation.Service
             throw new WebException("Data model does not exist!");
         }
 
+        // Save all database changes from all DbContext objects that a given service is using.
+        public static void SaveChanges(IEnumerable<IUnitOfWork> uoWs)
+        {
+            foreach (var uoW in uoWs)
+            {
+                uoW.Commit();
+            }
+        }
+
+        // Returns all Unit of Works for a given service.
         public static IEnumerable<IUnitOfWork> GetServiceUoWs(IService service)
         {
             var serviceUoWs = service.GetType()
@@ -39,13 +52,25 @@ namespace PriceCalculation.Service
 
             if (serviceUoWs.Any())
             {
-                return serviceUoWs.Select(f => (IUnitOfWork)f.GetValue(service));
+                return serviceUoWs.Select(u => (IUnitOfWork)u.GetValue(service));
             }
 
             throw new WebException("Service does not contain any Unit Of Work!");
         }
 
-        public static object DetermineRepository(Type dataModelType, IEnumerable<IUnitOfWork> uoWs)
+        // Determines a repository from a ViewModel object.
+        public static object DetermineRepository<TOutput>(IService service)
+            where TOutput : class, BaseViewModel
+        {
+            var serviceUoWs = ServiceHelper.GetServiceUoWs(service);
+            var dataModelType = ServiceHelper.GetDataModelType<TOutput>();
+            var repository = ServiceHelper.FindRepository(dataModelType, serviceUoWs);
+
+            return repository;
+        }
+
+        // Searches the repository within all assemblies
+        private static object FindRepository(Type dataModelType, IEnumerable<IUnitOfWork> uoWs)
         {
             Type repositoryType = typeof(IRepository<>).MakeGenericType(dataModelType);
 
@@ -53,7 +78,7 @@ namespace PriceCalculation.Service
             {
                 var uoWRepositories = uoW.GetType()
                     .GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                    .Where(p => repositoryType.IsAssignableFrom(p.PropertyType));
+                    .Where(r => repositoryType.IsAssignableFrom(r.PropertyType));
 
                 if (uoWRepositories.Any())
                 {

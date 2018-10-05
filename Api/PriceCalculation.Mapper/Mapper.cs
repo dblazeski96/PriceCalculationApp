@@ -1,18 +1,20 @@
-﻿using PriceCalculation.Data.Models;
-using PriceCalculation.ViewModels;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PriceCalculation.Models.Base;
+using PriceCalculation.Models.Data;
+using PriceCalculation.Models.View;
 
 namespace PriceCalculation.Mapper
 {
     public static class Mapper
     {
-        public static dynamic Map(this object src, Type mapModel)
+        // Maps DataModel to ViewModel
+        public static BaseViewModel MapToViewModel(this object src, Type mapModel)
         {
             switch (mapModel.Name)
             {
@@ -38,6 +40,31 @@ namespace PriceCalculation.Mapper
                         return mapObj;
                     }
 
+                case "BusinessEntityOModel":
+                    {
+                        var objMain = new BusinessEntity();
+                        objMain.CopyPropertiesFrom(src);
+
+                        var mapObjMain = new BusinessEntityOModel();
+
+                        mapObjMain.Id = objMain.Id;
+                        mapObjMain.Name = objMain.Name;
+                        mapObjMain.Type = objMain.Type.ToString();
+                        mapObjMain.Currency = objMain.Currency.ToString();
+
+                        return mapObjMain;
+                    }
+
+                default:
+                    throw new Exception($"No implementation to map ${mapModel.Name}!");
+            }
+        }
+
+        // Maps a ViewModel to DataModel
+        public static BaseDataModel MapToDataModel(this object src, Type mapModel)
+        {
+            switch (mapModel.Name)
+            {
                 case "BusinessItem":
                     {
                         var srcObj = new BusinessItemIModel();
@@ -74,23 +101,8 @@ namespace PriceCalculation.Mapper
                         return mapObj;
                     }
 
-                case "BusinessEntityOModel":
-                    {
-                        var objMain = new BusinessEntity();
-                        objMain.CopyPropertiesFrom(src);
-
-                        var mapObjMain = new BusinessEntityOModel();
-
-                        mapObjMain.Id = objMain.Id;
-                        mapObjMain.Name = objMain.Name;
-                        mapObjMain.Type = objMain.Type.ToString();
-                        mapObjMain.Currency = objMain.Currency.ToString();
-
-                        return mapObjMain;
-                    }
-
                 default:
-                    throw new Exception($"No implementation to map ${mapModel.Name} model!");
+                    throw new Exception($"No implementation to map ${mapModel.Name}!");
             }
         }
     }

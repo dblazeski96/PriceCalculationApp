@@ -1,0 +1,10 @@
+C:\Users\Dejan.PBlazheski\Documents\Visual Studio 2015\Projects\PriceCalculationApp\Api\PriceCalculation.Models\bin\Debug\PriceCalculation.Models.dll.config
+C:\Users\Dejan.PBlazheski\Documents\Visual Studio 2015\Projects\PriceCalculationApp\Api\PriceCalculation.Models\bin\Debug\PriceCalculation.Models.dll
+C:\Users\Dejan.PBlazheski\Documents\Visual Studio 2015\Projects\PriceCalculationApp\Api\PriceCalculation.Models\bin\Debug\PriceCalculation.Models.pdb
+C:\Users\Dejan.PBlazheski\Documents\Visual Studio 2015\Projects\PriceCalculationApp\Api\PriceCalculation.Models\bin\Debug\EntityFramework.dll
+C:\Users\Dejan.PBlazheski\Documents\Visual Studio 2015\Projects\PriceCalculationApp\Api\PriceCalculation.Models\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\Dejan.PBlazheski\Documents\Visual Studio 2015\Projects\PriceCalculationApp\Api\PriceCalculation.Models\bin\Debug\EntityFramework.xml
+C:\Users\Dejan.PBlazheski\Documents\Visual Studio 2015\Projects\PriceCalculationApp\Api\PriceCalculation.Models\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\Dejan.PBlazheski\Documents\Visual Studio 2015\Projects\PriceCalculationApp\Api\PriceCalculation.Models\obj\Debug\PriceCalculation.Models.csprojResolveAssemblyReference.cache
+C:\Users\Dejan.PBlazheski\Documents\Visual Studio 2015\Projects\PriceCalculationApp\Api\PriceCalculation.Models\obj\Debug\PriceCalculation.Models.dll
+C:\Users\Dejan.PBlazheski\Documents\Visual Studio 2015\Projects\PriceCalculationApp\Api\PriceCalculation.Models\obj\Debug\PriceCalculation.Models.pdb

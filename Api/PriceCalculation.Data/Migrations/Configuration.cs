@@ -1,11 +1,12 @@
 namespace PriceCalculation.Data.Migrations
 {
-    using Models;
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Collections.Generic;
     using System.Linq;
+    using Models;
+    using Models.Data;
 
     internal sealed class Configuration : DbMigrationsConfiguration<PriceCalculation.Data.PriceCalculationContext>
     {

@@ -41,24 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseModel\BaseModel.cs" />
-    <Compile Include="BusinessEntity.cs" />
-    <Compile Include="BusinessItem.cs" />
-    <Compile Include="Relationships\CatalogueItem.cs" />
-    <Compile Include="Catalogue.cs" />
-    <Compile Include="Enums\BusinessType.cs" />
-    <Compile Include="Enums\Currency.cs" />
-    <Compile Include="Enums\Operation.cs" />
-    <Compile Include="Enums\PriceType.cs" />
-    <Compile Include="Group.cs" />
-    <Compile Include="Item.cs" />
-    <Compile Include="Price.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rule.cs" />
-    <Compile Include="EquationOperation.cs" />
-    <Compile Include="Strategy.cs" />
-    <Compile Include="Relationships\StrategyOperation.cs" />
-    <Compile Include="Relationships\StrategyRule.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

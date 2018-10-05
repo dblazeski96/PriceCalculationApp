@@ -1,20 +1,20 @@
-﻿using PriceCalculation.Data.Models;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using PriceCalculation.Models.Base;
 using System.Data.Entity;
 
 namespace PriceCalculation.Mapper
 {
     public static class Helper
     {
-        public static void CopyPropertiesFrom(this object src, object obj, bool copyId = true)
+        // Copy Properties from one object to another
+        public static void CopyPropertiesFrom(this BaseModel src, object obj, bool copyId = true)
         {
             var srcProps = src.GetType().GetProperties();
             var objProps = obj.GetType().GetProperties();
@@ -43,25 +43,87 @@ namespace PriceCalculation.Mapper
             }
         }
 
-        public static IEnumerable<PropertyInfo> GetIncludableProps(this Type obj, bool includeCollections = true, bool includeBaseModels = true)
+        // Includes all includable properties from a DbSet object.
+        public static IQueryable<T> IncludePropsToDbSet<T>(this DbSet<T> dbSet)
+            where T : class, BaseDataModel
+        {
+            var dbSetIncluded = dbSet.AsQueryable();
+
+            var includablePropPaths = Helper.DetermineIncludablePropPaths(
+                typeof(T),
+                null,
+                new List<string>(),
+                new List<string>());
+
+            foreach (var propPath in includablePropPaths)
+            {
+                dbSetIncluded = dbSetIncluded.Include(propPath);
+            }
+
+            return dbSetIncluded;
+        }
+
+        // Extension for "IncludePropsToDbSet" method. Gets the paths of the includable properties for the current DbSet object.
+        private static ICollection<string> DetermineIncludablePropPaths(Type item, string parentItemPath, ICollection<string> includedProps, ICollection<string> includedPropPaths)
+        {
+            var includableProps = item.GetIncludableProps();
+
+            foreach (var prop in includableProps)
+            {
+                var propType = prop.PropertyType;
+
+                if (typeof(IEnumerable).IsAssignableFrom(propType))
+                {
+                    var collectionPath = parentItemPath == null || parentItemPath == "" ?
+                        prop.Name :
+                        parentItemPath + "." + prop.Name;
+
+                    if (!includedPropPaths.Contains(collectionPath))
+                    {
+                        includedPropPaths.Add(collectionPath);
+                    }
+                }
+                else
+                {
+                    if (!includedProps.Contains(propType.Name))
+                    {
+                        includedProps.Add(propType.Name);
+
+                        var itemPath = parentItemPath == null || parentItemPath == "" ?
+                            prop.Name :
+                            parentItemPath + "." + prop.Name;
+
+                        includedPropPaths.Add(itemPath);
+
+                        // Recursive function
+                        DetermineIncludablePropPaths(propType, itemPath, includedProps, includedPropPaths);
+                    }
+                }
+            }
+
+            return includedPropPaths;
+        }
+
+        // Extension for "IncludePropsToDbSet" method. Gets all the includable properties for the current DbSet object.
+        private static IEnumerable<PropertyInfo> GetIncludableProps(this Type obj, bool includeCollections = true, bool includeBaseModels = true)
         {
             var props = obj.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
             if (includeCollections && includeBaseModels)
             {
                 return props.Where(p =>
-                    typeof(BaseModel).IsAssignableFrom(p.PropertyType) ||
-                    typeof(IEnumerable<BaseModel>).IsAssignableFrom(p.PropertyType));
+                    typeof(BaseDataModel).IsAssignableFrom(p.PropertyType) ||
+                    typeof(IEnumerable<BaseDataModel>).IsAssignableFrom(p.PropertyType));
             }
 
             if (includeCollections && !includeBaseModels)
             {
-                return props.Where(p => typeof(IEnumerable).IsAssignableFrom(p.PropertyType));
+                return props.Where(p => typeof(IEnumerable<BaseDataModel>).IsAssignableFrom(p.PropertyType));
             }
 
             if (!includeCollections && includeBaseModels)
             {
-                return props.Where(p => typeof(BaseModel).IsAssignableFrom(p.PropertyType));
+                return props.Where(p => typeof(BaseDataModel).IsAssignableFrom(p.PropertyType));
             }
 
             throw new WebException("You must include eather 'BaseModels' or 'Collections' or both");
