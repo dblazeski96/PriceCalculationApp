@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 
 namespace PriceCalculation.Data.UnitOfWork
 {
-    public class PriceCalculationUoW<Context> : BaseUoW<Context>, IPriceCalculationUoW where Context : DbContext
+    public class PriceCalculationUoW<Context> : BaseUoW<Context>, IPriceCalculationUoW 
+        where Context : DbContext
     {
         public IBusinessEntityRepository _businessEntityRepository { get; private set; }
         public IBusinessItemRepository _businessItemRepository { get; private set; }

@@ -8,27 +8,28 @@ using System.Net;
 using PriceCalculation.Mapper;
 using PriceCalculation.Models.Base;
 using PriceCalculation.Data.Repository;
+using PriceCalculation.Data.UnitOfWork;
 
 namespace PriceCalculation.Service
 {
-    public abstract class BaseService : IService
+    public abstract partial class BaseService
     {
         // Service CRUD: Create
-        public virtual ServiceResult<TOutput> Create<TInput, TOutput>(TInput item)
-            where TInput : class, BaseViewModel
+        protected ServiceResult<TOutput> Create<TInput, TOutput>(IRepository<TInput> repository, TInput item)
+            where TInput : class, BaseDataModel
             where TOutput : class, BaseViewModel
         {
             try
             {
-                var repository = ServiceHelper.DetermineRepository<TOutput>(this);
-
-                var itemDataType = ServiceHelper.GetDataModelType<TOutput>();
-                var itemDataModel = item.MapToDataModel(itemDataType);
-
-                //repository.Create(itemDataModel);
-                repository.GetType().GetMethod("Create").Invoke(repository, new object[] { itemDataModel });
-
-                ServiceHelper.SaveChanges(ServiceHelper.GetServiceUoWs(this));
+                var repositoryResult = repository.Create(item);
+                if (!repositoryResult.Success)
+                {
+                    return new ServiceResult<TOutput>
+                    {
+                        Success = false,
+                        ex = repositoryResult.ex
+                    };
+                }
 
                 return new ServiceResult<TOutput>
                 {
@@ -46,21 +47,21 @@ namespace PriceCalculation.Service
         }
 
         // Service CRUD: Change
-        public virtual ServiceResult<TOutput> Change<TInput, TOutput>(TInput item)
-            where TInput : class, BaseViewModel
+        protected ServiceResult<TOutput> Change<TInput, TOutput>(IRepository<TInput> repository, TInput item)
+            where TInput : class, BaseDataModel
             where TOutput : class, BaseViewModel
         {
             try
             {
-                var repository = ServiceHelper.DetermineRepository<TOutput>(this);
-
-                var itemDataType = ServiceHelper.GetDataModelType<TOutput>();
-                var itemDataModel = item.MapToDataModel(itemDataType);
-
-                //repository.Change(itemDataModel);
-                repository.GetType().GetMethod("Change").Invoke(repository, new object[] { itemDataModel });
-
-                ServiceHelper.SaveChanges(ServiceHelper.GetServiceUoWs(this));
+                var repositoryResult = repository.Change(item);
+                if (!repositoryResult.Success)
+                {
+                    return new ServiceResult<TOutput>
+                    {
+                        Success = false,
+                        ex = repositoryResult.ex
+                    };
+                }
 
                 return new ServiceResult<TOutput>
                 {
@@ -78,17 +79,21 @@ namespace PriceCalculation.Service
         }
 
         // Service CRUD: Remove
-        public virtual ServiceResult<TOutput> Remove<TOutput>(int id)
+        protected ServiceResult<TOutput> Remove<TInput, TOutput>(IRepository<TInput> repository, int id)
+            where TInput : class, BaseDataModel
             where TOutput : class, BaseViewModel
         {
             try
             {
-                var repository = ServiceHelper.DetermineRepository<TOutput>(this);
-
-                //repository.Remove(id);
-                repository.GetType().GetMethod("Remove").Invoke(repository, new object[] { id });
-
-                ServiceHelper.SaveChanges(ServiceHelper.GetServiceUoWs(this));
+                var repositoryResult = repository.Remove(id);
+                if (!repositoryResult.Success)
+                {
+                    return new ServiceResult<TOutput>
+                    {
+                        Success = false,
+                        ex = repositoryResult.ex
+                    };
+                }
 
                 return new ServiceResult<TOutput>
                 {
@@ -106,24 +111,29 @@ namespace PriceCalculation.Service
         }
 
         // Service CRUD: Get
-        public virtual ServiceResult<TOutput> Get<TOutput>(int id)
+        protected ServiceResult<TOutput> Get<TInput, TOutput>(IRepository<TInput> repository, int id)
+            where TInput : class, BaseDataModel
             where TOutput : class, BaseViewModel
         {
             try
             {
-                var repository = ServiceHelper.DetermineRepository<TOutput>(this);
-
-                //var item = (TOutput)repository.Get(id);
-                var item = repository.GetType().GetMethod("Get").Invoke(repository, new object[] { id });
-                var itemViewModel = (TOutput)item.MapToViewModel(typeof(TOutput));
+                var repositoryResult = repository.Get(id);
+                if (!repositoryResult.Success)
+                {
+                    return new ServiceResult<TOutput>
+                    {
+                        Success = false,
+                        ex = repositoryResult.ex
+                    };
+                }
 
                 return new ServiceResult<TOutput>
                 {
                     Success = true,
-                    Item = itemViewModel
+                    Item = repositoryResult.item.MapToViewModel<TOutput>()
                 };
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new ServiceResult<TOutput>
                 {
@@ -134,29 +144,29 @@ namespace PriceCalculation.Service
         }
 
         // Service CRUD: GetAll
-        public virtual ServiceResult<TOutput> GetAll<TOutput>(string property, string searchCriteria)
+        protected ServiceResult<TOutput> GetAll<TInput, TOutput>(IRepository<TInput> repository, string property, string searchCriteria)
+            where TInput : class, BaseDataModel
             where TOutput : class, BaseViewModel
         {
             try
             {
-                var repository = ServiceHelper.DetermineRepository<TOutput>(this);
-
-                //var items = repository.GetAll(property, searchCriteria);
-                var items = (IEnumerable<object>)repository.GetType().GetMethod("GetAll").Invoke(repository, new object[] { property, searchCriteria });
-
-                var itemViewModels = new List<TOutput>();
-                foreach (var i in items)
+                var repositoryResult = repository.GetAll(property, searchCriteria);
+                if (!repositoryResult.Success)
                 {
-                    itemViewModels.Add((TOutput)i.MapToViewModel(typeof(TOutput)));
+                    return new ServiceResult<TOutput>
+                    {
+                        Success = false,
+                        ex = repositoryResult.ex
+                    };
                 }
 
                 return new ServiceResult<TOutput>
                 {
                     Success = true,
-                    Items = itemViewModels
+                    Items = repositoryResult.items.Select(i => i.MapToViewModel<TOutput>()).ToList()
                 };
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new ServiceResult<TOutput>
                 {
@@ -164,7 +174,6 @@ namespace PriceCalculation.Service
                     ex = ex
                 };
             }
-
         }
     }
 }

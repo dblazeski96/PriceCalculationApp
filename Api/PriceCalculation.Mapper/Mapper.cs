@@ -13,10 +13,18 @@ namespace PriceCalculation.Mapper
 {
     public static class Mapper
     {
-        // Maps DataModel to ViewModel
-        public static BaseViewModel MapToViewModel(this object src, Type mapModel)
+        /// <summary>
+        ///     Maps a Data Model to a View Model
+        /// </summary>
+        /// <param name="src">Data Model that </param>
+        /// <param name="mapModel"></param>
+        /// <returns></returns>
+        public static T MapToViewModel<T>(this BaseDataModel src)
+            where T : class, BaseViewModel
         {
-            switch (mapModel.Name)
+            var mapType = typeof(T);
+
+            switch (mapType.Name)
             {
                 case "BusinessItemOModel":
                     {
@@ -37,33 +45,42 @@ namespace PriceCalculation.Mapper
                             DateOfLastSoldItem = srcObj.DateOfLastSold.Date.ToString("dd/MM/yyyy")
                         };
 
-                        return mapObj;
+                        var map = (T)Activator.CreateInstance(mapType);
+                        map.CopyPropertiesFrom(mapObj);
+
+                        return map;
                     }
 
                 case "BusinessEntityOModel":
                     {
-                        var objMain = new BusinessEntity();
-                        objMain.CopyPropertiesFrom(src);
+                        var srcObj = new BusinessEntity();
+                        srcObj.CopyPropertiesFrom(src);
 
-                        var mapObjMain = new BusinessEntityOModel();
+                        var mapObj = new BusinessEntityOModel();
 
-                        mapObjMain.Id = objMain.Id;
-                        mapObjMain.Name = objMain.Name;
-                        mapObjMain.Type = objMain.Type.ToString();
-                        mapObjMain.Currency = objMain.Currency.ToString();
+                        mapObj.Id = srcObj.Id;
+                        mapObj.Name = srcObj.Name;
+                        mapObj.Type = srcObj.Type.ToString();
+                        mapObj.Currency = srcObj.Currency.ToString();
 
-                        return mapObjMain;
+                        var map = (T)Activator.CreateInstance(mapType);
+                        map.CopyPropertiesFrom(mapObj);
+
+                        return map;
                     }
 
                 default:
-                    throw new Exception($"No implementation to map ${mapModel.Name}!");
+                    throw new Exception($"No implementation to map ${mapType.Name}!");
             }
         }
 
         // Maps a ViewModel to DataModel
-        public static BaseDataModel MapToDataModel(this object src, Type mapModel)
+        public static T MapToDataModel<T>(this BaseViewModel src)
+            where T : class, BaseDataModel
         {
-            switch (mapModel.Name)
+            var mapType = typeof(T);
+
+            switch (mapType.Name)
             {
                 case "BusinessItem":
                     {
@@ -98,11 +115,30 @@ namespace PriceCalculation.Mapper
                             Catalogues = null,
                         };
 
-                        return mapObj;
+                        var map = (T)Activator.CreateInstance(mapType);
+                        map.CopyPropertiesFrom(mapObj);
+
+                        return map;
+                    }
+
+                case "BusinessEntity":
+                    {
+                        var srcObj = new BusinessEntityIModel();
+                        srcObj.CopyPropertiesFrom(src);
+
+                        var mapObj = new BusinessEntity
+                        {
+
+                        };
+
+                        var map = (T)Activator.CreateInstance(mapType);
+                        map.CopyPropertiesFrom(mapObj);
+
+                        return map;
                     }
 
                 default:
-                    throw new Exception($"No implementation to map ${mapModel.Name}!");
+                    throw new Exception($"No implementation to map {mapType.Name}!");
             }
         }
     }

@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace PriceCalculation.Data.UnitOfWork
 {
-    public abstract class BaseUoW<Context> : IUnitOfWork where Context : DbContext
+    public abstract class BaseUoW<Context> : IUnitOfWork 
+        where Context : DbContext
     {
         protected DbContext _dbContext;
 

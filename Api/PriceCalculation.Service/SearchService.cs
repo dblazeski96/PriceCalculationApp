@@ -11,51 +11,239 @@ using System.Reflection;
 using PriceCalculation.Data.Repository;
 using PriceCalculation.Models.Base;
 using PriceCalculation.Data.UnitOfWork;
+using PriceCalculation.Models.View;
+using PriceCalculation.Models.Data;
 
 namespace PriceCalculation.Service
 {
     public class SearchService : BaseService, ISearchService
     {
-        private readonly IPriceCalculationUoW _priceCalculationUoW;
+        private IPriceCalculationUoW _priceCalculationUoW;
 
         public SearchService(IPriceCalculationUoW priceCalculationUoW)
         {
             _priceCalculationUoW = priceCalculationUoW;
         }
 
-        public ServiceResult<TOutput> ChangePropertyOfMultipleItems<TOutput>(string property, string value, IList<int> items) // Need to finish
-            where TOutput : class, BaseViewModel
+        //
+        // Business Item
+        //
+        public ServiceResult<BusinessItemOModel> CreateBusinessItem(BusinessItemIModel businessItem)
         {
             try
             {
-                //var repository = ServiceHelper.DetermineRepository<TOutput>(this);
+                var serviceResult = Create<BusinessItem, BusinessItemOModel>(
+                    _priceCalculationUoW._businessItemRepository,
+                    businessItem.MapToDataModel<BusinessItem>());
 
-                //foreach (var itemId in items)
-                //{
-                //    var item = repository.Get(itemId);
+                _priceCalculationUoW.Commit();
 
-                //    var itemProperty = item.GetType().GetProperty(property);
-                //    itemProperty.SetValue(item, Convert.ChangeType(value, itemProperty.PropertyType));
-
-                //    repository.Change(item);
-                //}
-
-                //ServiceHelper.SaveChanges(ServiceHelper.GetServiceUoWs(this));
-
-                return new ServiceResult<TOutput>
-                {
-                    Success = true
-                };
+                return serviceResult;
             }
             catch (Exception ex)
             {
-                return new ServiceResult<TOutput>
+                return new ServiceResult<BusinessItemOModel>
                 {
                     Success = false,
                     ex = ex
                 };
             }
         }
+        public ServiceResult<BusinessItemOModel> ChangeBusinessItem(BusinessItemIModel businessItem)
+        {
+            try
+            {
+                var serviceResult = Change<BusinessItem, BusinessItemOModel>(
+                    _priceCalculationUoW._businessItemRepository,
+                    businessItem.MapToDataModel<BusinessItem>());
+
+                _priceCalculationUoW.Commit();
+
+                return serviceResult;
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResult<BusinessItemOModel>
+                {
+                    Success = false,
+                    ex = ex
+                };
+            }
+        }
+        public ServiceResult<BusinessItemOModel> RemoveBusinessItem(int id)
+        {
+            try
+            {
+                var serviceResult = Remove<BusinessItem, BusinessItemOModel>(
+                    _priceCalculationUoW._businessItemRepository,
+                    id);
+
+                _priceCalculationUoW.Commit();
+
+                return serviceResult;
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResult<BusinessItemOModel>
+                {
+                    Success = false,
+                    ex = ex
+                };
+            }
+        }
+        public ServiceResult<BusinessItemOModel> GetBusinessItem(int id)
+        {
+            var serviceResult = Get<BusinessItem, BusinessItemOModel>(
+                _priceCalculationUoW._businessItemRepository,
+                id);
+
+            return serviceResult;
+        }
+        public ServiceResult<BusinessItemOModel> GetAllBusinessItems(string property, string searchCriteria)
+        {
+            var serviceResult = GetAll<BusinessItem, BusinessItemOModel>(
+                _priceCalculationUoW._businessItemRepository,
+                property,
+                searchCriteria);
+
+            return serviceResult;
+        }
+        public ServiceResult<BusinessItemOModel> ChangePropertyOfMultipleBusinessItems(string property, string value, IEnumerable<int> items)
+        {
+            try
+            {
+                var serviceResult = ChangePropertyOfMultipleItems<BusinessItem, BusinessItemOModel>(
+                    _priceCalculationUoW._businessItemRepository,
+                    property,
+                    value,
+                    items);
+
+                _priceCalculationUoW.Commit();
+
+                return serviceResult;
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResult<BusinessItemOModel>
+                {
+                    Success = false,
+                    ex = ex
+                };
+            }
+        }
+
+        //
+        // Business Entity
+        //
+        public ServiceResult<BusinessEntityOModel> CreateBusinessEntity(BusinessEntityIModel businessEntity)
+        {
+            try
+            {
+                var serviceResult = Create<BusinessEntity, BusinessEntityOModel>(
+                    _priceCalculationUoW._businessEntityRepository,
+                    businessEntity.MapToDataModel<BusinessEntity>());
+
+                _priceCalculationUoW.Commit();
+
+                return serviceResult;
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResult<BusinessEntityOModel>
+                {
+                    Success = false,
+                    ex = ex
+                };
+            }
+            
+        }
+        public ServiceResult<BusinessEntityOModel> ChangeBusinessEntity(BusinessEntityIModel businessEntity)
+        {
+            try
+            {
+                var serviceResult = Change<BusinessEntity, BusinessEntityOModel>(
+                    _priceCalculationUoW._businessEntityRepository,
+                    businessEntity.MapToDataModel<BusinessEntity>());
+
+                _priceCalculationUoW.Commit();
+
+                return serviceResult;
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResult<BusinessEntityOModel>
+                {
+                    Success = false,
+                    ex = ex
+                };
+            }
+            
+        }
+        public ServiceResult<BusinessEntityOModel> RemoveBusinessEntity(int id)
+        {
+            try
+            {
+                var serviceResult = Remove<BusinessEntity, BusinessEntityOModel>(
+                    _priceCalculationUoW._businessEntityRepository,
+                    id);
+
+                _priceCalculationUoW.Commit();
+
+                return serviceResult;
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResult<BusinessEntityOModel>
+                {
+                    Success = false,
+                    ex = ex
+                };
+            }
+            
+        }
+        public ServiceResult<BusinessEntityOModel> GetBusinessEntity(int id)
+        {
+            var serviceResult = Get<BusinessEntity, BusinessEntityOModel>(
+                _priceCalculationUoW._businessEntityRepository,
+                id);
+
+            return serviceResult;
+        }
+        public ServiceResult<BusinessEntityOModel> GetAllBusinessEntities(string property, string searchCriteria)
+        {
+            var serviceResult = GetAll<BusinessEntity, BusinessEntityOModel>(
+                _priceCalculationUoW._businessEntityRepository,
+                property,
+                searchCriteria);
+
+            return serviceResult;
+        }
+
+        public ServiceResult<BusinessEntityOModel> ChangePropertyOfMultipleBusinessEntities(string property, string value, IEnumerable<int> items)
+        {
+            try
+            {
+                var serviceResult = ChangePropertyOfMultipleItems<BusinessEntity, BusinessEntityOModel>(
+                    _priceCalculationUoW._businessEntityRepository,
+                    property,
+                    value,
+                    items);
+
+                _priceCalculationUoW.Commit();
+
+                return serviceResult;
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResult<BusinessEntityOModel>
+                {
+                    Success = false,
+                    ex = ex
+                };
+            }
+        }
+
+
 
         public void Dispose()
         {

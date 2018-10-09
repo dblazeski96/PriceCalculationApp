@@ -9,7 +9,8 @@ namespace PriceCalculation.Data.Factory
 {
     public static class ContextFactory
     {
-        public static T Create<T>() where T : DbContext
+        public static T Create<T>() 
+            where T : DbContext
         {
             return (T)Activator.CreateInstance(typeof(T));
         }

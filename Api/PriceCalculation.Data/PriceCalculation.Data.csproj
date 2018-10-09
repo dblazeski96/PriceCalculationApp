@@ -55,12 +55,14 @@
     <Compile Include="PriceCalculationContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\BaseRepository\BaseRepository.cs" />
+    <Compile Include="Repository\BaseRepository\BaseSearchOperationsRepository.cs" />
+    <Compile Include="Repository\BaseRepository\IRepository.cs" />
+    <Compile Include="Repository\BaseRepository\RepositoryResult.cs" />
     <Compile Include="Repository\BusinessEntityRepository.cs" />
     <Compile Include="Repository\CatalogueRepository.cs" />
     <Compile Include="Repository\GroupRepository.cs" />
     <Compile Include="Repository\Interfaces\IBusinessEntityRepository.cs" />
     <Compile Include="Repository\Interfaces\IBusinessItemRepository.cs" />
-    <Compile Include="Repository\BaseRepository\IRepository.cs" />
     <Compile Include="Repository\BusinessItemRepository.cs" />
     <Compile Include="Repository\Interfaces\ICatalogueRepository.cs" />
     <Compile Include="Repository\Interfaces\IGroupRepository.cs" />

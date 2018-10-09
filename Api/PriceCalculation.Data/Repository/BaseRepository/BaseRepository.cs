@@ -11,7 +11,7 @@ using PriceCalculation.Models.Base;
 
 namespace PriceCalculation.Data.Repository
 {
-    public abstract class BaseRepository<T> : IRepository<T>
+    public abstract partial class BaseRepository<T> : IRepository<T>
         where T : class, BaseDataModel
     {
         protected readonly DbContext _dbContext;
@@ -22,106 +22,151 @@ namespace PriceCalculation.Data.Repository
         }
 
         // CRUD: Create 
-        public virtual void Create(T item) // Need to test
+        public virtual RepositoryResult<T> Create(T item) // Need to test
         {
-            var dbSet = _dbContext.Set<T>();
-            dbSet.Add(item);
+            try
+            {
+                var dbSet = _dbContext.Set<T>();
+                dbSet.Add(item);
+
+                return new RepositoryResult<T>
+                {
+                    Success = true
+                };
+            }
+            catch (Exception ex)
+            {
+                return new RepositoryResult<T>
+                {
+                    Success = false,
+                    ex = ex
+                };
+            }
         }
 
         // CRUD: Change
-        public virtual void Change(T item) // Need to finish
+        public virtual RepositoryResult<T> Change(T item) // Need to finish
         {
-            var dbSet = _dbContext.Set<T>();
-            var dbSetIncluded = dbSet.IncludePropsToDbSet();
+            try
+            {
+                var dbSet = _dbContext.Set<T>();
+                var dbSetIncluded = dbSet.IncludePropsToDbSet();
+
+                var itemId = (int)item.GetType().GetProperty("Id").GetValue(item);
+                var itemToChange = dbSetIncluded.ToList().Single(i => (int)i.GetType().GetProperty("Id").GetValue(i) == itemId);
+
+                itemToChange.CopyPropertiesFrom(item);
+
+                return new RepositoryResult<T>
+                {
+                    Success = true
+                };
+            }
+            catch (Exception ex)
+            {
+                return new RepositoryResult<T>
+                {
+                    Success = false,
+                    ex = ex
+                };
+            }
         }
 
-        //private void UpdateBaseModels(object item)
-        //{
-        //    var dbEntityEntry = _dbContext.Entry(item);
-        //    dbEntityEntry.State = EntityState.Modified;
-
-        //    var itemType = item.GetType();
-
-        //    var includableProps = itemType.GetIncludableProps(false);
-
-        //    foreach (var prop in includableProps)
-        //    {
-        //        var recursiveItem = itemType.GetProperty(prop.PropertyType.Name).GetValue(item);
-        //        if (recursiveItem != null)
-        //        {
-        //            UpdateBaseModels(recursiveItem);
-        //        }
-        //    }
-        //}
-
-        //private void UpdateCollections(object item)
-        //{
-        //    var itemType = item.GetType();
-        //    var includableCollections = itemType.GetIncludableProps(true, false);
-
-        //    foreach (var collectionProp in includableCollections)
-        //    {
-        //        var collection = (ICollection)itemType.GetProperty(collectionProp.Name).GetValue(item);
-                
-        //        if (collection != null)
-        //        {
-        //            foreach (var collectionItem in collection)
-        //            {
-        //                var dbEntityEntry = _dbContext.Entry(collectionItem);
-        //                dbEntityEntry.State = EntityState.Modified;
-
-        //                if (collectionItem != null)
-        //                {
-        //                    UpdateCollections(collectionItem);
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
-
-
         // CRUD: Remove
-        public virtual void Remove(int id) // Need to test
+        public virtual RepositoryResult<T> Remove(int id) // Need to test
         {
-            var dbSet = _dbContext.Set<T>();
+            try
+            {
+                var dbSet = _dbContext.Set<T>();
 
-            var item = dbSet.Find(id);
-            dbSet.Remove(item);
+                var item = dbSet.Find(id);
+                dbSet.Remove(item);
+
+                return new RepositoryResult<T>
+                {
+                    Success = true
+                };
+            }
+            catch (Exception ex)
+            {
+                return new RepositoryResult<T>
+                {
+                    Success = false,
+                    ex = ex
+                };
+            }
         }
 
         // CRUD: Get
-        public virtual T Get(int id) // Good
+        public virtual RepositoryResult<T> Get(int id) // Good
         {
-            var dbSet = _dbContext.Set<T>();
-            var dbSetIncluded = dbSet.IncludePropsToDbSet();
+            try
+            {
+                var dbSet = _dbContext.Set<T>();
+                var dbSetIncluded = dbSet.IncludePropsToDbSet();
 
-            var item = dbSetIncluded.ToList().Single(i => (int)i.GetType().GetProperty("Id").GetValue(i) == id);
+                var item = dbSetIncluded.ToList().Single(i => (int)i.GetType().GetProperty("Id").GetValue(i) == id);
 
-            return item;
+                return new RepositoryResult<T>
+                {
+                    Success = true,
+                    item = item
+                };
+            }
+            catch (Exception ex)
+            {
+                return new RepositoryResult<T>
+                {
+                    Success = false,
+                    ex = ex
+                };
+            }
         }
 
         // CRUD: GetAll
-        public virtual IEnumerable<T> GetAll(string property, string searchCriteria) // Good
+        public virtual RepositoryResult<T> GetAll(string property, string searchCriteria) // Good
         {
-            var dbSet = _dbContext.Set<T>();
-            var dbSetIncluded = dbSet.IncludePropsToDbSet();
-
-            var items = dbSetIncluded.ToList();
-
-            if (searchCriteria == "" || searchCriteria == null)
+            try
             {
-                return items;
+                var dbSet = _dbContext.Set<T>();
+                var dbSetIncluded = dbSet.IncludePropsToDbSet();
+
+                var items = dbSetIncluded.ToList();
+
+                if (searchCriteria == "" || searchCriteria == null)
+                {
+                    return new RepositoryResult<T>
+                    {
+                        Success = true,
+                        items = items
+                    };
+                }
+
+                var itemsFiltered = items.Where(i =>
+                    i.GetType()
+                    .GetProperty(property)
+                    .GetValue(i)
+                    .ToString().ToLower()
+                    .Contains(searchCriteria.ToLower())
+                );
+
+                return new RepositoryResult<T>
+                {
+                    Success = true,
+                    items = itemsFiltered
+                };
             }
-
-            var itemsFiltered = items.Where(i => 
-                i.GetType()
-                .GetProperty(property)
-                .GetValue(i)
-                .ToString().ToLower()
-                .Contains(searchCriteria.ToLower())
-            );
-
-            return itemsFiltered;
+            catch (Exception ex)
+            {
+                return new RepositoryResult<T>
+                {
+                    Success = false,
+                    ex = ex
+                };
+            }
         }
+
+
+
     }
 }

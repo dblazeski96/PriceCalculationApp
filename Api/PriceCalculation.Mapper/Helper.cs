@@ -13,7 +13,12 @@ namespace PriceCalculation.Mapper
 {
     public static class Helper
     {
-        // Copy Properties from one object to another
+        /// <summary>
+        ///     Copy all properties that have the same name and type from any object.
+        /// </summary>
+        /// <param name="src">Object that the properties are copied to.</param>
+        /// <param name="obj">Object that the properties are copied from.</param>
+        /// <param name="copyId">Bool that indicates whether ID property should be copied.</param>
         public static void CopyPropertiesFrom(this BaseModel src, object obj, bool copyId = true)
         {
             var srcProps = src.GetType().GetProperties();
@@ -43,7 +48,12 @@ namespace PriceCalculation.Mapper
             }
         }
 
-        // Includes all includable properties from a DbSet object.
+        /// <summary>
+        ///     Includes all includable properties from a DbSet object.
+        /// </summary>
+        /// <typeparam name="T">The Data Model/Table of the DbSet object</typeparam>
+        /// <param name="dbSet">DbSet object</param>
+        /// <returns>IQueryable of the DbSet object with included properties</returns>
         public static IQueryable<T> IncludePropsToDbSet<T>(this DbSet<T> dbSet)
             where T : class, BaseDataModel
         {
@@ -63,8 +73,15 @@ namespace PriceCalculation.Mapper
             return dbSetIncluded;
         }
 
-        // Extension for "IncludePropsToDbSet" method. Gets the paths of the includable properties for the current DbSet object.
-        private static ICollection<string> DetermineIncludablePropPaths(Type item, string parentItemPath, ICollection<string> includedProps, ICollection<string> includedPropPaths)
+        /// <summary>
+        ///     Note: This function is recursive. Determines the paths of all includable properties from a DbSet object. 
+        /// </summary>
+        /// <param name="item">The type of the current includable property</param>
+        /// <param name="parentItemPath">The path of the parent item that the current property is a property of</param>
+        /// <param name="includedProps">List of already included properties</param>
+        /// <param name="includedPropPaths">List of already determined paths</param>
+        /// <returns>ICollection of paths of all includable properties</returns>
+        public static ICollection<string> DetermineIncludablePropPaths(Type item, string parentItemPath, ICollection<string> includedProps, ICollection<string> includedPropPaths)
         {
             var includableProps = item.GetIncludableProps();
 
@@ -104,8 +121,14 @@ namespace PriceCalculation.Mapper
             return includedPropPaths;
         }
 
-        // Extension for "IncludePropsToDbSet" method. Gets all the includable properties for the current DbSet object.
-        private static IEnumerable<PropertyInfo> GetIncludableProps(this Type obj, bool includeCollections = true, bool includeBaseModels = true)
+        /// <summary>
+        ///     Determines all includable properties from a DbSet object.
+        /// </summary>
+        /// <param name="obj">Type of object the cointains includable properties.</param>
+        /// <param name="includeCollections">Bool that inducates whether collections should be included.</param>
+        /// <param name="includeBaseModels">Bool that inducates whether Data Models should be included.</param>
+        /// <returns>ICollection of PropertyInfo objects that are includable properties</returns>
+        public static IEnumerable<PropertyInfo> GetIncludableProps(this Type obj, bool includeCollections = true, bool includeBaseModels = true)
         {
             var props = obj.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 

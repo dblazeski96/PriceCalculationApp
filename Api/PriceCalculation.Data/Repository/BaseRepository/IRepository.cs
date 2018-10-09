@@ -8,15 +8,20 @@ using PriceCalculation.Models.Base;
 namespace PriceCalculation.Data.Repository
 {
     public interface IRepository<T>
+        where T : class, BaseDataModel
     {
-        void Create(T item);
+        // CRUD Operations
+        RepositoryResult<T> Create(T item);
 
-        void Change(T item);
+        RepositoryResult<T> Change(T item);
 
-        void Remove(int id);
+        RepositoryResult<T> Remove(int id);
 
-        T Get(int id);
+        RepositoryResult<T> Get(int id);
 
-        IEnumerable<T> GetAll(string property, string searchCriteria);
+        RepositoryResult<T> GetAll(string property, string searchCriteria);
+
+        // Search Operations
+        RepositoryResult<T> ChangePropertyOfMultipleItems(string property, string value, IEnumerable<int> items);
     }
 }
