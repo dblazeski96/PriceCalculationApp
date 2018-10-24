@@ -1,23 +1,34 @@
 import * as React from "react";
+import { DropDownComponent } from "./DropDownComponent";
 
-interface IProps {
-  selectedItemProps: string[];
+export interface IProps {
+  searchProps: string[];
+  defaultSelectedProp: string;
+
+  handleOnChangeProp: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  handleSearch: (event: React.FormEvent<HTMLInputElement>) => void;
 }
 
-export let SearchComponent = ({ selectedItemProps }: IProps): JSX.Element => (
-  <div>
-    <input
-      type="text"
-      name="searchCriteria"
-      id="searchCriteria"
-      placeholder="Search..."
-    />
-    <select name="searchByProperty" id="searchByProperty">
-      {selectedItemProps.map(
-        (i, index): JSX.Element => (
-          <option key={`${i + index}`}>{i}</option>
-        )
-      )}
-    </select>
-  </div>
-);
+export const SearchComponent = ({
+  searchProps,
+  defaultSelectedProp,
+
+  handleSearch,
+  handleOnChangeProp
+}: IProps): React.ReactElement<HTMLDivElement> => {
+  return (
+    <div>
+      <input
+        type="text"
+        defaultValue=""
+        placeholder="Search..."
+        onInput={handleSearch}
+      />
+      <DropDownComponent
+        itemProps={searchProps}
+        defaultSelectedProp={defaultSelectedProp}
+        handleOnChangeProp={handleOnChangeProp}
+      />
+    </div>
+  );
+};

@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using PriceCalculation.Service;
 using PriceCalculation.Models.View;
+using System.Web.Http.Cors;
 
 namespace PriceCalculation.WebApi.Controllers
 {
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     [RoutePrefix("api/search")]
     public class SearchController : ApiController
     {
@@ -105,6 +107,12 @@ namespace PriceCalculation.WebApi.Controllers
             response.Content = new StringContent(JsonConvert.SerializeObject(serviceResult.Items));
 
             return response;
+        }
+
+        [HttpOptions]
+        public HttpResponseMessage ChangePropertyOfMultipleBusinessItems()
+        {
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
 
         [HttpPost]

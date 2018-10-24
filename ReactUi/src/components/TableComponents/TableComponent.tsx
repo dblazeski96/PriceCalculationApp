@@ -1,22 +1,24 @@
 import * as React from "react";
-import { IBaseModel } from "src/models/BaseModel/IBaseModel";
+import { IBaseModel } from "../../models/BaseModel/IBaseModel";
 
 interface IProps {
-  itemProperties: string[];
   data: IBaseModel[];
-  handleCheckItem: (id: number) => () => void;
+  itemProps: string[];
+
+  handleSelectDataItem: (id: number) => () => void;
 }
 
-export let TableComponent = ({
-  itemProperties,
+export const TableComponent = ({
   data,
-  handleCheckItem
-}: IProps): JSX.Element => (
+  itemProps,
+
+  handleSelectDataItem
+}: IProps): React.ReactElement<HTMLTableElement> => (
   <table style={styles.table}>
     <thead>
       <tr>
-        {itemProperties.map(
-          (propName, index): JSX.Element => (
+        {itemProps.map(
+          (propName, index): React.ReactElement<HTMLTableHeaderCellElement> => (
             <th style={styles.thead} key={`PropId-${index}`}>
               {propName}
             </th>
@@ -27,10 +29,13 @@ export let TableComponent = ({
 
     <tbody>
       {data.map(
-        (i, indexItem): JSX.Element => (
-          <tr key={`ItemId-${indexItem}`} onClick={handleCheckItem(i.Id)}>
-            {itemProperties.map(
-              (propName, indexProp): JSX.Element => (
+        (i, indexItem): React.ReactElement<HTMLTableRowElement> => (
+          <tr key={`ItemId-${indexItem}`} onClick={handleSelectDataItem(i.Id)}>
+            {itemProps.map(
+              (
+                propName,
+                indexProp
+              ): React.ReactElement<HTMLTableDataCellElement> => (
                 <td
                   style={styles.tbody}
                   key={`PropValue-${indexItem}:${indexProp}`}
