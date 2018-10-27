@@ -2,37 +2,27 @@ import * as React from "react";
 import { Dispatch, AnyAction } from "redux";
 import { connect } from "react-redux";
 
-import { IState } from "src/redux/store/IState";
+import { IState } from "src/redux/reduxStore/IState";
 
-import { updateSelectedItem } from "src/redux/actions/actions";
-import { getAllBusinessItems } from "src/services/BusinessItemService";
+import { updateSelectedItem } from "src/redux/reduxActions/actions";
 
 import { SelectItemComponent } from "../../components/TableComponents/SelectItemComponent";
-import { getAllBusinessEntities } from "src/services/BusinessEntityService";
+import { determineDataItemPromise } from "src/services/DetermineDataItemPromise";
+import { getAllServiceAction } from "src/services/serviceActions/actions";
 
 const mapStateToProps = (state: IState) => ({
   defaultSelectedItem: state.searchScreenReducer.defaultSelectedItem
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => ({
-  handleOnChangeItem: (event: React.ChangeEvent<HTMLSelectElement>): void => {
-    const selectedItem = event.target.value;
+  handleOnChangeItem: (
+    event: React.ChangeEvent<HTMLSelectElement> | string
+  ): void => {
+    const selectedItem = typeof event === "string" ? event : event.target.value;
 
-    switch (selectedItem) {
-      case "businessItem": {
-        getAllBusinessItems().then(res =>
-          dispatch(updateSelectedItem(selectedItem, res.data))
-        );
-      }
-
-      case "businessEntity": {
-        getAllBusinessEntities().then(res =>
-          dispatch(updateSelectedItem(selectedItem, res.data))
-        );
-      }
-
-      default:
-    }
+    determineDataItemPromise(selectedItem, getAllServiceAction()).then(res => {
+      dispatch(updateSelectedItem(selectedItem, res.data));
+    });
   }
 });
 

@@ -1,30 +1,48 @@
 import { Dispatch, AnyAction } from "redux";
-import { FormEvent, ChangeEvent } from "react";
+import { ChangeEvent } from "react";
 import { connect } from "react-redux";
 
-import { IState } from "src/redux/store/IState";
+import { IState } from "src/redux/reduxStore/IState";
 
 import {
   updateSelectedSearchProp,
-  updateSearchTerm
-} from "src/redux/actions/actions";
+  updateSearchTerm,
+  updateSelectedItem
+} from "src/redux/reduxActions/actions";
 
 import { SearchComponent } from "src/components/TableComponents/SearchComponent";
+import { determineDataItemPromise } from "src/services/DetermineDataItemPromise";
+import { searchServiceAction } from "src/services/serviceActions/actions";
 
-const mapStateToProps = (state: IState) => {
-  return {
-    searchProps: state.searchScreenReducer.searchProps,
-    defaultSelectedProp: state.searchScreenReducer.defaultSelectedSearchProp,
-    searchTerm: state.searchScreenReducer.searchTerm
-  };
-};
+const mapStateToProps = (state: IState) => ({
+  searchProps: state.searchScreenReducer.searchProps,
+  defaultSelectedProp: state.searchScreenReducer.defaultSelectedSearchProp,
+
+  selectedItem: state.searchScreenReducer.selectedItem,
+  selectedSearchProp: state.searchScreenReducer.selectedSearchProp,
+  searchTerm: state.searchScreenReducer.searchTerm
+});
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => ({
-  handleOnChangeProp: (event: ChangeEvent<HTMLSelectElement>) =>
-    dispatch(updateSelectedSearchProp(event.target.value)),
+  updateSearchTerm: (event: React.FormEvent<HTMLInputElement>): void => {
+    const value = event.currentTarget.value;
+    dispatch(updateSearchTerm(value));
+  },
 
-  handleSearch: (event: FormEvent<HTMLInputElement>) =>
-    dispatch(updateSearchTerm(event.currentTarget.value))
+  handleOnChangeProp: (event: ChangeEvent<HTMLSelectElement>): void => {
+    dispatch(updateSelectedSearchProp(event.target.value));
+  },
+
+  handleSearch: (
+    selectedItem: string,
+    selectedSearchProp: string,
+    searchTerm: string
+  ) => (event: React.MouseEvent<HTMLButtonElement>): void => {
+    determineDataItemPromise(
+      selectedItem,
+      searchServiceAction(selectedSearchProp, searchTerm)
+    ).then(res => dispatch(updateSelectedItem(selectedItem, res.data)));
+  }
 });
 
 export const Search = connect(

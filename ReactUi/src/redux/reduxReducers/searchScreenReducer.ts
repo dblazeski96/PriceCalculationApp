@@ -1,7 +1,7 @@
 import { Action, Reducer } from "redux";
 
-import { ISearchScreenState } from "../store/IState";
-import { initialState } from "../store/initialState";
+import { ISearchScreenState } from "../reduxStore/IState";
+import { initialState } from "../reduxStore/initialState";
 
 import {
   UPDATE_SELECTED_ITEM,
@@ -10,7 +10,7 @@ import {
   UPDATE_SELECTED_CHANGE_PROP,
   UPDATE_CHANGE_PROP_VALUE,
   SELECT_DESELECT_DATA_ITEM
-} from "../actions/actionTypes";
+} from "../reduxActions/actionTypes";
 
 import {
   IUpdateSelectedItem,
@@ -19,20 +19,31 @@ import {
   IUpdateSelectedChangeProp,
   IUpdateChangePropValue,
   ISelectDeselectDataItem
-} from "../actions/IActions";
+} from "../reduxActions/IActions";
 
 export const searchScreenReducer: Reducer<ISearchScreenState> = (
   state: ISearchScreenState = initialState.searchScreenReducer,
   action: Action<string>
 ): ISearchScreenState => {
   switch (action.type) {
-    // Need to finish update selected item to convert fetched data to IBASEMODEL(IBusinessItem?, IBusinessEntity?)
     case UPDATE_SELECTED_ITEM: {
       const nextState = { ...state };
       nextState.selectedItem = (action as IUpdateSelectedItem).selectedItem;
       nextState.itemData = (action as IUpdateSelectedItem).data;
+      nextState.itemProps = Object.keys(nextState.itemData[0]);
+
       nextState.searchProps = Object.keys(nextState.itemData[0]);
-      nextState.changeProps = Object.keys(nextState.itemData[0]);
+      nextState.defaultSelectedSearchProp = nextState.searchProps[0];
+      nextState.selectedSearchProp = nextState.searchProps[0];
+      nextState.searchTerm = "";
+
+      nextState.changeProps = Object.keys(nextState.itemData[0]).filter(
+        p => p.toLowerCase() !== "id"
+      );
+      nextState.defaultSelectedChangeProp = nextState.changeProps[0];
+      nextState.selectedChangeProp = nextState.changeProps[0];
+      nextState.changePropValue = "";
+      nextState.selectedDataItems = [];
 
       return nextState;
     }
@@ -40,24 +51,28 @@ export const searchScreenReducer: Reducer<ISearchScreenState> = (
     case UPDATE_SELECTED_SEARCH_PROP: {
       const nextState = { ...state };
       nextState.selectedSearchProp = (action as IUpdateSelectedSearchProp).prop;
+
       return nextState;
     }
 
     case UPDATE_SEARCH_TERM: {
       const nextState = { ...state };
       nextState.searchTerm = (action as IUpdateSearchTerm).searchTerm;
+
       return nextState;
     }
 
     case UPDATE_SELECTED_CHANGE_PROP: {
       const nextState = { ...state };
       nextState.selectedChangeProp = (action as IUpdateSelectedChangeProp).prop;
+
       return nextState;
     }
 
     case UPDATE_CHANGE_PROP_VALUE: {
       const nextState = { ...state };
       nextState.changePropValue = (action as IUpdateChangePropValue).propValue;
+
       return nextState;
     }
 
@@ -70,6 +85,7 @@ export const searchScreenReducer: Reducer<ISearchScreenState> = (
         selectedItems.indexOf(actionId) === -1
           ? [...selectedItems, actionId]
           : [...selectedItems.filter(i => i !== actionId)];
+
       return nextState;
     }
 

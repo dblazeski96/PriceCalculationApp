@@ -8,7 +8,8 @@ export interface IState {
 export interface ISearchScreenState {
   defaultSelectedItem: string;
   selectedItem: string;
-  itemData: IBaseModel[]; // IBaseModel[]
+  itemData: IBaseModel[];
+  itemProps: string[];
 
   searchProps: string[];
   defaultSelectedSearchProp: string;
@@ -23,5 +24,5 @@ export interface ISearchScreenState {
 }
 
 export interface ITestState {
-  test: string;
+  rikiText: string;
 }

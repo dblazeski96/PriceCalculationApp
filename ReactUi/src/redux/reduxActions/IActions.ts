@@ -25,3 +25,8 @@ export interface IUpdateChangePropValue extends Action<string> {
 export interface ISelectDeselectDataItem extends Action<string> {
   id: number;
 }
+
+// Show Riki Text
+export interface IShowRikiText extends Action<string> {
+  rikiText: string;
+}

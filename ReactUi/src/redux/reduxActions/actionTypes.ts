@@ -11,3 +11,6 @@ export const UPDATE_SELECTED_CHANGE_PROP: string =
 export const UPDATE_CHANGE_PROP_VALUE: string = "UPDATE_CHANGE_PROP_VALUE";
 
 export const SELECT_DESELECT_DATA_ITEM: string = "SELECT_DESELECT_DATA_ITEM";
+
+// Riki Text
+export const SHOW_RIKI_TEXT: string = "SHOW_RIKI_TEXT";

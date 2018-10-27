@@ -6,7 +6,8 @@ import {
   IUpdateSearchTerm,
   IUpdateSelectedChangeProp,
   IUpdateChangePropValue,
-  ISelectDeselectDataItem
+  ISelectDeselectDataItem,
+  IShowRikiText
 } from "./IActions";
 
 import {
@@ -15,7 +16,8 @@ import {
   UPDATE_SEARCH_TERM,
   UPDATE_SELECTED_CHANGE_PROP,
   UPDATE_CHANGE_PROP_VALUE,
-  SELECT_DESELECT_DATA_ITEM
+  SELECT_DESELECT_DATA_ITEM,
+  SHOW_RIKI_TEXT
 } from "./actionTypes";
 import { IBaseModel } from "src/models/BaseModel/IBaseModel";
 
@@ -61,4 +63,12 @@ export const selectDeselectDataItem: ActionCreator<ISelectDeselectDataItem> = (
 ): ISelectDeselectDataItem => ({
   type: SELECT_DESELECT_DATA_ITEM,
   id
+});
+
+// Update Riki Text
+export const showRikiText: ActionCreator<IShowRikiText> = (
+  rikiText: string
+): IShowRikiText => ({
+  type: SHOW_RIKI_TEXT,
+  rikiText
 });

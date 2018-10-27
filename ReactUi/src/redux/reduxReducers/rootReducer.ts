@@ -1,5 +1,5 @@
 import { combineReducers, Reducer, AnyAction } from "redux";
-import { IState } from "../store/IState";
+import { IState } from "../reduxStore/IState";
 import { searchScreenReducer } from "./searchScreenReducer";
 import { testReducer } from "./testReducer";
 

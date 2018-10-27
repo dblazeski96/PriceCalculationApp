@@ -4,13 +4,17 @@ import { IBaseModel } from "../../models/BaseModel/IBaseModel";
 interface IProps {
   data: IBaseModel[];
   itemProps: string[];
+  selectedItems: number[];
 
-  handleSelectDataItem: (id: number) => () => void;
+  handleSelectDataItem: (
+    id: number
+  ) => (event: React.MouseEvent<HTMLTableRowElement>) => void;
 }
 
 export const TableComponent = ({
   data,
   itemProps,
+  selectedItems,
 
   handleSelectDataItem
 }: IProps): React.ReactElement<HTMLTableElement> => (
@@ -30,7 +34,15 @@ export const TableComponent = ({
     <tbody>
       {data.map(
         (i, indexItem): React.ReactElement<HTMLTableRowElement> => (
-          <tr key={`ItemId-${indexItem}`} onClick={handleSelectDataItem(i.Id)}>
+          <tr
+            key={`ItemId-${indexItem}`}
+            onClick={handleSelectDataItem(i.Id)}
+            style={
+              selectedItems.indexOf(i.Id) === -1
+                ? styles.trow
+                : styles.trowSelected
+            }
+          >
             {itemProps.map(
               (
                 propName,
@@ -60,5 +72,11 @@ const styles = {
   },
   thead: {
     border: "5px solid red"
+  },
+  trow: {
+    backgroundColor: "white"
+  },
+  trowSelected: {
+    backgroundColor: "grey"
   }
 };

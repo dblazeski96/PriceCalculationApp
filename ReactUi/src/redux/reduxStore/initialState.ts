@@ -5,20 +5,21 @@ export const initialState: IState = {
     defaultSelectedItem: "businessItem",
     selectedItem: "businessItem",
     itemData: [],
+    itemProps: ["noData"],
 
-    searchProps: ["test search prop 1", "test search prop 2"],
+    searchProps: ["noData"],
     defaultSelectedSearchProp: "Id",
-    selectedSearchProp: "Id",
-    searchTerm: "test search term",
+    selectedSearchProp: "noData",
+    searchTerm: "",
 
-    changeProps: ["test change prop 1", "test change prop 2"],
+    changeProps: ["noData"],
     defaultSelectedChangeProp: "Id",
-    selectedChangeProp: "Id",
-    changePropValue: "test change prop value",
+    selectedChangeProp: "noData",
+    changePropValue: "",
     selectedDataItems: []
   },
 
   testReducer: {
-    test: "testText"
+    rikiText: ""
   }
 };

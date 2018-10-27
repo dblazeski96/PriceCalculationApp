@@ -3,16 +3,25 @@ import * as React from "react";
 interface IProps {
   defaultSelectedItem: string;
 
-  handleOnChangeItem: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  handleOnChangeItem: (
+    event: React.ChangeEvent<HTMLSelectElement> | string
+  ) => void;
 }
 
-export const SelectItemComponent = ({
-  defaultSelectedItem,
+export class SelectItemComponent extends React.Component<IProps> {
+  public componentDidMount(): void {
+    this.props.handleOnChangeItem(this.props.defaultSelectedItem);
+  }
 
-  handleOnChangeItem
-}: IProps): React.ReactElement<HTMLSelectElement> => (
-  <select defaultValue={defaultSelectedItem} onChange={handleOnChangeItem}>
-    <option value="businessItem">Business Item</option>
-    <option value="businessEntity">Business Entity</option>
-  </select>
-);
+  public render(): React.ReactElement<HTMLSelectElement> {
+    return (
+      <select
+        defaultValue={this.props.defaultSelectedItem}
+        onChange={this.props.handleOnChangeItem}
+      >
+        <option value="businessItem">Business Item</option>
+        <option value="businessEntity">Business Entity</option>
+      </select>
+    );
+  }
+}
