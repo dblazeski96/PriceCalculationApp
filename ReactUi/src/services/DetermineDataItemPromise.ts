@@ -1,24 +1,28 @@
 import {
   getAllBusinessItems,
   searchBusinessItems,
-  changeMultipleBusinessItems
+  changeMultipleBusinessItems,
+  changeBusinessItem
 } from "./BusinessItemService";
 import {
   getAllBusinessEntities,
   searchBusinessEntities,
-  changeMultipleBusinessEntities
+  changeMultipleBusinessEntities,
+  changeBusinessEntity
 } from "./BusinessEntityService";
 import { AxiosPromise } from "axios";
 import { IBaseModel } from "src/models/BaseModel/IBaseModel";
 import {
   GET_ALL_SERVICE_ACTION,
   SEARCH_SERVICE_ACTION,
-  CHANGE_MULTIPLE_ITEMS_ACTION
+  CHANGE_MULTIPLE_ITEMS_ACTION,
+  CHANGE_ITEM_ACTION
 } from "./serviceActions/actionTypes";
 import { AnyAction } from "redux";
 import {
   ISearchServiceAction,
-  IChangeMultipleItemsAction
+  IChangeMultipleItemsAction,
+  IChangeItemAction
 } from "./serviceActions/IActions";
 
 export const determineDataItemPromise = (
@@ -97,6 +101,25 @@ export const determineDataItemPromise = (
             actionDetermined.value,
             actionDetermined.items
           );
+        }
+      }
+    }
+
+    case CHANGE_ITEM_ACTION: {
+      switch (selectedItem) {
+        case "businessItem": {
+          const actionDetermined = action as IChangeItemAction;
+          return changeBusinessItem(actionDetermined.item);
+        }
+
+        case "businessEntity": {
+          const actionDetermined = action as IChangeItemAction;
+          return changeBusinessEntity(actionDetermined.item);
+        }
+
+        default: {
+          const actionDetermined = action as IChangeItemAction;
+          return changeBusinessItem(actionDetermined.item);
         }
       }
     }

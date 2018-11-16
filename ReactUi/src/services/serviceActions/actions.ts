@@ -2,13 +2,17 @@ import { ActionCreator } from "redux";
 import {
   IGetAllServiceAction,
   ISearchServiceAction,
-  IChangeMultipleItemsAction
+  IChangeMultipleItemsAction,
+  IChangeItemAction
 } from "./IActions";
 import {
   GET_ALL_SERVICE_ACTION,
   SEARCH_SERVICE_ACTION,
-  CHANGE_MULTIPLE_ITEMS_ACTION
+  CHANGE_MULTIPLE_ITEMS_ACTION,
+  CHANGE_ITEM_ACTION
 } from "./actionTypes";
+
+import { IBaseModel } from "../../models/BaseModel/IBaseModel";
 
 export const getAllServiceAction: ActionCreator<
   IGetAllServiceAction
@@ -36,4 +40,11 @@ export const changeMultipleItemsAction: ActionCreator<
   prop,
   value,
   items
+});
+
+export const changeItemAction: ActionCreator<IChangeItemAction> = (
+  item: IBaseModel
+): IChangeItemAction => ({
+  type: CHANGE_ITEM_ACTION,
+  item
 });

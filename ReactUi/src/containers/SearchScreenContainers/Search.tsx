@@ -10,7 +10,7 @@ import {
   updateSelectedItem
 } from "src/redux/reduxActions/actions";
 
-import { SearchComponent } from "src/components/TableComponents/SearchComponent";
+import { SearchComponent } from "src/components/SearchScreenComponents/SearchComponent";
 import { determineDataItemPromise } from "src/services/DetermineDataItemPromise";
 import { searchServiceAction } from "src/services/serviceActions/actions";
 

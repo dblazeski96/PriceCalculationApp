@@ -19,7 +19,7 @@ export const initialState: IState = {
     selectedDataItems: []
   },
 
-  testReducer: {
-    rikiText: ""
+  commonReducer: {
+    loggedIn: false
   }
 };

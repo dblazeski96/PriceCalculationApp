@@ -6,11 +6,12 @@ import { IState } from "src/redux/reduxStore/IState";
 
 import { updateSelectedItem } from "src/redux/reduxActions/actions";
 
-import { SelectItemComponent } from "../../components/TableComponents/SelectItemComponent";
+import { SelectItemComponent } from "../../components/SearchScreenComponents/SelectItemComponent";
 import { determineDataItemPromise } from "src/services/DetermineDataItemPromise";
 import { getAllServiceAction } from "src/services/serviceActions/actions";
 
 const mapStateToProps = (state: IState) => ({
+  selectedItem: state.searchScreenReducer.selectedItem,
   defaultSelectedItem: state.searchScreenReducer.defaultSelectedItem
 });
 

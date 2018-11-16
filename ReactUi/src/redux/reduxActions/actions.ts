@@ -7,7 +7,7 @@ import {
   IUpdateSelectedChangeProp,
   IUpdateChangePropValue,
   ISelectDeselectDataItem,
-  IShowRikiText
+  IUpdateLoginStatus
 } from "./IActions";
 
 import {
@@ -17,7 +17,7 @@ import {
   UPDATE_SELECTED_CHANGE_PROP,
   UPDATE_CHANGE_PROP_VALUE,
   SELECT_DESELECT_DATA_ITEM,
-  SHOW_RIKI_TEXT
+  UPDATE_LOGIN_STATUS
 } from "./actionTypes";
 import { IBaseModel } from "src/models/BaseModel/IBaseModel";
 
@@ -65,10 +65,9 @@ export const selectDeselectDataItem: ActionCreator<ISelectDeselectDataItem> = (
   id
 });
 
-// Update Riki Text
-export const showRikiText: ActionCreator<IShowRikiText> = (
-  rikiText: string
-): IShowRikiText => ({
-  type: SHOW_RIKI_TEXT,
-  rikiText
+export const updateLoginStatus: ActionCreator<IUpdateLoginStatus> = (
+  loggedIn: boolean
+): IUpdateLoginStatus => ({
+  type: UPDATE_LOGIN_STATUS,
+  loggedIn
 });

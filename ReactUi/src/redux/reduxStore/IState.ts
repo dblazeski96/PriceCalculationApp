@@ -2,7 +2,7 @@ import { IBaseModel } from "src/models/BaseModel/IBaseModel";
 
 export interface IState {
   searchScreenReducer: ISearchScreenState;
-  testReducer: ITestState;
+  commonReducer: ICommonState;
 }
 
 export interface ISearchScreenState {
@@ -23,6 +23,6 @@ export interface ISearchScreenState {
   selectedDataItems: number[];
 }
 
-export interface ITestState {
-  rikiText: string;
+export interface ICommonState {
+  loggedIn: boolean;
 }

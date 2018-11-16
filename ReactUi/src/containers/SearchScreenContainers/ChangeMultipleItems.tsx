@@ -1,4 +1,4 @@
-import { ChangeMultipleItemsComponent } from "src/components/TableComponents/ChangeMultipleItemsComponent";
+import { ChangeMultipleItemsComponent } from "src/components/SearchScreenComponents/ChangeMultipleItemsComponent";
 import { IState } from "src/redux/reduxStore/IState";
 import { Dispatch, AnyAction } from "redux";
 import { connect } from "react-redux";

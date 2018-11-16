@@ -1,22 +1,35 @@
 import * as React from "react";
-import { Component } from "react";
 
-import { Search } from "../containers/TableContainers/Search";
-import { SelectItem } from "../containers/TableContainers/SelectItem";
-import { Table } from "../containers/TableContainers/Table";
-import { KopceZaRiki } from "src/containers/KopceZaRiki";
-import { ChangeMultipleItems } from "src/containers/TableContainers/ChangeMultipleItems";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import { Paper, Theme } from "@material-ui/core";
 
-export class SearchScreen extends Component {
-  public render() {
-    return (
-      <div>
-        <SelectItem />
-        <Search />
-        <Table />
-        <ChangeMultipleItems />
-        <KopceZaRiki />
-      </div>
-    );
+import { Search } from "../containers/SearchScreenContainers/Search";
+import { SelectItem } from "../containers/SearchScreenContainers/SelectItem";
+import { Table } from "../containers/SearchScreenContainers/Table";
+import { ChangeMultipleItems } from "src/containers/SearchScreenContainers/ChangeMultipleItems";
+import { withStyles } from "@material-ui/core";
+
+// const styles = {
+//   root: {
+//     width: "90%",
+//     overFlowX: "auto"
+//   }
+// };
+
+const customStyles = (theme: Theme) => ({
+  root: {
+    ...theme.mixins.gutters()
   }
-}
+});
+
+const SearchScreenComponent = ({ classes }: any) => (
+  <Paper className={classes.root}>
+    <CssBaseline />
+    <SelectItem />
+    <Search />
+    <Table />
+    <ChangeMultipleItems />
+  </Paper>
+);
+
+export const SearchScreen = withStyles(customStyles)(SearchScreenComponent);

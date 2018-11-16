@@ -1,17 +1,36 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-
-import App from "./App";
-import "./index.css";
+import { BrowserRouter } from "react-router-dom";
+import { Provider } from "react-redux";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import registerServiceWorker from "./registerServiceWorker";
 
-import { Provider } from "react-redux";
+import "roboto-fontface";
+import "./index.css";
+
 import { store } from "./redux/reduxStore/store";
+import App from "./App";
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: "#1976d2"
+    },
+    secondary: {
+      main: "#0d47a1"
+    }
+  }
+});
 
 ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
+  <BrowserRouter>
+    <Provider store={store}>
+      <MuiThemeProvider theme={theme}>
+        <App />
+      </MuiThemeProvider>
+    </Provider>
+  </BrowserRouter>,
   document.getElementById("root") as HTMLElement
 );
+
 registerServiceWorker();

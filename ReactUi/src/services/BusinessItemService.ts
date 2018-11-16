@@ -1,5 +1,6 @@
 import Axios, { AxiosPromise } from "axios";
 import { IBusinessItem } from "src/models/IBusinessItem";
+import { IBaseModel } from "src/models/BaseModel/IBaseModel";
 
 export let getAllBusinessItems = (): AxiosPromise<IBusinessItem[]> =>
   Axios.get(
@@ -23,3 +24,6 @@ export let changeMultipleBusinessItems = (
     `http://localhost:2888/api/search/ChangePropertyOfMultipleBusinessItems?property=${prop}&value=${value}`,
     items
   );
+
+export let changeBusinessItem = (item: IBaseModel): AxiosPromise<any> =>
+  Axios.post(`http://localhost:2888/api/search/ChangeBusinessItem`, item);
