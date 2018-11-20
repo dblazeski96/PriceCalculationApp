@@ -14,8 +14,11 @@ import {
   WithStyles
 } from "@material-ui/core/styles";
 
+import MenuIcon from "@material-ui/icons/Menu";
 import EuroSymbol from "@material-ui/icons/EuroSymbol";
 import AccountCircle from "@material-ui/icons/AccountCircle";
+import FilterVintage from "@material-ui/icons/FilterVintage";
+import PowerSettingsNew from "@material-ui/icons/PowerSettingsNew";
 
 import {
   ToLandingScreen,
@@ -25,6 +28,15 @@ import {
   ToLoginScreen,
   ToProfileScreen
 } from "./Links";
+import {
+  ListItemIcon,
+  ListItemText,
+  Drawer,
+  Divider,
+  List,
+  ListItem,
+  Typography
+} from "@material-ui/core";
 
 // Props
 interface IProps extends WithStyles<typeof styles> {
@@ -36,6 +48,7 @@ interface IProps extends WithStyles<typeof styles> {
 // State
 interface IState {
   profileAnchorEl: HTMLElement | null;
+  drawerOpen: boolean;
 }
 
 // Styles
@@ -55,8 +68,11 @@ class MenuBarComponent extends React.Component<IProps, IState> {
     super(props);
 
     this.state = {
-      profileAnchorEl: null
+      profileAnchorEl: null,
+      drawerOpen: false
     };
+
+    this.openCloseDrawer = this.openCloseDrawer.bind(this);
 
     this.handleProfileClick = this.handleProfileClick.bind(this);
     this.handleProfileMenuClose = this.handleProfileMenuClose.bind(this);
@@ -65,63 +81,104 @@ class MenuBarComponent extends React.Component<IProps, IState> {
 
   public render() {
     const { loggedIn, classes } = this.props;
-    const { profileAnchorEl } = this.state;
+    const { profileAnchorEl, drawerOpen } = this.state;
 
     return (
-      <AppBar className={classes.root} position="sticky">
-        <Toolbar variant="regular">
-          <IconButton component={ToLandingScreen} color="inherit">
-            <EuroSymbol />
-          </IconButton>
+      <div>
+        <AppBar className={classes.root} position="sticky">
+          <Toolbar variant="regular">
+            <IconButton onClick={this.openCloseDrawer}>
+              <MenuIcon />
+            </IconButton>
 
-          {loggedIn && (
-            <div>
-              <Button component={ToSearchScreen} color="inherit">
-                Search
-              </Button>
-              <Button component={ToPricingScreen} color="inherit">
-                Pricing
-              </Button>
-              <Button component={ToAdministrationScreen} color="inherit">
-                Administration
-              </Button>
-            </div>
-          )}
+            <IconButton component={ToLandingScreen} color="inherit">
+              <EuroSymbol />
+            </IconButton>
 
-          <span className={classes.grow} />
+            {loggedIn && (
+              <div>
+                <Button component={ToSearchScreen} color="inherit">
+                  Search
+                </Button>
+                <Button component={ToPricingScreen} color="inherit">
+                  Pricing
+                </Button>
+                <Button component={ToAdministrationScreen} color="inherit">
+                  Administration
+                </Button>
+              </div>
+            )}
 
-          {loggedIn ? (
-            <div>
-              <IconButton color="inherit" onClick={this.handleProfileClick}>
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                anchorEl={profileAnchorEl}
-                open={Boolean(profileAnchorEl)}
-                onClose={this.handleProfileMenuClose}
-              >
-                <MenuItem
-                  component={ToProfileScreen}
-                  onClick={this.handleProfileMenuClose}
+            <span className={classes.grow} />
+
+            {loggedIn && (
+              <div>
+                <IconButton color="inherit" onClick={this.handleProfileClick}>
+                  <AccountCircle />
+                </IconButton>
+                <Menu
+                  anchorEl={profileAnchorEl}
+                  open={Boolean(profileAnchorEl)}
+                  onClose={this.handleProfileMenuClose}
                 >
-                  Profile
-                </MenuItem>
+                  <MenuItem
+                    component={ToProfileScreen}
+                    onClick={this.handleProfileMenuClose}
+                  >
+                    <ListItemIcon>
+                      <FilterVintage />
+                    </ListItemIcon>
+                    <ListItemText primary="Profile" />
+                  </MenuItem>
 
-                <MenuItem component={ToLoginScreen} onClick={this.handleLogout}>
-                  Logout
-                </MenuItem>
-              </Menu>
-            </div>
-          ) : (
-            <div>
-              <Button component={ToLoginScreen} color="inherit">
-                Login
-              </Button>
-            </div>
-          )}
-        </Toolbar>
-      </AppBar>
+                  <MenuItem
+                    component={ToLoginScreen}
+                    onClick={this.handleLogout}
+                  >
+                    <ListItemIcon>
+                      <PowerSettingsNew />
+                    </ListItemIcon>
+                    <ListItemText primary="Logout" />
+                  </MenuItem>
+                </Menu>
+              </div>
+            )}
+            {!loggedIn && (
+              <div>
+                <Button component={ToLoginScreen} color="inherit">
+                  Login
+                </Button>
+              </div>
+            )}
+          </Toolbar>
+        </AppBar>
+        <Drawer variant="persistent" anchor="left" open={drawerOpen}>
+          <List>
+            <Typography variant="display1" align="center">
+              Menu
+            </Typography>
+            <Divider />
+            <ListItem component={ToSearchScreen} button={true}>
+              <ListItemText primary="Search" />
+            </ListItem>
+            <ListItem component={ToPricingScreen} button={true}>
+              <ListItemText primary="Pricing" />
+            </ListItem>
+            <ListItem component={ToAdministrationScreen} button={true}>
+              <ListItemText primary="Administration" />
+            </ListItem>
+          </List>
+        </Drawer>
+      </div>
     );
+  }
+
+  // Handle Drawer
+  private openCloseDrawer(e: React.MouseEvent<HTMLButtonElement>) {
+    const drawerOpen = !this.state.drawerOpen;
+    this.setState({
+      drawerOpen
+    });
   }
 
   private handleProfileClick(e: React.MouseEvent<HTMLButtonElement>) {

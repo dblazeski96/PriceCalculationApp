@@ -11,9 +11,7 @@ const mapStateToProps = (state: IState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  updateLoginStatus: (loggedIn: boolean) => (
-    e: React.MouseEvent<HTMLButtonElement>
-  ) => {
+  updateLoginStatus: (loggedIn: boolean) => {
     dispatch(updateLoginStatus(loggedIn));
   }
 });

@@ -1,12 +1,13 @@
 import * as React from "react";
 
 import Paper from "@material-ui/core/Paper";
-
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import TextField from "@material-ui/core/TextField";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Switch from "@material-ui/core/Switch";
+import Button from "@material-ui/core/Button";
 
-import EuroSymbol from "@material-ui/icons/EuroSymbol";
+import AccountCircle from "@material-ui/icons/AccountCircleRounded";
 
 import {
   Theme,
@@ -21,9 +22,30 @@ import { ToSearchScreen } from "../Links";
 interface IProps extends WithStyles<typeof styles> {
   loggedIn: boolean;
 
-  updateLoginStatus: (
-    loggedIn: boolean
-  ) => (e: React.MouseEvent<HTMLButtonElement>) => void;
+  updateLoginStatus: (loggedIn: boolean) => void;
+}
+
+// State
+interface IState {
+  values: IValues;
+  errors: IErrors;
+}
+
+interface IValues {
+  email: {
+    value: string;
+    touched: boolean;
+  };
+  password: {
+    value: string;
+    touched: boolean;
+  };
+  rememberMe: boolean;
+}
+
+interface IErrors {
+  email: string;
+  password: string;
 }
 
 // Styles
@@ -39,62 +61,230 @@ const styles = (theme: Theme) =>
     },
     formItem: {
       margin: theme.spacing.unit * 3
+    },
+    logo: {
+      marginBottom: theme.spacing.unit
+    },
+    emailField: {
+      marginTop: theme.spacing.unit,
+      marginBottom: theme.spacing.unit
+    },
+    passwordField: {
+      marginTop: theme.spacing.unit,
+      marginBottom: theme.spacing.unit
+    },
+    switchButton: {
+      margin: theme.spacing.unit
     }
   });
 
 // Component
-const LoginFormComponent = ({
-  loggedIn,
-  updateLoginStatus,
-  classes
-}: IProps) => (
-  <Paper className={classes.root}>
-    <form>
-      {!loggedIn ? (
-        <div className={classes.formContainer}>
-          <Typography align="center" variant="h1">
-            <EuroSymbol />
-          </Typography>
-          <Typography
-            className={classes.formItem}
-            align="center"
-            variant="headline"
-          >
-            Sign in
-          </Typography>
-          <TextField
-            className={classes.formItem}
-            label="Email Address"
-            placeholder="Enter your email address"
-            type="email"
-            required={true}
-          />
-          <TextField
-            className={classes.formItem}
-            label="Password"
-            placeholder="Enter your password"
-            type="password"
-            required={true}
-          />
-          <Button
-            className={classes.formItem}
-            variant="contained"
-            color="primary"
-            component={ToSearchScreen}
-            onClick={updateLoginStatus(true)}
-          >
-            Login
-          </Button>
-        </div>
-      ) : (
-        <div className={classes.formContainer}>
-          <Typography className={classes.formItem}>
-            You are already logged in :)
-          </Typography>
-        </div>
-      )}
-    </form>
-  </Paper>
-);
+class LoginFormComponent extends React.Component<IProps, IState> {
+  constructor(props: IProps) {
+    super(props);
+
+    this.state = {
+      values: {
+        email: {
+          value: "",
+          touched: false
+        },
+        password: {
+          value: "",
+          touched: false
+        },
+        rememberMe: false
+      },
+      errors: {
+        email: "",
+        password: ""
+      }
+    };
+
+    this.handleEmailOnBlur = this.handleEmailOnBlur.bind(this);
+    this.handlePasswordOnBlur = this.handlePasswordOnBlur.bind(this);
+
+    this.updateEmail = this.updateEmail.bind(this);
+    this.updatePassword = this.updatePassword.bind(this);
+    this.updateRememberMe = this.updateRememberMe.bind(this);
+    this.tryLogin = this.tryLogin.bind(this);
+  }
+
+  public render() {
+    const { classes, loggedIn } = this.props;
+    const { values, errors } = this.state;
+
+    return (
+      <Paper className={classes.root}>
+        {loggedIn && (
+          <form className={classes.formContainer}>
+            <Typography className={classes.formItem}>
+              You are already logged in :)
+            </Typography>
+          </form>
+        )}
+
+        {!loggedIn && (
+          <form className={classes.formContainer}>
+            <Typography
+              className={[classes.formItem, classes.logo].join(" ")}
+              align="center"
+            >
+              <AccountCircle fontSize="large" color="primary" />
+            </Typography>
+
+            <Typography align="center" variant="headline">
+              Log in
+            </Typography>
+
+            <TextField
+              className={[classes.formItem, classes.emailField].join(" ")}
+              type="email"
+              required={true}
+              error={Boolean(errors.email)}
+              value={values.email.value}
+              label="Email"
+              placeholder="Enter your email address"
+              helperText={` ${errors.email}`}
+              onChange={this.updateEmail}
+              onBlur={this.handleEmailOnBlur}
+            />
+
+            <TextField
+              className={[classes.formItem, classes.passwordField].join(" ")}
+              type="password"
+              required={true}
+              error={Boolean(errors.password)}
+              value={values.password.value}
+              label="Password"
+              placeholder="Enter your password"
+              helperText={` ${errors.password}`}
+              onChange={this.updatePassword}
+              onBlur={this.handlePasswordOnBlur}
+            />
+
+            <FormControlLabel
+              className={classes.switchButton}
+              control={
+                <Switch
+                  checked={values.rememberMe}
+                  onChange={this.updateRememberMe}
+                />
+              }
+              label="Remember me"
+            />
+
+            <Button
+              className={classes.formItem}
+              variant="contained"
+              color="primary"
+              component={ToSearchScreen}
+              onClick={this.tryLogin}
+            >
+              Login
+            </Button>
+          </form>
+        )}
+      </Paper>
+    );
+  }
+
+  private validateEmail(email: string) {
+    switch (true) {
+      case email === "":
+        return "Required *";
+      case !email.includes("@"):
+        return "Please enter a valid email address";
+      default:
+        return "";
+    }
+  }
+
+  private validatePassword(password: string) {
+    switch (true) {
+      case password === "":
+        return "Required *";
+      case password.length < 8:
+        return "Your password must be at least 8 characters long";
+      default:
+        return "";
+    }
+  }
+
+  private handleEmailOnBlur(e: any) {
+    const values = this.state.values;
+    const { value } = this.state.values.email;
+    const errors = this.state.errors;
+
+    values.email.touched = true;
+    errors.email = this.validateEmail(value);
+
+    this.setState({
+      values,
+      errors
+    });
+  }
+
+  private updateEmail(e: React.ChangeEvent<HTMLInputElement>) {
+    const emailValue = e.currentTarget.value;
+
+    const values = this.state.values;
+    const { touched } = this.state.values.email;
+    const errors = this.state.errors;
+
+    values.email.value = emailValue;
+    errors.email = touched ? this.validateEmail(emailValue) : "";
+
+    this.setState({
+      values,
+      errors
+    });
+  }
+
+  private handlePasswordOnBlur(e: any) {
+    const values = this.state.values;
+    const { value } = this.state.values.password;
+    const errors = this.state.errors;
+
+    values.password.touched = true;
+    errors.password = this.validatePassword(value);
+
+    this.setState({
+      values,
+      errors
+    });
+  }
+
+  private updatePassword(e: React.ChangeEvent<HTMLInputElement>) {
+    const passwordValue = e.currentTarget.value;
+
+    const values = this.state.values;
+    const { touched } = this.state.values.password;
+    const errors = this.state.errors;
+
+    values.password.value = passwordValue;
+    errors.password = touched ? this.validatePassword(passwordValue) : "";
+
+    this.setState({
+      values,
+      errors
+    });
+  }
+
+  private updateRememberMe(e: React.ChangeEvent<HTMLInputElement>) {
+    const rememberMe = e.currentTarget.checked;
+    const values = this.state.values;
+
+    values.rememberMe = rememberMe;
+
+    this.setState({
+      values
+    });
+  }
+
+  private tryLogin(e: React.MouseEvent<HTMLButtonElement>) {
+    this.props.updateLoginStatus(true);
+  }
+}
 
 export default withStyles(styles)(LoginFormComponent);

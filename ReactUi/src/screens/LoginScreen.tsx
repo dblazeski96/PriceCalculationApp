@@ -25,9 +25,9 @@ const styles = (theme: Theme) =>
 
 // Component
 const LoginScreen = ({ classes }: IProps) => (
-  <div className={classes.root}>
+  <div>
     <Grid container={true} justify="center" alignItems="center">
-      <Grid item={true} xs={3}>
+      <Grid item={true} xs={6} sm={5} md={4} lg={3}>
         <LoginForm />
       </Grid>
     </Grid>
