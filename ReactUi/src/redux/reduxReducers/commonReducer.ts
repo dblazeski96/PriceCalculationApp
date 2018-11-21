@@ -7,7 +7,7 @@ import { IUpdateLoginStatus } from "../reduxActions/IActions";
 export const commonReducer: Reducer<ICommonState> = (
   state: ICommonState = initialState.commonReducer,
   action: Action<string>
-): ICommonState => {
+) => {
   switch (action.type) {
     case UPDATE_LOGIN_STATUS: {
       const nextState = { ...state };

@@ -1,6 +1,10 @@
 import { IState } from "./IState";
 
 export const initialState: IState = {
+  commonReducer: {
+    loggedIn: false
+  },
+
   searchScreenReducer: {
     defaultSelectedItem: "businessItem",
     selectedItem: "businessItem",
@@ -17,9 +21,5 @@ export const initialState: IState = {
     selectedChangeProp: "noData",
     changePropValue: "",
     selectedDataItems: []
-  },
-
-  commonReducer: {
-    loggedIn: false
   }
 };

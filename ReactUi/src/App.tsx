@@ -4,7 +4,7 @@ import { Switch, Route } from "react-router-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
 import { store } from "./redux/reduxStore/store";
-import { RedirectToLoginScreen } from "./components/RedirectToLoginScreen";
+import { RedirectToLoginScreen } from "./components/Redirect";
 import { LandingScreen } from "./screens/LandingScreen";
 import { SearchScreen } from "./screens/SearchScreen";
 import { PricingScreen } from "./screens/PricingScreen";

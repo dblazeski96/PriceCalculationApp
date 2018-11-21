@@ -1,4 +1,5 @@
 import * as React from "react";
+import Axios from "axios";
 
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
@@ -6,6 +7,7 @@ import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import Button from "@material-ui/core/Button";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 import AccountCircle from "@material-ui/icons/AccountCircleRounded";
 
@@ -16,7 +18,7 @@ import {
   withStyles
 } from "@material-ui/core/styles";
 
-import { ToSearchScreen } from "../Links";
+import { RedirectToSearchScreen } from "../../components/Redirect";
 
 // Props
 interface IProps extends WithStyles<typeof styles> {
@@ -41,11 +43,13 @@ interface IValues {
     touched: boolean;
   };
   rememberMe: boolean;
+  isFetching: boolean;
 }
 
 interface IErrors {
   email: string;
   password: string;
+  fetchError: string;
 }
 
 // Styles
@@ -93,11 +97,13 @@ class LoginFormComponent extends React.Component<IProps, IState> {
           value: "",
           touched: false
         },
-        rememberMe: false
+        rememberMe: false,
+        isFetching: false
       },
       errors: {
         email: "",
-        password: ""
+        password: "",
+        fetchError: ""
       }
     };
 
@@ -116,16 +122,14 @@ class LoginFormComponent extends React.Component<IProps, IState> {
 
     return (
       <Paper className={classes.root}>
-        {loggedIn && (
-          <form className={classes.formContainer}>
-            <Typography className={classes.formItem}>
-              You are already logged in :)
-            </Typography>
-          </form>
-        )}
+        {loggedIn && <RedirectToSearchScreen />}
 
         {!loggedIn && (
           <form className={classes.formContainer}>
+            {values.isFetching && <LinearProgress variant="indeterminate" />}
+            {!values.isFetching && (
+              <LinearProgress variant="determinate" value={0} />
+            )}
             <Typography
               className={[classes.formItem, classes.logo].join(" ")}
               align="center"
@@ -178,7 +182,6 @@ class LoginFormComponent extends React.Component<IProps, IState> {
               className={classes.formItem}
               variant="contained"
               color="primary"
-              component={ToSearchScreen}
               onClick={this.tryLogin}
             >
               Login
@@ -283,7 +286,32 @@ class LoginFormComponent extends React.Component<IProps, IState> {
   }
 
   private tryLogin(e: React.MouseEvent<HTMLButtonElement>) {
-    this.props.updateLoginStatus(true);
+    const values = this.state.values;
+    values.isFetching = true;
+    this.setState({
+      values
+    });
+
+    Axios.get("http://localhost:2888/api/login/requestlogin")
+      .then(res => {
+        values.isFetching = false;
+        this.props.updateLoginStatus(true);
+
+        this.setState({
+          values
+        });
+      })
+      .catch(err => {
+        const errors = this.state.errors;
+
+        values.isFetching = false;
+        errors.fetchError = err;
+
+        this.setState({
+          values,
+          errors
+        });
+      });
   }
 }
 

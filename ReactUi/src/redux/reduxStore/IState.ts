@@ -1,8 +1,12 @@
 import { IBaseModel } from "src/models/BaseModel/IBaseModel";
 
 export interface IState {
-  searchScreenReducer: ISearchScreenState;
   commonReducer: ICommonState;
+  searchScreenReducer: ISearchScreenState;
+}
+
+export interface ICommonState {
+  loggedIn: boolean;
 }
 
 export interface ISearchScreenState {
@@ -21,8 +25,4 @@ export interface ISearchScreenState {
   selectedChangeProp: string;
   changePropValue: string;
   selectedDataItems: number[];
-}
-
-export interface ICommonState {
-  loggedIn: boolean;
 }
