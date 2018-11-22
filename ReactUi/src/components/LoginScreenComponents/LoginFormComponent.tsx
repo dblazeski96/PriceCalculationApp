@@ -19,6 +19,9 @@ import {
 } from "@material-ui/core/styles";
 
 import { RedirectToSearchScreen } from "../../components/Redirect";
+import { validateEmail, validatePassword } from "../../services/Validation";
+import { IValidationResult } from "src/models/Values/IValidationResult";
+import { IValue } from "src/models/Values/IValue";
 
 // Props
 interface IProps extends WithStyles<typeof styles> {
@@ -31,25 +34,21 @@ interface IProps extends WithStyles<typeof styles> {
 interface IState {
   values: IValues;
   errors: IErrors;
-}
 
-interface IValues {
-  email: {
-    value: string;
-    touched: boolean;
-  };
-  password: {
-    value: string;
-    touched: boolean;
-  };
-  rememberMe: boolean;
   isFetching: boolean;
 }
 
+interface IValues {
+  email: IValue;
+  password: IValue;
+  rememberMe: boolean;
+}
+
 interface IErrors {
-  email: string;
-  password: string;
-  fetchError: string;
+  email: IValidationResult;
+  password: IValidationResult;
+  fetchErrEmail: IValidationResult;
+  fetchErrPassword: IValidationResult;
 }
 
 // Styles
@@ -90,35 +89,114 @@ class LoginFormComponent extends React.Component<IProps, IState> {
     this.state = {
       values: {
         email: {
-          value: "",
-          touched: false
+          touched: false,
+          value: ""
         },
         password: {
-          value: "",
-          touched: false
+          touched: false,
+          value: ""
         },
-        rememberMe: false,
-        isFetching: false
+        rememberMe: false
       },
       errors: {
-        email: "",
-        password: "",
-        fetchError: ""
-      }
+        email: {
+          isValid: false,
+          errorMsg: null
+        },
+        password: {
+          isValid: false,
+          errorMsg: null
+        },
+        fetchErrEmail: {
+          isValid: true,
+          errorMsg: null
+        },
+        fetchErrPassword: {
+          isValid: true,
+          errorMsg: null
+        }
+      },
+
+      isFetching: false
     };
 
+    this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleEmailOnBlur = this.handleEmailOnBlur.bind(this);
     this.handlePasswordOnBlur = this.handlePasswordOnBlur.bind(this);
 
     this.updateEmail = this.updateEmail.bind(this);
     this.updatePassword = this.updatePassword.bind(this);
     this.updateRememberMe = this.updateRememberMe.bind(this);
+
     this.tryLogin = this.tryLogin.bind(this);
+  }
+
+  public componentDidUpdate() {
+    const isFetching = this.state.isFetching;
+
+    if (isFetching) {
+      const values = this.state.values;
+
+      Axios.get(
+        `http://localhost:2888/api/login/requestlogin?email=${
+          values.email.value
+        }&password=${values.password.value}`
+      )
+        .then(res => {
+          const errors = this.state.errors;
+
+          errors.fetchErrEmail = {
+            isValid: true,
+            errorMsg: null
+          };
+          errors.fetchErrPassword = {
+            isValid: true,
+            errorMsg: null
+          };
+
+          this.setState({
+            errors,
+            isFetching: false
+          });
+
+          this.props.updateLoginStatus(true);
+        })
+        .catch(err => {
+          const resMsg = JSON.parse(err.response.data.Message);
+          const errors = this.state.errors;
+
+          if (resMsg.Type === "email") {
+            errors.fetchErrEmail = {
+              isValid: false,
+              errorMsg: resMsg.Message
+            };
+            errors.fetchErrPassword = {
+              isValid: true,
+              errorMsg: null
+            };
+          }
+          if (resMsg.Type === "password") {
+            errors.fetchErrEmail = {
+              isValid: true,
+              errorMsg: null
+            };
+            errors.fetchErrPassword = {
+              isValid: false,
+              errorMsg: resMsg.Message
+            };
+          }
+
+          this.setState({
+            errors,
+            isFetching: false
+          });
+        });
+    }
   }
 
   public render() {
     const { classes, loggedIn } = this.props;
-    const { values, errors } = this.state;
+    const { values, errors, isFetching } = this.state;
 
     return (
       <Paper className={classes.root}>
@@ -126,10 +204,9 @@ class LoginFormComponent extends React.Component<IProps, IState> {
 
         {!loggedIn && (
           <form className={classes.formContainer}>
-            {values.isFetching && <LinearProgress variant="indeterminate" />}
-            {!values.isFetching && (
-              <LinearProgress variant="determinate" value={0} />
-            )}
+            {!isFetching && <LinearProgress variant="determinate" value={0} />}
+            {isFetching && <LinearProgress variant="indeterminate" />}
+
             <Typography
               className={[classes.formItem, classes.logo].join(" ")}
               align="center"
@@ -145,26 +222,60 @@ class LoginFormComponent extends React.Component<IProps, IState> {
               className={[classes.formItem, classes.emailField].join(" ")}
               type="email"
               required={true}
-              error={Boolean(errors.email)}
-              value={values.email.value}
+              error={Boolean(
+                values.email.touched
+                  ? errors.fetchErrEmail.isValid
+                    ? errors.email.isValid
+                      ? false
+                      : true
+                    : true
+                  : false
+              )}
+              value={values.email.value as string}
               label="Email"
               placeholder="Enter your email address"
-              helperText={` ${errors.email}`}
+              helperText={`${
+                values.email.touched
+                  ? errors.fetchErrEmail.isValid
+                    ? errors.email.isValid
+                      ? ""
+                      : errors.email.errorMsg
+                    : errors.fetchErrEmail.errorMsg
+                  : ""
+              } `}
               onChange={this.updateEmail}
               onBlur={this.handleEmailOnBlur}
+              onKeyDown={this.handleKeyDown}
             />
 
             <TextField
               className={[classes.formItem, classes.passwordField].join(" ")}
               type="password"
               required={true}
-              error={Boolean(errors.password)}
-              value={values.password.value}
+              error={Boolean(
+                values.password.touched
+                  ? errors.fetchErrPassword.isValid
+                    ? errors.password.isValid
+                      ? false
+                      : true
+                    : true
+                  : false
+              )}
+              value={values.password.value as string}
               label="Password"
               placeholder="Enter your password"
-              helperText={` ${errors.password}`}
+              helperText={`${
+                values.password.touched
+                  ? errors.fetchErrPassword.isValid
+                    ? errors.password.isValid
+                      ? ""
+                      : errors.password.errorMsg
+                    : errors.fetchErrPassword.errorMsg
+                  : ""
+              } `}
               onChange={this.updatePassword}
               onBlur={this.handlePasswordOnBlur}
+              onKeyDown={this.handleKeyDown}
             />
 
             <FormControlLabel
@@ -179,6 +290,7 @@ class LoginFormComponent extends React.Component<IProps, IState> {
             />
 
             <Button
+              disabled={!this.isValidInput()}
               className={classes.formItem}
               variant="contained"
               color="primary"
@@ -192,35 +304,51 @@ class LoginFormComponent extends React.Component<IProps, IState> {
     );
   }
 
-  private validateEmail(email: string) {
-    switch (true) {
-      case email === "":
-        return "Required *";
-      case !email.includes("@"):
-        return "Please enter a valid email address";
-      default:
-        return "";
-    }
+  private isValidInput() {
+    const errors = this.state.errors;
+    return (
+      (errors.fetchErrEmail.isValid
+        ? errors.email.isValid
+          ? true
+          : false
+        : false) &&
+      (errors.fetchErrPassword.isValid
+        ? errors.password.isValid
+          ? true
+          : false
+        : false)
+    );
   }
 
-  private validatePassword(password: string) {
-    switch (true) {
-      case password === "":
-        return "Required *";
-      case password.length < 8:
-        return "Your password must be at least 8 characters long";
-      default:
-        return "";
+  private handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
+    if (e.keyCode === 13 && !this.state.isFetching) {
+      if (this.isValidInput()) {
+        this.setState({
+          isFetching: true
+        });
+      }
     }
   }
 
   private handleEmailOnBlur(e: any) {
     const values = this.state.values;
-    const { value } = this.state.values.email;
     const errors = this.state.errors;
 
     values.email.touched = true;
-    errors.email = this.validateEmail(value);
+    errors.email = validateEmail(values.email.value as string);
+
+    this.setState({
+      values,
+      errors
+    });
+  }
+
+  private handlePasswordOnBlur(e: any) {
+    const values = this.state.values;
+    const errors = this.state.errors;
+
+    values.password.touched = true;
+    errors.password = validatePassword(values.password.value as string);
 
     this.setState({
       values,
@@ -232,25 +360,14 @@ class LoginFormComponent extends React.Component<IProps, IState> {
     const emailValue = e.currentTarget.value;
 
     const values = this.state.values;
-    const { touched } = this.state.values.email;
     const errors = this.state.errors;
 
     values.email.value = emailValue;
-    errors.email = touched ? this.validateEmail(emailValue) : "";
-
-    this.setState({
-      values,
-      errors
-    });
-  }
-
-  private handlePasswordOnBlur(e: any) {
-    const values = this.state.values;
-    const { value } = this.state.values.password;
-    const errors = this.state.errors;
-
-    values.password.touched = true;
-    errors.password = this.validatePassword(value);
+    errors.email = validateEmail(emailValue);
+    errors.fetchErrEmail = {
+      isValid: true,
+      errorMsg: null
+    };
 
     this.setState({
       values,
@@ -262,11 +379,14 @@ class LoginFormComponent extends React.Component<IProps, IState> {
     const passwordValue = e.currentTarget.value;
 
     const values = this.state.values;
-    const { touched } = this.state.values.password;
     const errors = this.state.errors;
 
     values.password.value = passwordValue;
-    errors.password = touched ? this.validatePassword(passwordValue) : "";
+    errors.password = validatePassword(passwordValue);
+    errors.fetchErrPassword = {
+      isValid: true,
+      errorMsg: null
+    };
 
     this.setState({
       values,
@@ -286,32 +406,9 @@ class LoginFormComponent extends React.Component<IProps, IState> {
   }
 
   private tryLogin(e: React.MouseEvent<HTMLButtonElement>) {
-    const values = this.state.values;
-    values.isFetching = true;
     this.setState({
-      values
+      isFetching: true
     });
-
-    Axios.get("http://localhost:2888/api/login/requestlogin")
-      .then(res => {
-        values.isFetching = false;
-        this.props.updateLoginStatus(true);
-
-        this.setState({
-          values
-        });
-      })
-      .catch(err => {
-        const errors = this.state.errors;
-
-        values.isFetching = false;
-        errors.fetchError = err;
-
-        this.setState({
-          values,
-          errors
-        });
-      });
   }
 }
 

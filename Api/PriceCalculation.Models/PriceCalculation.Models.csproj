@@ -78,6 +78,7 @@
     <Compile Include="View\Output\BusinessEntityOModel.cs" />
     <Compile Include="View\Output\BusinessItemOModel.cs" />
     <Compile Include="View\Output\CatalogueOModel.cs" />
+    <Compile Include="View\Output\Error.cs" />
     <Compile Include="View\Output\GroupOModel.cs" />
     <Compile Include="View\Output\RuleOModel.cs" />
     <Compile Include="View\Output\StrategyOModel.cs" />
