@@ -1,12 +1,12 @@
 import { Dispatch } from "redux";
 import { connect } from "react-redux";
 
-import { IState } from "../../redux/reduxStore/IState";
-import { updateLoginStatus } from "../../redux/reduxActions/commonActions/commonActionCreators";
+import { IReduxState } from "../redux/reduxStore/IState";
+import { updateLoginStatus } from "../redux/reduxActions/commonActions/commonActionCreators";
 
-import LoginFormComponent from "../../components/LoginScreenComponents/LoginFormComponent";
+import LoginScreenComponent from "../screens/LoginScreenComponent";
 
-const mapStateToProps = (state: IState) => ({
+const mapStateToProps = (state: IReduxState) => ({
   loggedIn: state.commonState.loggedIn
 });
 
@@ -19,4 +19,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(LoginFormComponent);
+)(LoginScreenComponent);

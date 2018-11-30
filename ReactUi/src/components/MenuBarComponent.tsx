@@ -41,20 +41,24 @@ import {
   ToPricingScreen,
   ToAdministrationScreen
 } from "../services/ComponentServices/Links";
+import { RedirectToSearchScreen } from "src/services/ComponentServices/Redirects";
 
 // IProps
 interface IProps extends WithStyles<typeof styles> {
   loggedIn: boolean;
   isOnSearchScreen: boolean;
+  searchTerm: string;
 
   updateLoginStatus: (loggedIn: boolean) => void;
+  updateSearchTerm: (searchTerm: string) => void;
 }
 
 // IState
 interface IState {
+  drawerOpen: boolean;
+  shouldSearch: boolean;
   profileAnchorEl: HTMLElement | null;
   profileMenuOpen: boolean;
-  drawerOpen: boolean;
 }
 
 // Component
@@ -63,27 +67,47 @@ class MenuBarComponent extends React.Component<IProps, IState> {
     super(props);
 
     this.state = {
+      drawerOpen: false,
+      shouldSearch: false,
       profileAnchorEl: null,
-      profileMenuOpen: false,
-      drawerOpen: false
+      profileMenuOpen: false
     };
 
     this.handleMenuClick = this.handleMenuClick.bind(this);
     this.handleDrawerClose = this.handleDrawerClose.bind(this);
+    this.handleSearchInputChange = this.handleSearchInputChange.bind(this);
+    this.handleSearchOnKeyDown = this.handleSearchOnKeyDown.bind(this);
+    this.handleSearchOnClick = this.handleSearchOnClick.bind(this);
     this.handleProfileClick = this.handleProfileClick.bind(this);
     this.handleProfileMenuClose = this.handleProfileMenuClose.bind(this);
 
     this.handleLogout = this.handleLogout.bind(this);
   }
 
+  public componentDidUpdate() {
+    const { shouldSearch } = this.state;
+
+    if (shouldSearch) {
+      this.setState({
+        shouldSearch: false
+      });
+    }
+  }
+
   public render() {
-    const { classes, loggedIn, isOnSearchScreen } = this.props;
-    const { profileAnchorEl, profileMenuOpen, drawerOpen } = this.state;
+    const { classes, loggedIn, isOnSearchScreen, searchTerm } = this.props;
+    const {
+      drawerOpen,
+      shouldSearch,
+      profileAnchorEl,
+      profileMenuOpen
+    } = this.state;
 
     return (
       <AppBar position="sticky" color="primary" className={classes.appBar}>
         {loggedIn && (
           <Toolbar variant="regular">
+            {shouldSearch && <RedirectToSearchScreen />}
             <Hidden mdUp={true}>
               <IconButton
                 centerRipple={true}
@@ -105,18 +129,24 @@ class MenuBarComponent extends React.Component<IProps, IState> {
             </Hidden>
 
             {!isOnSearchScreen && (
-              <div className={classes.search}>
+              <div
+                className={classes.search}
+                onKeyDown={this.handleSearchOnKeyDown}
+              >
                 <InputBase
                   placeholder="Search…"
+                  value={searchTerm}
                   classes={{
                     root: classes.inputRoot,
                     input: classes.inputInput
                   }}
+                  onChange={this.handleSearchInputChange}
                 />
                 <IconButton
                   centerRipple={true}
                   color="inherit"
                   component={ToSearchScreen}
+                  onClick={this.handleSearchOnClick}
                 >
                   <SearchIcon />
                 </IconButton>
@@ -255,6 +285,27 @@ class MenuBarComponent extends React.Component<IProps, IState> {
     });
   }
 
+  private handleSearchInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const searchTerm = e.currentTarget.value;
+    const { updateSearchTerm } = this.props;
+    console.log(searchTerm);
+    updateSearchTerm(searchTerm);
+  }
+
+  private handleSearchOnKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
+    if (e.keyCode === 13) {
+      this.setState({
+        shouldSearch: true
+      });
+    }
+  }
+
+  private handleSearchOnClick(e: React.MouseEvent<HTMLButtonElement>) {
+    this.setState({
+      shouldSearch: true
+    });
+  }
+
   private handleProfileClick(e: React.MouseEvent<HTMLButtonElement>) {
     const anchorEl = e.currentTarget;
 
@@ -272,11 +323,13 @@ class MenuBarComponent extends React.Component<IProps, IState> {
   }
 
   private handleLogout() {
+    const { updateLoginStatus } = this.props;
+
     this.setState({
       profileAnchorEl: null
     });
 
-    this.props.updateLoginStatus(false);
+    updateLoginStatus(false);
   }
 }
 

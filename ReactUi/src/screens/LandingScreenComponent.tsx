@@ -10,13 +10,13 @@ import {
   WithStyles
 } from "@material-ui/core/styles";
 
-import MenuBar from "../containers/MenuBar";
+import MenuBar from "../containers/MenuBarContainer";
 
 // IProps
 interface IProps extends WithStyles<typeof styles> {}
 
 // Component
-const LandingScreen = ({ classes }: IProps) => (
+const LandingScreenComponent = ({ classes }: IProps) => (
   <div>
     <MenuBar />
 
@@ -29,4 +29,4 @@ const LandingScreen = ({ classes }: IProps) => (
 // Styles
 const styles = (theme: Theme) => createStyles({});
 
-export default withStyles(styles)(LandingScreen);
+export default withStyles(styles)(LandingScreenComponent);

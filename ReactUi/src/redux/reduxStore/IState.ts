@@ -1,6 +1,6 @@
 import { IBaseModel } from "../../models/DataModels/IBaseModel";
 
-export interface IState {
+export interface IReduxState {
   commonState: ICommonState;
   searchScreenState: ISearchScreenState;
 }
@@ -8,6 +8,8 @@ export interface IState {
 export interface ICommonState {
   loggedIn: boolean;
   isOnSearchScreen: boolean;
+  selectedItem: string;
+  searchTerm: string;
 }
 
 export interface ISearchScreenState {

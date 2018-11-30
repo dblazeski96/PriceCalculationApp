@@ -16,6 +16,9 @@ export const searchBusinessEntities = (
     `http://${apihost}/api/search/GetAllBusinessEntities?property=${prop}&searchCriteria=${searchCriteria}`
   );
 
+export const changeBusinessEntity = (item: IBusinessEntity): AxiosPromise =>
+  Axios.post(`http://${apihost}/api/search/ChangeBusinessEntity`, item);
+
 export const changeMultipleBusinessEntities = (
   prop: string,
   value: string,
@@ -25,6 +28,3 @@ export const changeMultipleBusinessEntities = (
     `http://${apihost}/api/search/ChangePropertyOfMultipleBusinessEntities?property=${prop}&value=${value}`,
     items
   );
-
-export const changeBusinessEntity = (item: IBusinessEntity): AxiosPromise =>
-  Axios.post(`http://${apihost}/api/search/ChangeBusinessEntity`, item);

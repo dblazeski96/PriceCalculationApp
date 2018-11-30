@@ -6,13 +6,14 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import store from "./redux/reduxStore/store";
 
 import { RedirectToLoginScreen } from "./services/ComponentServices/Redirects";
-import LandingScreen from "./screens/LandingScreen";
-import SearchScreen from "./screens/SearchScreen";
-import PricingScreen from "./screens/PricingScreen";
-import AdministrationScreen from "./screens/AdministrationScreen";
-import LoginScreen from "./screens/LoginScreen";
-import ProfileScreen from "./screens/ProfileScreen";
-import NotFoundScreen from "./screens/NotFoundScreen";
+
+import LandingScreen from "./containers/LandingScreenContainer";
+import SearchScreen from "./containers/SearchScreenContainer";
+import PricingScreen from "./containers/PricingScreenContainer";
+import AdministrationScreen from "./containers/AdministrationScreenContainer";
+import LoginScreen from "./containers/LoginScreenContainer";
+import ProfileScreen from "./containers/ProfileScreenContainer";
+import NotFoundScreen from "./containers/NotFoundScreenContainer";
 
 class App extends React.Component {
   constructor(props: any) {

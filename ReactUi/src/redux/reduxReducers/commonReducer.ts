@@ -5,11 +5,15 @@ import initialState from "../reduxStore/initialState";
 
 import {
   UPDATE_LOGIN_STATUS,
-  UPDATE_IS_ON_SEARCH_SCREEN
+  UPDATE_IS_ON_SEARCH_SCREEN,
+  UPDATE_SELECTED_ITEM,
+  UPDATE_SEARCH_TERM
 } from "../reduxActions/commonActions/commonActionTypes";
 import {
   IUpdateLoginStatus,
-  IUpdateIsOnSearchScreen
+  IUpdateIsOnSearchScreen,
+  IUpdateSelectedItem,
+  IUpdateSearchTerm
 } from "../reduxActions/commonActions/commonIActions";
 
 // Reducer
@@ -28,6 +32,20 @@ const commonReducer: Reducer<ICommonState> = (
     case UPDATE_IS_ON_SEARCH_SCREEN: {
       const nextState = { ...state };
       nextState.isOnSearchScreen = (action as IUpdateIsOnSearchScreen).isOnSearchScreen;
+
+      return nextState;
+    }
+
+    case UPDATE_SELECTED_ITEM: {
+      const nextState = { ...state };
+      nextState.selectedItem = (action as IUpdateSelectedItem).selectedItem;
+
+      return nextState;
+    }
+
+    case UPDATE_SEARCH_TERM: {
+      const nextState = { ...state };
+      nextState.searchTerm = (action as IUpdateSearchTerm).searchTerm;
 
       return nextState;
     }

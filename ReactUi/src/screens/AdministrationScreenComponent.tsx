@@ -10,18 +10,18 @@ import {
   WithStyles
 } from "@material-ui/core/styles";
 
-import MenuBar from "../containers/MenuBar";
+import MenuBar from "../containers/MenuBarContainer";
 
 // IProps
 interface IProps extends WithStyles<typeof styles> {}
 
 // Component
-const PricingScreen = ({ classes }: IProps) => (
+const AdministrationScreenComponent = ({ classes }: IProps) => (
   <div>
     <MenuBar />
 
     <Paper>
-      <Typography>Pricing Screen Placeholder</Typography>
+      <Typography>Administration Screen Placeholder</Typography>
     </Paper>
   </div>
 );
@@ -29,4 +29,4 @@ const PricingScreen = ({ classes }: IProps) => (
 // Styles
 const styles = (theme: Theme) => createStyles({});
 
-export default withStyles(styles)(PricingScreen);
+export default withStyles(styles)(AdministrationScreenComponent);

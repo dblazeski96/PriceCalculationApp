@@ -93,7 +93,7 @@ class LoginFormComponent extends React.Component<IProps, IState> {
       isFetching: false
     };
 
-    this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.handleLoginKeyDown = this.handleLoginKeyDown.bind(this);
     this.handleEmailOnBlur = this.handleEmailOnBlur.bind(this);
     this.handlePasswordOnBlur = this.handlePasswordOnBlur.bind(this);
 
@@ -108,64 +108,66 @@ class LoginFormComponent extends React.Component<IProps, IState> {
     const { shouldFetch } = this.state;
 
     if (shouldFetch) {
-      const email = this.state.values.email.value;
-      const password = this.state.values.password.value;
+      if (this.isValidInput()) {
+        const email = this.state.values.email.value;
+        const password = this.state.values.password.value;
 
-      this.setState({
-        shouldFetch: false,
-        isFetching: true
-      });
-
-      login(email as string, password as string)
-        .then(res => {
-          const errors = this.state.errors;
-
-          errors.fetchErrEmail = {
-            isValid: true,
-            errorMsg: null
-          };
-          errors.fetchErrPassword = {
-            isValid: true,
-            errorMsg: null
-          };
-
-          this.setState({
-            errors,
-            isFetching: false
-          });
-
-          this.props.updateLoginStatus(true);
-        })
-        .catch(err => {
-          const resMsg = JSON.parse(err.response.data.Message);
-          const errors = this.state.errors;
-
-          if (resMsg.Type === "email") {
-            errors.fetchErrEmail = {
-              isValid: false,
-              errorMsg: resMsg.Message
-            };
-            errors.fetchErrPassword = {
-              isValid: true,
-              errorMsg: null
-            };
-          }
-          if (resMsg.Type === "password") {
-            errors.fetchErrEmail = {
-              isValid: true,
-              errorMsg: null
-            };
-            errors.fetchErrPassword = {
-              isValid: false,
-              errorMsg: resMsg.Message
-            };
-          }
-
-          this.setState({
-            errors,
-            isFetching: false
-          });
+        this.setState({
+          shouldFetch: false,
+          isFetching: true
         });
+
+        login(email as string, password as string)
+          .then(res => {
+            const errors = this.state.errors;
+
+            errors.fetchErrEmail = {
+              isValid: true,
+              errorMsg: null
+            };
+            errors.fetchErrPassword = {
+              isValid: true,
+              errorMsg: null
+            };
+
+            this.setState({
+              errors,
+              isFetching: false
+            });
+
+            this.props.updateLoginStatus(true);
+          })
+          .catch(err => {
+            const resMsg = JSON.parse(err.response.data.Message);
+            const errors = this.state.errors;
+
+            if (resMsg.Type === "email") {
+              errors.fetchErrEmail = {
+                isValid: false,
+                errorMsg: resMsg.Message
+              };
+              errors.fetchErrPassword = {
+                isValid: true,
+                errorMsg: null
+              };
+            }
+            if (resMsg.Type === "password") {
+              errors.fetchErrEmail = {
+                isValid: true,
+                errorMsg: null
+              };
+              errors.fetchErrPassword = {
+                isValid: false,
+                errorMsg: resMsg.Message
+              };
+            }
+
+            this.setState({
+              errors,
+              isFetching: false
+            });
+          });
+      }
     }
   }
 
@@ -220,7 +222,7 @@ class LoginFormComponent extends React.Component<IProps, IState> {
               } `}
               onChange={this.updateEmail}
               onBlur={this.handleEmailOnBlur}
-              onKeyDown={this.handleKeyDown}
+              onKeyDown={this.handleLoginKeyDown}
             />
 
             <TextField
@@ -250,7 +252,7 @@ class LoginFormComponent extends React.Component<IProps, IState> {
               } `}
               onChange={this.updatePassword}
               onBlur={this.handlePasswordOnBlur}
-              onKeyDown={this.handleKeyDown}
+              onKeyDown={this.handleLoginKeyDown}
             />
 
             <FormControlLabel
@@ -295,7 +297,7 @@ class LoginFormComponent extends React.Component<IProps, IState> {
     );
   }
 
-  private handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
+  private handleLoginKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
     const { shouldFetch, isFetching } = this.state;
 
     if (e.keyCode === 13 && !shouldFetch && !isFetching) {

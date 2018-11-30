@@ -1,9 +1,11 @@
-import { IState } from "./IState";
+import { IReduxState } from "./IState";
 
-const initialState: IState = {
+const initialState: IReduxState = {
   commonState: {
     loggedIn: true,
-    isOnSearchScreen: false
+    isOnSearchScreen: false,
+    selectedItem: "businessItem",
+    searchTerm: ""
   },
 
   searchScreenState: {

@@ -18,7 +18,7 @@ import {
 interface IProps extends WithStyles<typeof styles> {}
 
 // Component
-const NotFoundScreen = ({ classes }: IProps) => (
+const NotFoundScreenComponent = ({ classes }: IProps) => (
   <Grid container={true} justify="center" alignItems="center">
     <Grid item={true} xs={11}>
       <Paper className={classes.root}>
@@ -59,4 +59,4 @@ const styles = (theme: Theme) =>
     }
   });
 
-export default withStyles(styles)(NotFoundScreen);
+export default withStyles(styles)(NotFoundScreenComponent);
