@@ -3,9 +3,20 @@ import * as React from "react";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 
-import { MenuBar } from "../containers/MenuBar";
+import {
+  createStyles,
+  withStyles,
+  Theme,
+  WithStyles
+} from "@material-ui/core/styles";
 
-export const ProfileScreen = (props: any) => (
+import MenuBar from "../containers/MenuBar";
+
+// IProps
+interface IProps extends WithStyles<typeof styles> {}
+
+// Component
+const ProfileScreen = ({ classes }: IProps) => (
   <div>
     <MenuBar />
 
@@ -14,3 +25,8 @@ export const ProfileScreen = (props: any) => (
     </Paper>
   </div>
 );
+
+// Styles
+const styles = (theme: Theme) => createStyles({});
+
+export default withStyles(styles)(ProfileScreen);

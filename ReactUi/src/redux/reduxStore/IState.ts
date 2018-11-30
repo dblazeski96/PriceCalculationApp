@@ -1,12 +1,13 @@
-import { IBaseModel } from "src/models/BaseModel/IBaseModel";
+import { IBaseModel } from "../../models/DataModels/IBaseModel";
 
 export interface IState {
-  commonReducer: ICommonState;
-  searchScreenReducer: ISearchScreenState;
+  commonState: ICommonState;
+  searchScreenState: ISearchScreenState;
 }
 
 export interface ICommonState {
   loggedIn: boolean;
+  isOnSearchScreen: boolean;
 }
 
 export interface ISearchScreenState {

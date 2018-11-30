@@ -1,11 +1,12 @@
 import { IState } from "./IState";
 
-export const initialState: IState = {
-  commonReducer: {
-    loggedIn: false
+const initialState: IState = {
+  commonState: {
+    loggedIn: true,
+    isOnSearchScreen: false
   },
 
-  searchScreenReducer: {
+  searchScreenState: {
     defaultSelectedItem: "businessItem",
     selectedItem: "businessItem",
     itemData: [],
@@ -23,3 +24,5 @@ export const initialState: IState = {
     selectedDataItems: []
   }
 };
+
+export default initialState;

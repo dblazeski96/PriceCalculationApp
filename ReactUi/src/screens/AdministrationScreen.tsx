@@ -1,10 +1,22 @@
 import * as React from "react";
 
-import { MenuBar } from "../containers/MenuBar";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 
-export const AdministrationScreen = (props: any) => (
+import {
+  createStyles,
+  withStyles,
+  Theme,
+  WithStyles
+} from "@material-ui/core/styles";
+
+import MenuBar from "../containers/MenuBar";
+
+// IProps
+interface IProps extends WithStyles<typeof styles> {}
+
+// Component
+const AdministrationScreen = ({ classes }: IProps) => (
   <div>
     <MenuBar />
 
@@ -13,3 +25,8 @@ export const AdministrationScreen = (props: any) => (
     </Paper>
   </div>
 );
+
+// Styles
+const styles = (theme: Theme) => createStyles({});
+
+export default withStyles(styles)(AdministrationScreen);

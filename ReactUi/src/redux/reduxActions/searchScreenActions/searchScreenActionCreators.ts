@@ -1,25 +1,24 @@
 import { ActionCreator } from "redux";
 
 import {
-  IUpdateSelectedItem,
-  IUpdateSelectedSearchProp,
-  IUpdateSearchTerm,
-  IUpdateSelectedChangeProp,
-  IUpdateChangePropValue,
-  ISelectDeselectDataItem,
-  IUpdateLoginStatus
-} from "./IActions";
-
-import {
   UPDATE_SELECTED_ITEM,
   UPDATE_SELECTED_SEARCH_PROP,
   UPDATE_SEARCH_TERM,
-  UPDATE_SELECTED_CHANGE_PROP,
-  UPDATE_CHANGE_PROP_VALUE,
   SELECT_DESELECT_DATA_ITEM,
-  UPDATE_LOGIN_STATUS
-} from "./actionTypes";
-import { IBaseModel } from "src/models/BaseModel/IBaseModel";
+  UPDATE_SELECTED_CHANGE_PROP,
+  UPDATE_CHANGE_PROP_VALUE
+} from "./searchScreenActionTypes";
+
+import {
+  IUpdateSelectedItem,
+  IUpdateSelectedSearchProp,
+  IUpdateSearchTerm,
+  ISelectDeselectDataItem,
+  IUpdateSelectedChangeProp,
+  IUpdateChangePropValue
+} from "./searchScreenIActions";
+
+import { IBaseModel } from "../../../models/DataModels/IBaseModel";
 
 export const updateSelectedItem: ActionCreator<IUpdateSelectedItem> = (
   selectedItem: string,
@@ -63,11 +62,4 @@ export const selectDeselectDataItem: ActionCreator<ISelectDeselectDataItem> = (
 ): ISelectDeselectDataItem => ({
   type: SELECT_DESELECT_DATA_ITEM,
   id
-});
-
-export const updateLoginStatus: ActionCreator<IUpdateLoginStatus> = (
-  loggedIn: boolean
-): IUpdateLoginStatus => ({
-  type: UPDATE_LOGIN_STATUS,
-  loggedIn
 });

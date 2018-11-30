@@ -2,10 +2,28 @@ import * as React from "react";
 
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import IconButton from "@material-ui/core/IconButton";
-import Button from "@material-ui/core/Button";
-import Menu from "@material-ui/core/Menu";
+import Hidden from "@material-ui/core/Hidden";
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import Paper from "@material-ui/core/Paper";
+import Drawer from "@material-ui/core/Drawer";
+import Popper from "@material-ui/core/Popper";
+import Divider from "@material-ui/core/Divider";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import MenuList from "@material-ui/core/MenuList";
 import MenuItem from "@material-ui/core/MenuItem";
+import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
+import InputBase from "@material-ui/core/InputBase";
+
+import EuroSymbol from "@material-ui/icons/EuroSymbol";
+import MenuIcon from "@material-ui/icons/Menu";
+import SearchIcon from "@material-ui/icons/Search";
+import AccountCircle from "@material-ui/icons/AccountCircle";
+import FilterVintage from "@material-ui/icons/FilterVintage";
+import PowerSettingsNew from "@material-ui/icons/PowerSettingsNew";
 
 import {
   createStyles,
@@ -13,54 +31,31 @@ import {
   Theme,
   WithStyles
 } from "@material-ui/core/styles";
-
-import MenuIcon from "@material-ui/icons/Menu";
-import EuroSymbol from "@material-ui/icons/EuroSymbol";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import FilterVintage from "@material-ui/icons/FilterVintage";
-import PowerSettingsNew from "@material-ui/icons/PowerSettingsNew";
+import { fade } from "@material-ui/core/styles/colorManipulator";
 
 import {
   ToLandingScreen,
+  ToLoginScreen,
+  ToProfileScreen,
   ToSearchScreen,
   ToPricingScreen,
-  ToAdministrationScreen,
-  ToLoginScreen,
-  ToProfileScreen
-} from "./Links";
-import {
-  ListItemIcon,
-  ListItemText,
-  Drawer,
-  Divider,
-  List,
-  ListItem,
-  Typography
-} from "@material-ui/core";
+  ToAdministrationScreen
+} from "../services/ComponentServices/Links";
 
-// Props
+// IProps
 interface IProps extends WithStyles<typeof styles> {
   loggedIn: boolean;
+  isOnSearchScreen: boolean;
 
   updateLoginStatus: (loggedIn: boolean) => void;
 }
 
-// State
+// IState
 interface IState {
   profileAnchorEl: HTMLElement | null;
+  profileMenuOpen: boolean;
   drawerOpen: boolean;
 }
-
-// Styles
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1
-    },
-    grow: {
-      flexGrow: 1
-    }
-  });
 
 // Component
 class MenuBarComponent extends React.Component<IProps, IState> {
@@ -69,127 +64,210 @@ class MenuBarComponent extends React.Component<IProps, IState> {
 
     this.state = {
       profileAnchorEl: null,
+      profileMenuOpen: false,
       drawerOpen: false
     };
 
-    this.openCloseDrawer = this.openCloseDrawer.bind(this);
-
+    this.handleMenuClick = this.handleMenuClick.bind(this);
+    this.handleDrawerClose = this.handleDrawerClose.bind(this);
     this.handleProfileClick = this.handleProfileClick.bind(this);
     this.handleProfileMenuClose = this.handleProfileMenuClose.bind(this);
+
     this.handleLogout = this.handleLogout.bind(this);
   }
 
   public render() {
-    const { loggedIn, classes } = this.props;
-    const { profileAnchorEl, drawerOpen } = this.state;
+    const { classes, loggedIn, isOnSearchScreen } = this.props;
+    const { profileAnchorEl, profileMenuOpen, drawerOpen } = this.state;
 
     return (
-      <div>
-        <AppBar className={classes.root} position="sticky">
+      <AppBar position="sticky" color="primary" className={classes.appBar}>
+        {loggedIn && (
           <Toolbar variant="regular">
-            <IconButton onClick={this.openCloseDrawer}>
-              <MenuIcon />
-            </IconButton>
+            <Hidden mdUp={true}>
+              <IconButton
+                centerRipple={true}
+                color="inherit"
+                onClick={this.handleMenuClick}
+              >
+                <MenuIcon />
+              </IconButton>
+            </Hidden>
 
-            <IconButton component={ToLandingScreen} color="inherit">
-              <EuroSymbol />
-            </IconButton>
+            <Hidden smDown={true}>
+              <IconButton
+                centerRipple={true}
+                color="inherit"
+                component={ToLandingScreen}
+              >
+                <EuroSymbol />
+              </IconButton>
+            </Hidden>
 
-            {loggedIn && (
-              <div>
-                <Button component={ToSearchScreen} color="inherit">
-                  Search
-                </Button>
-                <Button component={ToPricingScreen} color="inherit">
-                  Pricing
-                </Button>
-                <Button component={ToAdministrationScreen} color="inherit">
-                  Administration
-                </Button>
+            {!isOnSearchScreen && (
+              <div className={classes.search}>
+                <InputBase
+                  placeholder="Search…"
+                  classes={{
+                    root: classes.inputRoot,
+                    input: classes.inputInput
+                  }}
+                />
+                <IconButton
+                  centerRipple={true}
+                  color="inherit"
+                  component={ToSearchScreen}
+                >
+                  <SearchIcon />
+                </IconButton>
               </div>
             )}
 
             <span className={classes.grow} />
 
-            {loggedIn && (
-              <div>
-                <IconButton color="inherit" onClick={this.handleProfileClick}>
-                  <AccountCircle />
-                </IconButton>
-                <Menu
-                  anchorEl={profileAnchorEl}
-                  open={Boolean(profileAnchorEl)}
-                  onClose={this.handleProfileMenuClose}
-                >
-                  <MenuItem
-                    component={ToProfileScreen}
-                    onClick={this.handleProfileMenuClose}
-                  >
-                    <ListItemIcon>
-                      <FilterVintage />
-                    </ListItemIcon>
-                    <ListItemText primary="Profile" />
-                  </MenuItem>
+            <Hidden smDown={true}>
+              <Button
+                centerRipple={true}
+                color="inherit"
+                component={ToPricingScreen}
+              >
+                Pricing
+              </Button>
+              <Button
+                centerRipple={true}
+                color="inherit"
+                component={ToAdministrationScreen}
+              >
+                Administration
+              </Button>
+            </Hidden>
 
-                  <MenuItem
-                    component={ToLoginScreen}
-                    onClick={this.handleLogout}
-                  >
-                    <ListItemIcon>
-                      <PowerSettingsNew />
-                    </ListItemIcon>
-                    <ListItemText primary="Logout" />
-                  </MenuItem>
-                </Menu>
-              </div>
-            )}
-            {!loggedIn && (
-              <div>
-                <Button component={ToLoginScreen} color="inherit">
-                  Login
-                </Button>
-              </div>
-            )}
+            <IconButton
+              centerRipple={true}
+              color="inherit"
+              onClick={this.handleProfileClick}
+            >
+              <AccountCircle />
+            </IconButton>
+            <Popper
+              anchorEl={profileAnchorEl}
+              open={profileMenuOpen}
+              disablePortal={true}
+              onClick={this.handleProfileMenuClose}
+            >
+              <ClickAwayListener onClickAway={this.handleProfileMenuClose}>
+                <Paper>
+                  <MenuList>
+                    <MenuItem button={true} component={ToProfileScreen}>
+                      <ListItemIcon>
+                        <FilterVintage />
+                      </ListItemIcon>
+                      <ListItemText primary="Profile" />
+                    </MenuItem>
+
+                    <MenuItem
+                      button={true}
+                      component={ToLoginScreen}
+                      onClick={this.handleLogout}
+                    >
+                      <ListItemIcon>
+                        <PowerSettingsNew />
+                      </ListItemIcon>
+                      <ListItemText primary="Logout" />
+                    </MenuItem>
+                  </MenuList>
+                </Paper>
+              </ClickAwayListener>
+            </Popper>
           </Toolbar>
-        </AppBar>
-        <Drawer variant="persistent" anchor="left" open={drawerOpen}>
+        )}
+
+        {!loggedIn && (
+          <Toolbar variant="regular">
+            <IconButton
+              centerRipple={true}
+              color="inherit"
+              component={ToLandingScreen}
+            >
+              <EuroSymbol />
+            </IconButton>
+
+            <span className={classes.grow} />
+
+            <Button
+              centerRipple={true}
+              color="inherit"
+              component={ToLoginScreen}
+            >
+              Login
+            </Button>
+          </Toolbar>
+        )}
+        <Drawer
+          variant="temporary"
+          anchor="left"
+          open={drawerOpen}
+          onClose={this.handleDrawerClose}
+        >
           <List>
-            <Typography variant="display1" align="center">
-              Menu
-            </Typography>
-            <Divider />
-            <ListItem component={ToSearchScreen} button={true}>
-              <ListItemText primary="Search" />
+            <ListItem
+              button={true}
+              className={classes.drawerHeader}
+              component={ToLandingScreen}
+            >
+              <ListItemIcon>
+                <EuroSymbol />
+              </ListItemIcon>
             </ListItem>
-            <ListItem component={ToPricingScreen} button={true}>
+
+            <Divider />
+
+            <ListItem
+              button={true}
+              className={classes.drawerItem}
+              component={ToPricingScreen}
+            >
               <ListItemText primary="Pricing" />
             </ListItem>
-            <ListItem component={ToAdministrationScreen} button={true}>
+
+            <ListItem
+              button={true}
+              className={classes.drawerItem}
+              component={ToAdministrationScreen}
+            >
               <ListItemText primary="Administration" />
             </ListItem>
           </List>
         </Drawer>
-      </div>
+      </AppBar>
     );
   }
 
-  // Handle Drawer
-  private openCloseDrawer(e: React.MouseEvent<HTMLButtonElement>) {
-    const drawerOpen = !this.state.drawerOpen;
+  private handleMenuClick(e: React.MouseEvent<HTMLButtonElement>) {
     this.setState({
-      drawerOpen
+      drawerOpen: true
+    });
+  }
+
+  private handleDrawerClose(e: React.MouseEvent<HTMLDivElement>) {
+    this.setState({
+      drawerOpen: false
     });
   }
 
   private handleProfileClick(e: React.MouseEvent<HTMLButtonElement>) {
+    const anchorEl = e.currentTarget;
+
     this.setState({
-      profileAnchorEl: e.currentTarget
+      profileAnchorEl: anchorEl,
+      profileMenuOpen: true
     });
   }
 
   private handleProfileMenuClose(e: React.SyntheticEvent) {
     this.setState({
-      profileAnchorEl: null
+      profileAnchorEl: null,
+      profileMenuOpen: false
     });
   }
 
@@ -201,5 +279,57 @@ class MenuBarComponent extends React.Component<IProps, IState> {
     this.props.updateLoginStatus(false);
   }
 }
+
+// Styles
+const styles = (theme: Theme) =>
+  createStyles({
+    appBar: {
+      flexGrow: 1
+    },
+    grow: {
+      flexGrow: 1
+    },
+    search: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: fade(theme.palette.common.white, 0.15),
+      "&:hover": {
+        backgroundColor: fade(theme.palette.common.white, 0.25)
+      },
+      borderRadius: theme.shape.borderRadius,
+      width: "100%",
+      marginLeft: theme.spacing.unit,
+      marginRight: theme.spacing.unit,
+      [theme.breakpoints.up("sm")]: {
+        width: "auto"
+      }
+    },
+    inputRoot: {
+      color: "inherit",
+      width: "100%"
+    },
+    inputInput: {
+      height: "100%",
+      width: "100%",
+      [theme.breakpoints.up("sm")]: {
+        width: 220,
+        "&:focus": {
+          width: 310
+        }
+      },
+      transition: theme.transitions.create("width"),
+      padding: theme.spacing.unit,
+      paddingLeft: theme.spacing.unit * 3
+    },
+    drawerHeader: {
+      justifyContent: "center"
+    },
+    drawerItem: {
+      paddingLeft: theme.spacing.unit * 3,
+      paddingRight: theme.spacing.unit * 10
+    }
+  });
 
 export default withStyles(styles)(MenuBarComponent);

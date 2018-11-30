@@ -2,13 +2,14 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import registerServiceWorker from "./registerServiceWorker";
 
 import "roboto-fontface";
 import "./index.css";
 
-import { store } from "./redux/reduxStore/store";
+import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
+
+import store from "./redux/reduxStore/store";
 import App from "./App";
 
 const theme = createMuiTheme({

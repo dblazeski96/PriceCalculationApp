@@ -1,6 +1,11 @@
-import { createStore, Store } from "redux";
+import { createStore, combineReducers } from "redux";
 
-import { IState } from "./IState";
-import { rootReducer } from "../reduxReducers/rootReducer";
+import commonState from "../reduxReducers/commonReducer";
+import searchScreenState from "../reduxReducers/searchScreenReducer";
 
-export const store: Store<IState> = createStore(rootReducer);
+const rootReducer = combineReducers({
+  commonState,
+  searchScreenState
+});
+
+export default createStore(rootReducer);

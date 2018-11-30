@@ -1,5 +1,5 @@
 import { Action } from "redux";
-import { IBaseModel } from "src/models/BaseModel/IBaseModel";
+import { IBaseModel } from "../../../models/DataModels/IBaseModel";
 
 export interface IUpdateSelectedItem extends Action<string> {
   selectedItem: string;
@@ -24,8 +24,4 @@ export interface IUpdateChangePropValue extends Action<string> {
 
 export interface ISelectDeselectDataItem extends Action<string> {
   id: number;
-}
-
-export interface IUpdateLoginStatus extends Action<string> {
-  loggedIn: boolean;
 }

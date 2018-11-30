@@ -1,4 +1,4 @@
-import { IBaseModel } from "./BaseModel/IBaseModel";
+import { IBaseModel } from "./IBaseModel";
 
 export interface IBusinessItem extends IBaseModel {
   Name: string;

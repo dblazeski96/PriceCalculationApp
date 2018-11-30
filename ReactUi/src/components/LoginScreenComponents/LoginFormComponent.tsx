@@ -1,27 +1,28 @@
 import * as React from "react";
-import Axios from "axios";
 
 import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
-import Button from "@material-ui/core/Button";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import Switch from "@material-ui/core/Switch";
+import TextField from "@material-ui/core/TextField";
 
 import AccountCircle from "@material-ui/icons/AccountCircleRounded";
 
 import {
-  Theme,
   createStyles,
-  WithStyles,
-  withStyles
+  withStyles,
+  Theme,
+  WithStyles
 } from "@material-ui/core/styles";
 
-import { RedirectToSearchScreen } from "../../components/Redirect";
-import { validateEmail, validatePassword } from "../../services/Validation";
+import { IFormValue } from "src/models/Values/IFormValue";
 import { IValidationResult } from "src/models/Values/IValidationResult";
-import { IValue } from "src/models/Values/IValue";
+
+import { login } from "../../services/ApiServices/LoginService";
+import { validateEmail, validatePassword } from "../../services/Validation";
+import { RedirectToSearchScreen } from "../../services/ComponentServices/Redirects";
 
 // Props
 interface IProps extends WithStyles<typeof styles> {
@@ -35,12 +36,13 @@ interface IState {
   values: IValues;
   errors: IErrors;
 
+  shouldFetch: boolean;
   isFetching: boolean;
 }
 
 interface IValues {
-  email: IValue;
-  password: IValue;
+  email: IFormValue;
+  password: IFormValue;
   rememberMe: boolean;
 }
 
@@ -50,36 +52,6 @@ interface IErrors {
   fetchErrEmail: IValidationResult;
   fetchErrPassword: IValidationResult;
 }
-
-// Styles
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-      marginTop: theme.spacing.unit * 10
-    },
-    formContainer: {
-      display: "flex",
-      flexDirection: "column"
-    },
-    formItem: {
-      margin: theme.spacing.unit * 3
-    },
-    logo: {
-      marginBottom: theme.spacing.unit
-    },
-    emailField: {
-      marginTop: theme.spacing.unit,
-      marginBottom: theme.spacing.unit
-    },
-    passwordField: {
-      marginTop: theme.spacing.unit,
-      marginBottom: theme.spacing.unit
-    },
-    switchButton: {
-      margin: theme.spacing.unit
-    }
-  });
 
 // Component
 class LoginFormComponent extends React.Component<IProps, IState> {
@@ -117,6 +89,7 @@ class LoginFormComponent extends React.Component<IProps, IState> {
         }
       },
 
+      shouldFetch: false,
       isFetching: false
     };
 
@@ -132,16 +105,18 @@ class LoginFormComponent extends React.Component<IProps, IState> {
   }
 
   public componentDidUpdate() {
-    const isFetching = this.state.isFetching;
+    const { shouldFetch } = this.state;
 
-    if (isFetching) {
-      const values = this.state.values;
+    if (shouldFetch) {
+      const email = this.state.values.email.value;
+      const password = this.state.values.password.value;
 
-      Axios.get(
-        `http://localhost:2888/api/login/requestlogin?email=${
-          values.email.value
-        }&password=${values.password.value}`
-      )
+      this.setState({
+        shouldFetch: false,
+        isFetching: true
+      });
+
+      login(email as string, password as string)
         .then(res => {
           const errors = this.state.errors;
 
@@ -321,12 +296,16 @@ class LoginFormComponent extends React.Component<IProps, IState> {
   }
 
   private handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
-    if (e.keyCode === 13 && !this.state.isFetching) {
-      if (this.isValidInput()) {
-        this.setState({
-          isFetching: true
-        });
-      }
+    const { shouldFetch, isFetching } = this.state;
+
+    if (e.keyCode === 13 && !shouldFetch && !isFetching) {
+      this.setState({
+        shouldFetch: true
+      });
+    } else {
+      this.setState({
+        shouldFetch: false
+      });
     }
   }
 
@@ -411,5 +390,35 @@ class LoginFormComponent extends React.Component<IProps, IState> {
     });
   }
 }
+
+// Styles
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+      marginTop: theme.spacing.unit * 10
+    },
+    formContainer: {
+      display: "flex",
+      flexDirection: "column"
+    },
+    formItem: {
+      margin: theme.spacing.unit * 3
+    },
+    logo: {
+      marginBottom: theme.spacing.unit
+    },
+    emailField: {
+      marginTop: theme.spacing.unit,
+      marginBottom: theme.spacing.unit
+    },
+    passwordField: {
+      marginTop: theme.spacing.unit,
+      marginBottom: theme.spacing.unit
+    },
+    switchButton: {
+      margin: theme.spacing.unit
+    }
+  });
 
 export default withStyles(styles)(LoginFormComponent);

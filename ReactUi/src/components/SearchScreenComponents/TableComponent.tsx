@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IBaseModel } from "../../models/BaseModel/IBaseModel";
+import { IBaseModel } from "../../models/DataModels/IBaseModel";
 import {
   Table,
   TableHead,

@@ -17,19 +17,6 @@ import {
 // IProps
 interface IProps extends WithStyles<typeof styles> {}
 
-// Styles
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      marginTop: theme.spacing.unit * 2,
-      paddingTop: theme.spacing.unit * 10,
-      paddingBottom: theme.spacing.unit * 10
-    },
-    errorMsg: {
-      marginTop: theme.spacing.unit * 5
-    }
-  });
-
 // Component
 const NotFoundScreen = ({ classes }: IProps) => (
   <Grid container={true} justify="center" alignItems="center">
@@ -58,5 +45,18 @@ const NotFoundScreen = ({ classes }: IProps) => (
     </Grid>
   </Grid>
 );
+
+// Styles
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      marginTop: theme.spacing.unit * 2,
+      paddingTop: theme.spacing.unit * 10,
+      paddingBottom: theme.spacing.unit * 10
+    },
+    errorMsg: {
+      marginTop: theme.spacing.unit * 5
+    }
+  });
 
 export default withStyles(styles)(NotFoundScreen);

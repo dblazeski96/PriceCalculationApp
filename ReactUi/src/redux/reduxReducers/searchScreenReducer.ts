@@ -1,28 +1,28 @@
 import { Action, Reducer } from "redux";
 
 import { ISearchScreenState } from "../reduxStore/IState";
-import { initialState } from "../reduxStore/initialState";
+import initialState from "../reduxStore/initialState";
 
 import {
   UPDATE_SELECTED_ITEM,
   UPDATE_SELECTED_SEARCH_PROP,
   UPDATE_SEARCH_TERM,
+  SELECT_DESELECT_DATA_ITEM,
   UPDATE_SELECTED_CHANGE_PROP,
-  UPDATE_CHANGE_PROP_VALUE,
-  SELECT_DESELECT_DATA_ITEM
-} from "../reduxActions/actionTypes";
+  UPDATE_CHANGE_PROP_VALUE
+} from "../reduxActions/searchScreenActions/searchScreenActionTypes";
 
 import {
   IUpdateSelectedItem,
   IUpdateSelectedSearchProp,
   IUpdateSearchTerm,
+  ISelectDeselectDataItem,
   IUpdateSelectedChangeProp,
-  IUpdateChangePropValue,
-  ISelectDeselectDataItem
-} from "../reduxActions/IActions";
+  IUpdateChangePropValue
+} from "../reduxActions/searchScreenActions/searchScreenIActions";
 
-export const searchScreenReducer: Reducer<ISearchScreenState> = (
-  state: ISearchScreenState = initialState.searchScreenReducer,
+const searchScreenReducer: Reducer<ISearchScreenState> = (
+  state: ISearchScreenState = initialState.searchScreenState,
   action: Action<string>
 ): ISearchScreenState => {
   switch (action.type) {
@@ -94,3 +94,5 @@ export const searchScreenReducer: Reducer<ISearchScreenState> = (
     }
   }
 };
+
+export default searchScreenReducer;

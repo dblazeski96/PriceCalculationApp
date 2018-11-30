@@ -1,13 +1,13 @@
-import { connect } from "react-redux";
 import { Dispatch } from "redux";
+import { connect } from "react-redux";
 
 import { IState } from "../../redux/reduxStore/IState";
-import { updateLoginStatus } from "src/redux/reduxActions/actions";
+import { updateLoginStatus } from "../../redux/reduxActions/commonActions/commonActionCreators";
 
 import LoginFormComponent from "../../components/LoginScreenComponents/LoginFormComponent";
 
 const mapStateToProps = (state: IState) => ({
-  loggedIn: state.commonReducer.loggedIn
+  loggedIn: state.commonState.loggedIn
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -16,7 +16,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   }
 });
 
-export const LoginForm = connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(LoginFormComponent);

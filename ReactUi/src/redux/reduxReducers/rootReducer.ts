@@ -1,9 +1,0 @@
-import { combineReducers, Reducer } from "redux";
-import { IState } from "../reduxStore/IState";
-import { searchScreenReducer } from "./searchScreenReducer";
-import { commonReducer } from "./commonReducer";
-
-export const rootReducer: Reducer<IState> = combineReducers({
-  commonReducer,
-  searchScreenReducer
-});

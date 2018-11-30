@@ -9,29 +9,23 @@ import {
   WithStyles
 } from "@material-ui/core/styles";
 
-import { LoginForm } from "../containers/LoginScreenContainers/LoginForm";
+import LoginForm from "../containers/LoginScreenContainers/LoginForm";
 
-// Props
+// IProps
 interface IProps extends WithStyles<typeof styles> {}
-
-// Styles
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      display: "flex",
-      flexGrow: 1
-    }
-  });
 
 // Component
 const LoginScreen = ({ classes }: IProps) => (
   <div>
     <Grid container={true} justify="center" alignItems="center">
-      <Grid item={true} xs={6} sm={5} md={4} lg={3}>
+      <Grid item={true} xs={10} sm={6} md={4} lg={3}>
         <LoginForm />
       </Grid>
     </Grid>
   </div>
 );
+
+// Styles
+const styles = (theme: Theme) => createStyles({});
 
 export default withStyles(styles)(LoginScreen);

@@ -1,40 +1,93 @@
 import * as React from "react";
+import { Dispatch } from "redux";
+import { connect } from "react-redux";
 
-import CssBaseline from "@material-ui/core/CssBaseline";
-import { Paper, Theme } from "@material-ui/core";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
 
-import { MenuBar } from "../containers/MenuBar";
-import { Search } from "../containers/SearchScreenContainers/Search";
-import { SelectItem } from "../containers/SearchScreenContainers/SelectItem";
-import { Table } from "../containers/SearchScreenContainers/Table";
-import { ChangeMultipleItems } from "src/containers/SearchScreenContainers/ChangeMultipleItems";
-import { withStyles } from "@material-ui/core";
+import {
+  createStyles,
+  withStyles,
+  Theme,
+  WithStyles
+} from "@material-ui/core/styles";
 
-// const styles = {
-//   root: {
-//     width: "90%",
-//     overFlowX: "auto"
-//   }
-// };
+import { IState } from "../redux/reduxStore/IState";
+import { updateIsOnSearchScreen } from "../redux/reduxActions/commonActions/commonActionCreators";
 
-const customStyles = (theme: Theme) => ({
-  root: {
-    ...theme.mixins.gutters()
+import MenuBar from "../containers/MenuBar";
+
+// IProps
+interface IProps extends WithStyles<typeof styles> {
+  updateIsOnSearchScreenAsProp: (isOnSearchScreen: boolean) => void;
+}
+
+// Component
+class SearchScreen extends React.Component<IProps> {
+  constructor(props: IProps) {
+    super(props);
+  }
+
+  // Mount
+  public componentDidMount() {
+    const { updateIsOnSearchScreenAsProp } = this.props;
+
+    updateIsOnSearchScreenAsProp(true);
+  }
+
+  // Unmount
+  public componentWillUnmount() {
+    const { updateIsOnSearchScreenAsProp } = this.props;
+
+    updateIsOnSearchScreenAsProp(false);
+  }
+
+  public render() {
+    return (
+      <div>
+        <MenuBar />
+
+        <Paper>
+          <Typography>SearchScreen place holder</Typography>
+
+          <h1>Test</h1>
+          <h1>Test</h1>
+          <h1>Test</h1>
+          <h1>Test</h1>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h3>Test</h3>
+          <h3>Test</h3>
+          <h3>Test</h3>
+          <h3>Test</h3>
+          <h3>Test</h3>
+          <h3>Test</h3>
+          <h3>Test</h3>
+          <h3>Test</h3>
+        </Paper>
+      </div>
+    );
+  }
+}
+
+// Styles
+const styles = (theme: Theme) => createStyles({});
+
+// Container
+const mapStateToProps = (state: IState) => ({});
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  updateIsOnSearchScreenAsProp: (isOnSearchScreen: boolean) => {
+    dispatch(updateIsOnSearchScreen(isOnSearchScreen));
   }
 });
 
-const SearchScreenComponent = ({ classes }: any) => (
-  <div>
-    <MenuBar />
-
-    <Paper className={classes.root}>
-      <CssBaseline />
-      <SelectItem />
-      <Search />
-      <Table />
-      <ChangeMultipleItems />
-    </Paper>
-  </div>
-);
-
-export const SearchScreen = withStyles(customStyles)(SearchScreenComponent);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(SearchScreen));

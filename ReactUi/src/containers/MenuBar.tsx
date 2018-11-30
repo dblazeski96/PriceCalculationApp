@@ -2,12 +2,13 @@ import { Dispatch } from "redux";
 import { connect } from "react-redux";
 
 import { IState } from "src/redux/reduxStore/IState";
-import { updateLoginStatus } from "src/redux/reduxActions/actions";
+import { updateLoginStatus } from "../redux/reduxActions/commonActions/commonActionCreators";
 
 import MenuBarComponent from "src/components/MenuBarComponent";
 
 const mapStateToProps = (state: IState) => ({
-  loggedIn: state.commonReducer.loggedIn
+  loggedIn: state.commonState.loggedIn,
+  isOnSearchScreen: state.commonState.isOnSearchScreen
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -16,7 +17,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   }
 });
 
-export const MenuBar = connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(MenuBarComponent);

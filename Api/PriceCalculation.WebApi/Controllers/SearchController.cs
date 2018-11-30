@@ -225,5 +225,15 @@ namespace PriceCalculation.WebApi.Controllers
             return response;
         }
 
+        [HttpGet]
+        [Route("TestgetApi")]
+        public HttpResponseMessage TestGet([FromUri]string property)
+        {
+                        
+            var response = Request.CreateResponse(HttpStatusCode.OK);
+            response.Content = new StringContent(JsonConvert.SerializeObject($"Hellou {property}!"));
+            return response;
+        }
+
     }
 }
