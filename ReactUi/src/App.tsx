@@ -3,17 +3,17 @@ import { Switch, Route } from "react-router-dom";
 
 import CssBaseline from "@material-ui/core/CssBaseline";
 
-import store from "./redux/reduxStore/store";
+import store from "./redux/store/store";
 
-import { RedirectToLoginScreen } from "./services/ComponentServices/Redirects";
+import { RedirectToLoginScreen } from "./services/componentServices/Redirects";
 
-import LandingScreen from "./containers/LandingScreenContainer";
-import SearchScreen from "./containers/SearchScreenContainer";
-import PricingScreen from "./containers/PricingScreenContainer";
-import AdministrationScreen from "./containers/AdministrationScreenContainer";
-import LoginScreen from "./containers/LoginScreenContainer";
-import ProfileScreen from "./containers/ProfileScreenContainer";
-import NotFoundScreen from "./containers/NotFoundScreenContainer";
+import LandingScreen from "./containers/screenContainers/LandingScreenContainer";
+import SearchScreen from "./containers/screenContainers/SearchScreenContainer";
+import PricingScreen from "./containers/screenContainers/PricingScreenContainer";
+import AdministrationScreen from "./containers/screenContainers/AdministrationScreenContainer";
+import LoginScreen from "./containers/screenContainers/LoginScreenContainer";
+import ProfileScreen from "./containers/screenContainers/ProfileScreenContainer";
+import NotFoundScreen from "./containers/screenContainers/NotFoundScreenContainer";
 
 class App extends React.Component {
   constructor(props: any) {
