@@ -1,7 +1,7 @@
 import { createStore, combineReducers } from "redux";
 
-import commonState from "../reduxReducers/commonReducer";
-import searchScreenState from "../reduxReducers/searchScreenReducer";
+import commonState from "../reducers/commonReducer";
+import searchScreenState from "../reducers/searchScreenReducer";
 
 const rootReducer = combineReducers({
   commonState,

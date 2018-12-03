@@ -1,20 +1,20 @@
 import { Reducer, Action } from "redux";
 
-import { ICommonState } from "../reduxStore/IState";
-import initialState from "../reduxStore/initialState";
+import { ICommonState } from "../store/IState";
+import initialState from "../store/initialState";
 
 import {
   UPDATE_LOGIN_STATUS,
   UPDATE_IS_ON_SEARCH_SCREEN,
   UPDATE_SELECTED_ITEM,
   UPDATE_SEARCH_TERM
-} from "../reduxActions/commonActions/commonActionTypes";
+} from "../actions/commonActions/commonActionTypes";
 import {
   IUpdateLoginStatus,
   IUpdateIsOnSearchScreen,
   IUpdateSelectedItem,
   IUpdateSearchTerm
-} from "../reduxActions/commonActions/commonIActions";
+} from "../actions/commonActions/commonIActions";
 
 // Reducer
 const commonReducer: Reducer<ICommonState> = (

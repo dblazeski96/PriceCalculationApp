@@ -1,9 +1,9 @@
 import { Dispatch } from "redux";
 import { connect } from "react-redux";
 
-import { IReduxState } from "../redux/reduxStore/IState";
+import { IReduxState } from "src/redux/store/IState";
 
-import NotFoundScreenComponent from "../screens/NotFoundScreenComponent";
+import PricingScreenComponent from "src/screens/PricingScreenComponent";
 
 const mapStateToProps = (state: IReduxState) => ({});
 
@@ -12,4 +12,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({});
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(NotFoundScreenComponent);
+)(PricingScreenComponent);

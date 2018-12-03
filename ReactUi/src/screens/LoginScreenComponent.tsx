@@ -9,7 +9,7 @@ import {
   WithStyles
 } from "@material-ui/core/styles";
 
-import LoginForm from "../components/LoginScreenComponents/LoginFormComponent";
+import LoginForm from "src/components/LoginScreenComponents/LoginFormComponent";
 
 // IProps
 interface IProps extends WithStyles<typeof styles> {

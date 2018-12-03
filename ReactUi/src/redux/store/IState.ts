@@ -1,4 +1,4 @@
-import { IBaseModel } from "../../models/DataModels/IBaseModel";
+import { IBaseModel } from "src/models/DataModels/IBaseModel";
 
 export interface IReduxState {
   commonState: ICommonState;

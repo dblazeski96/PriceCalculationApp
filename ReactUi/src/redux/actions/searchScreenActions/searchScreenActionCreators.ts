@@ -18,7 +18,7 @@ import {
   IUpdateChangePropValue
 } from "./searchScreenIActions";
 
-import { IBaseModel } from "../../../models/DataModels/IBaseModel";
+import { IBaseModel } from "src/models/DataModels/IBaseModel";
 
 export const updateSelectedItem: ActionCreator<IUpdateSelectedItem> = (
   selectedItem: string,

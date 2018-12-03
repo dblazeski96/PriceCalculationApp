@@ -40,8 +40,8 @@ import {
   ToSearchScreen,
   ToPricingScreen,
   ToAdministrationScreen
-} from "../services/ComponentServices/Links";
-import { RedirectToSearchScreen } from "src/services/ComponentServices/Redirects";
+} from "src/services/componentServices/Links";
+import { RedirectToSearchScreen } from "src/services/componentServices/Redirects";
 
 // IProps
 interface IProps extends WithStyles<typeof styles> {

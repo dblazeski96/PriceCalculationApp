@@ -1,7 +1,7 @@
 import { Action, Reducer } from "redux";
 
-import { ISearchScreenState } from "../reduxStore/IState";
-import initialState from "../reduxStore/initialState";
+import { ISearchScreenState } from "../store/IState";
+import initialState from "../store/initialState";
 
 import {
   UPDATE_SELECTED_ITEM,
@@ -10,7 +10,7 @@ import {
   SELECT_DESELECT_DATA_ITEM,
   UPDATE_SELECTED_CHANGE_PROP,
   UPDATE_CHANGE_PROP_VALUE
-} from "../reduxActions/searchScreenActions/searchScreenActionTypes";
+} from "../actions/searchScreenActions/searchScreenActionTypes";
 
 import {
   IUpdateSelectedItem,
@@ -19,7 +19,7 @@ import {
   ISelectDeselectDataItem,
   IUpdateSelectedChangeProp,
   IUpdateChangePropValue
-} from "../reduxActions/searchScreenActions/searchScreenIActions";
+} from "../actions/searchScreenActions/searchScreenIActions";
 
 const searchScreenReducer: Reducer<ISearchScreenState> = (
   state: ISearchScreenState = initialState.searchScreenState,

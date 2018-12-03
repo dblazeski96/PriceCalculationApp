@@ -1,10 +1,10 @@
 import { Dispatch } from "redux";
 import { connect } from "react-redux";
 
-import { IReduxState } from "../redux/reduxStore/IState";
-import { updateIsOnSearchScreen } from "../redux/reduxActions/commonActions/commonActionCreators";
+import { IReduxState } from "src/redux/store/IState";
+import { updateIsOnSearchScreen } from "src/redux/actions/commonActions/commonActionCreators";
 
-import SearchScreenComponent from "../screens/SearchScreenComponent";
+import SearchScreenComponent from "src/screens/SearchScreenComponent";
 
 const mapStateToProps = (state: IReduxState) => ({
   selectedItem: state.commonState.selectedItem,

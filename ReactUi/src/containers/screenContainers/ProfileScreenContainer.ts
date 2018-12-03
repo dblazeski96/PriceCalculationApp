@@ -1,9 +1,9 @@
 import { Dispatch } from "redux";
 import { connect } from "react-redux";
 
-import { IReduxState } from "../redux/reduxStore/IState";
+import { IReduxState } from "src/redux/store/IState";
 
-import ProfileScreenComponent from "../screens/ProfileScreenComponent";
+import ProfileScreenComponent from "src/screens/ProfileScreenComponent";
 
 const mapStateToProps = (state: IReduxState) => ({});
 

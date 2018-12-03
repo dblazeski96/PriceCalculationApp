@@ -10,11 +10,11 @@ import {
   WithStyles
 } from "@material-ui/core/styles";
 
-import { IBaseModel } from "../models/DataModels/IBaseModel";
-import { searchBusinessItems } from "../services/ApiServices/BusinessItemService";
-import { searchBusinessEntities } from "../services/ApiServices/BusinessEntityService";
+import { IBaseModel } from "src/models/DataModels/IBaseModel";
+import { searchBusinessItems } from "src/services/apiServices/businessItemService";
+import { searchBusinessEntities } from "src/services/apiServices/businessEntityService";
 
-import MenuBar from "../containers/MenuBarContainer";
+import MenuBar from "src/containers/MenuBarContainer";
 
 // IProps
 interface IProps extends WithStyles<typeof styles> {

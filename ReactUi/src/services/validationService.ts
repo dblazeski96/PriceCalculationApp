@@ -1,4 +1,4 @@
-import { IValidationResult } from "../models/Values/IValidationResult";
+import { IValidationResult } from "src/models/Values/IValidationResult";
 
 export const validateEmail = (email: string): IValidationResult => {
   switch (true) {

@@ -1,11 +1,11 @@
 import { Dispatch } from "redux";
 import { connect } from "react-redux";
 
-import { IReduxState } from "src/redux/reduxStore/IState";
+import { IReduxState } from "src/redux/store/IState";
 import {
   updateLoginStatus,
   updateSearchTerm
-} from "../redux/reduxActions/commonActions/commonActionCreators";
+} from "src/redux/actions/commonActions/commonActionCreators";
 
 import MenuBarComponent from "src/components/MenuBarComponent";
 

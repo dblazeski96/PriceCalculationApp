@@ -10,7 +10,7 @@ import {
   WithStyles
 } from "@material-ui/core/styles";
 
-import MenuBar from "../containers/MenuBarContainer";
+import MenuBar from "src/containers/MenuBarContainer";
 
 // IProps
 interface IProps extends WithStyles<typeof styles> {}

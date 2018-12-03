@@ -20,9 +20,12 @@ import {
 import { IFormValue } from "src/models/Values/IFormValue";
 import { IValidationResult } from "src/models/Values/IValidationResult";
 
-import { login } from "../../services/ApiServices/LoginService";
-import { validateEmail, validatePassword } from "../../services/Validation";
-import { RedirectToSearchScreen } from "../../services/ComponentServices/Redirects";
+import { login } from "src/services/apiServices/loginService";
+import {
+  validateEmail,
+  validatePassword
+} from "src/services/validationService";
+import { RedirectToSearchScreen } from "src/services/componentServices/Redirects";
 
 // Props
 interface IProps extends WithStyles<typeof styles> {

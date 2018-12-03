@@ -9,7 +9,7 @@ import "./index.css";
 
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 
-import store from "./redux/reduxStore/store";
+import store from "./redux/store/store";
 import App from "./App";
 
 const theme = createMuiTheme({

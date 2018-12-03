@@ -1,9 +1,9 @@
 import { Dispatch } from "redux";
 import { connect } from "react-redux";
 
-import { IReduxState } from "../redux/reduxStore/IState";
+import { IReduxState } from "src/redux/store/IState";
 
-import AdministrationScreenComponent from "../screens/AdministrationScreenComponent";
+import LandingScreenComponent from "src/screens/LandingScreenComponent";
 
 const mapStateToProps = (state: IReduxState) => ({});
 
@@ -12,4 +12,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({});
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AdministrationScreenComponent);
+)(LandingScreenComponent);
