@@ -1,0 +1,3 @@
+export const UPDATE_LOGIN_STATUS: string = "UPDATE_LOGIN_STATUS";
+
+export const UPDATE_IS_ON_SEARCH_SCREEN: string = "UPDATE_IS_ON_SEARCH_SCREEN";

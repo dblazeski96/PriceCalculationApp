@@ -42,14 +42,19 @@ import {
   ToAdministrationScreen
 } from "src/services/componentServices/Links";
 import { RedirectToSearchScreen } from "src/services/componentServices/Redirects";
+import { Item } from "src/models/DataModels/Item";
 
 // IProps
 interface IProps extends WithStyles<typeof styles> {
   loggedIn: boolean;
   isOnSearchScreen: boolean;
+
+  selectedItem: Item;
+  selectedSearchProp: string;
   searchTerm: string;
 
   updateLoginStatus: (loggedIn: boolean) => void;
+
   updateSearchTerm: (searchTerm: string) => void;
 }
 

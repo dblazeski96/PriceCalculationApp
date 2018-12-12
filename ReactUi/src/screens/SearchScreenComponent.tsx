@@ -1,7 +1,6 @@
 import * as React from "react";
 
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
+import Grid from "@material-ui/core/Grid";
 
 import {
   createStyles,
@@ -10,23 +9,34 @@ import {
   WithStyles
 } from "@material-ui/core/styles";
 
+import { Item } from "src/models/DataModels/Item";
 import { IBaseModel } from "src/models/DataModels/IBaseModel";
-import { searchBusinessItems } from "src/services/apiServices/businessItemService";
-import { searchBusinessEntities } from "src/services/apiServices/businessEntityService";
+
+import { fetchDataGetItems } from "src/services/apiServices/fetchDataService";
 
 import MenuBar from "src/containers/MenuBarContainer";
+import AdvancedSearch from "src/components/SearchScreenComponents/AdvancedSearchComponent";
+import ItemTable from "src/components/SearchScreenComponents/ItemTableComponent";
 
 // IProps
 interface IProps extends WithStyles<typeof styles> {
-  selectedItem: string;
+  selectedItem: Item;
+  selectedSearchProp: string;
   searchTerm: string;
 
   updateIsOnSearchScreen: (isOnSearchScreen: boolean) => void;
+
+  updateSelectedItem: (selectedItem: Item) => void;
+  updateSelectedSearchProp: (selectedSearchProp: string) => void;
+  updateSearchTerm: (searchTerm: string) => void;
 }
 
-// State
+// IState
 interface IState {
-  data: IBaseModel[] | null;
+  ItemData: IBaseModel[] | null;
+  itemProps: string[] | null;
+  shouldFetch: boolean;
+  isFetching: boolean;
 }
 
 // Component
@@ -35,57 +45,22 @@ class SearchScreenComponent extends React.Component<IProps, IState> {
     super(props);
 
     this.state = {
-      data: null
+      ItemData: null,
+      itemProps: null,
+      shouldFetch: false,
+      isFetching: false
     };
-  }
 
+    this.updateShouldFetch = this.updateShouldFetch.bind(this);
+    this.fetchData = this.fetchData.bind(this);
+  }
   // Mount
   public componentDidMount() {
-    const { updateIsOnSearchScreen, selectedItem, searchTerm } = this.props;
+    const { updateIsOnSearchScreen } = this.props;
 
     updateIsOnSearchScreen(true);
 
-    switch (selectedItem) {
-      case "businessItem":
-        {
-          searchBusinessItems("Quantity", searchTerm)
-            .then(res => {
-              this.setState({
-                data: res.data
-              });
-            })
-            .catch(err => {
-              console.log(err.response.data);
-            });
-        }
-        break;
-
-      case "businessEntity":
-        {
-          searchBusinessEntities("Name", searchTerm)
-            .then(res => {
-              this.setState({
-                data: res.data
-              });
-            })
-            .catch(err => {
-              console.log(err.response.data);
-            });
-        }
-        break;
-
-      default: {
-        searchBusinessItems("Name", searchTerm)
-          .then(res => {
-            this.setState({
-              data: res.data
-            });
-          })
-          .catch(err => {
-            console.log(err.response.data);
-          });
-      }
-    }
+    this.fetchData();
   }
 
   // Unmount
@@ -95,19 +70,90 @@ class SearchScreenComponent extends React.Component<IProps, IState> {
     updateIsOnSearchScreen(false);
   }
 
+  // Update
+  public componentDidUpdate() {
+    const { shouldFetch } = this.state;
+
+    if (shouldFetch) {
+      this.setState({
+        shouldFetch: false,
+        isFetching: true
+      });
+
+      this.fetchData();
+    }
+  }
+
+  // Render
   public render() {
-    const { data } = this.state;
+    const {
+      selectedItem,
+      selectedSearchProp,
+      searchTerm,
+      updateSelectedItem,
+      updateSelectedSearchProp,
+      updateSearchTerm
+    } = this.props;
+    const { shouldFetch, isFetching, ItemData, itemProps } = this.state;
 
     return (
-      <div>
-        <MenuBar />
+      <Grid container={true} justify="center" alignItems="center">
+        <Grid item={true} xs={12}>
+          <MenuBar />
+        </Grid>
 
-        <Paper>
-          <Typography>{JSON.stringify(data)}</Typography>
-          {console.log(data)}
-        </Paper>
-      </div>
+        <Grid item={true} xs={11}>
+          <AdvancedSearch
+            itemProps={itemProps}
+            selectedSearchProp={selectedSearchProp}
+            searchTerm={searchTerm}
+            shouldFetch={shouldFetch}
+            isFetching={isFetching}
+            updateSelectedSearchProp={updateSelectedSearchProp}
+            updateSearchTerm={updateSearchTerm}
+            updateShouldFetch={this.updateShouldFetch}
+          />
+        </Grid>
+
+        <Grid item={true} xs={11}>
+          <ItemTable
+            selectedItem={selectedItem}
+            itemData={ItemData}
+            itemProps={itemProps}
+            shouldFetch={shouldFetch}
+            isFetching={isFetching}
+            updateSelectedItem={updateSelectedItem}
+            updateSelectedSearchProp={updateSelectedSearchProp}
+            updateSearchTerm={updateSearchTerm}
+            updateShouldFetch={this.updateShouldFetch}
+          />
+        </Grid>
+      </Grid>
     );
+  }
+
+  private updateShouldFetch(shouldFetch: boolean) {
+    this.setState({
+      shouldFetch
+    });
+  }
+
+  private fetchData() {
+    const { selectedItem, selectedSearchProp, searchTerm } = this.props;
+
+    fetchDataGetItems(selectedItem, selectedSearchProp, searchTerm)
+      .then(res => {
+        this.setState({
+          ItemData: res.data,
+          itemProps: Object.keys(res.data[0]),
+          isFetching: false
+        });
+      })
+      .catch(e => {
+        this.setState({
+          isFetching: false
+        });
+      });
   }
 }
 

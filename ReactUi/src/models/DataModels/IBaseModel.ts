@@ -1,3 +1,3 @@
-export interface IBaseModel {
-  id: number;
+export interface IBaseModel extends Object {
+  Id: number;
 }

@@ -3,9 +3,12 @@ import { Switch, Route } from "react-router-dom";
 
 import CssBaseline from "@material-ui/core/CssBaseline";
 
-import store from "./redux/store/store";
+import reduxStore from "./redux/store/reduxStore";
 
-import { RedirectToLoginScreen } from "./services/componentServices/Redirects";
+import {
+  RedirectToLoginScreen,
+  RedirectToSearchScreen
+} from "./services/componentServices/Redirects";
 
 import LandingScreen from "./containers/screenContainers/LandingScreenContainer";
 import SearchScreen from "./containers/screenContainers/SearchScreenContainer";
@@ -21,7 +24,7 @@ class App extends React.Component {
   }
 
   public render() {
-    const loggedIn = store.getState().commonState.loggedIn;
+    const loggedIn = reduxStore.getState().mainState.loggedIn;
 
     return (
       <div>
@@ -41,7 +44,10 @@ class App extends React.Component {
             path="/administration"
             component={loggedIn ? AdministrationScreen : RedirectToLoginScreen}
           />
-          <Route path="/login" component={LoginScreen} />
+          <Route
+            path="/login"
+            component={loggedIn ? RedirectToSearchScreen : LoginScreen}
+          />
           <Route
             path="/profile"
             component={loggedIn ? ProfileScreen : RedirectToLoginScreen}

@@ -1,90 +1,48 @@
-import { Action, Reducer } from "redux";
+import { Reducer, Action } from "redux";
 
-import { ISearchScreenState } from "../store/IState";
-import initialState from "../store/initialState";
+import { ISearchScreenState } from "../store/IReduxState";
+import initialReduxState from "../store/initialReduxState";
 
 import {
   UPDATE_SELECTED_ITEM,
   UPDATE_SELECTED_SEARCH_PROP,
-  UPDATE_SEARCH_TERM,
-  SELECT_DESELECT_DATA_ITEM,
-  UPDATE_SELECTED_CHANGE_PROP,
-  UPDATE_CHANGE_PROP_VALUE
+  UPDATE_SEARCH_TERM
 } from "../actions/searchScreenActions/searchScreenActionTypes";
-
 import {
   IUpdateSelectedItem,
   IUpdateSelectedSearchProp,
-  IUpdateSearchTerm,
-  ISelectDeselectDataItem,
-  IUpdateSelectedChangeProp,
-  IUpdateChangePropValue
+  IUpdateSearchTerm
 } from "../actions/searchScreenActions/searchScreenIActions";
 
-const searchScreenReducer: Reducer<ISearchScreenState> = (
-  state: ISearchScreenState = initialState.searchScreenState,
-  action: Action<string>
-): ISearchScreenState => {
+// Reducer
+const searchScreenReducer: Reducer<ISearchScreenState, Action<string>> = (
+  state = initialReduxState.searchScreenState,
+  action
+) => {
   switch (action.type) {
     case UPDATE_SELECTED_ITEM: {
       const nextState = { ...state };
-      nextState.selectedItem = (action as IUpdateSelectedItem).selectedItem;
-      nextState.itemData = (action as IUpdateSelectedItem).data;
-      nextState.itemProps = Object.keys(nextState.itemData[0]);
+      const nextAction = action as IUpdateSelectedItem;
 
-      nextState.searchProps = Object.keys(nextState.itemData[0]);
-      nextState.defaultSelectedSearchProp = nextState.searchProps[0];
-      nextState.selectedSearchProp = nextState.searchProps[0];
-      nextState.searchTerm = "";
-
-      nextState.changeProps = Object.keys(nextState.itemData[0]).filter(
-        p => p.toLowerCase() !== "id"
-      );
-      nextState.defaultSelectedChangeProp = nextState.changeProps[0];
-      nextState.selectedChangeProp = nextState.changeProps[0];
-      nextState.changePropValue = "";
-      nextState.selectedDataItems = [];
+      nextState.selectedItem = nextAction.selectedItem;
 
       return nextState;
     }
 
     case UPDATE_SELECTED_SEARCH_PROP: {
       const nextState = { ...state };
-      nextState.selectedSearchProp = (action as IUpdateSelectedSearchProp).prop;
+      const nextAction = action as IUpdateSelectedSearchProp;
+
+      nextState.selectedSearchProp = nextAction.selectedSearchProp;
 
       return nextState;
     }
 
     case UPDATE_SEARCH_TERM: {
       const nextState = { ...state };
-      nextState.searchTerm = (action as IUpdateSearchTerm).searchTerm;
+      const nextAction = action as IUpdateSearchTerm;
 
-      return nextState;
-    }
-
-    case UPDATE_SELECTED_CHANGE_PROP: {
-      const nextState = { ...state };
-      nextState.selectedChangeProp = (action as IUpdateSelectedChangeProp).prop;
-
-      return nextState;
-    }
-
-    case UPDATE_CHANGE_PROP_VALUE: {
-      const nextState = { ...state };
-      nextState.changePropValue = (action as IUpdateChangePropValue).propValue;
-
-      return nextState;
-    }
-
-    case SELECT_DESELECT_DATA_ITEM: {
-      const nextState = { ...state };
-      const actionId = (action as ISelectDeselectDataItem).id;
-      const selectedItems = nextState.selectedDataItems;
-
-      nextState.selectedDataItems =
-        selectedItems.indexOf(actionId) === -1
-          ? [...selectedItems, actionId]
-          : [...selectedItems.filter(i => i !== actionId)];
+      nextState.searchTerm = nextAction.searchTerm;
 
       return nextState;
     }

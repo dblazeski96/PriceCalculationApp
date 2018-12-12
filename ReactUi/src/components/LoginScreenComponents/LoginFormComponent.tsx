@@ -174,6 +174,7 @@ class LoginFormComponent extends React.Component<IProps, IState> {
     }
   }
 
+  // Render
   public render() {
     const { classes, loggedIn } = this.props;
     const { values, errors, isFetching } = this.state;

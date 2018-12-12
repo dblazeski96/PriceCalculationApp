@@ -1,10 +1,10 @@
 import { createStore, combineReducers } from "redux";
 
-import commonState from "../reducers/commonReducer";
+import mainState from "../reducers/mainReducer";
 import searchScreenState from "../reducers/searchScreenReducer";
 
 const rootReducer = combineReducers({
-  commonState,
+  mainState,
   searchScreenState
 });
 

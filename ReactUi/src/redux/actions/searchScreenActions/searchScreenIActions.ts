@@ -1,27 +1,14 @@
 import { Action } from "redux";
-import { IBaseModel } from "../../../models/DataModels/IBaseModel";
+import { Item } from "src/models/DataModels/Item";
 
 export interface IUpdateSelectedItem extends Action<string> {
-  selectedItem: string;
-  data: IBaseModel[];
+  selectedItem: Item;
 }
 
 export interface IUpdateSelectedSearchProp extends Action<string> {
-  prop: string;
+  selectedSearchProp: string;
 }
 
 export interface IUpdateSearchTerm extends Action<string> {
   searchTerm: string;
-}
-
-export interface IUpdateSelectedChangeProp extends Action<string> {
-  prop: string;
-}
-
-export interface IUpdateChangePropValue extends Action<string> {
-  propValue: string;
-}
-
-export interface ISelectDeselectDataItem extends Action<string> {
-  id: number;
 }

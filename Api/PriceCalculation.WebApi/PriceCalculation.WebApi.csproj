@@ -181,10 +181,10 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>2888</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://10.12.0.55:2888</IISUrl>
+          <IISUrl>http://10.80.71.170:2888</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>http://10.12.0.55:2888</CustomServerUrl>
+          <CustomServerUrl>http://10.80.71.170:2888</CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>

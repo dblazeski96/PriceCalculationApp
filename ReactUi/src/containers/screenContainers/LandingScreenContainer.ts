@@ -1,7 +1,7 @@
 import { Dispatch } from "redux";
 import { connect } from "react-redux";
 
-import { IReduxState } from "src/redux/store/IState";
+import { IReduxState } from "src/redux/store/IReduxState";
 
 import LandingScreenComponent from "src/screens/LandingScreenComponent";
 

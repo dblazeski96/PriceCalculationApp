@@ -1,13 +1,13 @@
 import { Dispatch } from "redux";
 import { connect } from "react-redux";
 
-import { IReduxState } from "src/redux/store/IState";
-import { updateLoginStatus } from "src/redux/actions/commonActions/commonActionCreators";
+import { IReduxState } from "src/redux/store/IReduxState";
+import { updateLoginStatus } from "src/redux/actions/mainActions/mainActionCreators";
 
 import LoginScreenComponent from "src/screens/LoginScreenComponent";
 
 const mapStateToProps = (state: IReduxState) => ({
-  loggedIn: state.commonState.loggedIn
+  loggedIn: state.mainState.loggedIn
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({

@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 
@@ -17,13 +18,17 @@ interface IProps extends WithStyles<typeof styles> {}
 
 // Component
 const PricingScreenComponent = ({ classes }: IProps) => (
-  <div>
-    <MenuBar />
+  <Grid container={true} justify="center" alignItems="center">
+    <Grid item={true} xs={12}>
+      <MenuBar />
+    </Grid>
 
-    <Paper>
-      <Typography>Pricing Screen Placeholder</Typography>
-    </Paper>
-  </div>
+    <Grid item={true} xs={11}>
+      <Paper>
+        <Typography align="center">Pricing Screen Placeholder</Typography>
+      </Paper>
+    </Grid>
+  </Grid>
 );
 
 // Styles

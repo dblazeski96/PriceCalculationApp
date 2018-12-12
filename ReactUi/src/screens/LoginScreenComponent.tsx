@@ -24,13 +24,11 @@ const LoginScreenComponent = ({
   loggedIn,
   updateLoginStatus
 }: IProps) => (
-  <div>
-    <Grid container={true} justify="center" alignItems="center">
-      <Grid item={true} xs={10} sm={6} md={4} lg={3}>
-        <LoginForm loggedIn={loggedIn} updateLoginStatus={updateLoginStatus} />
-      </Grid>
+  <Grid container={true} justify="center" alignItems="center">
+    <Grid item={true} xs={10} sm={6} md={4} lg={3}>
+      <LoginForm loggedIn={loggedIn} updateLoginStatus={updateLoginStatus} />
     </Grid>
-  </div>
+  </Grid>
 );
 
 // Styles
